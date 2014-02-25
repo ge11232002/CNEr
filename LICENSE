@@ -1,0 +1,17 @@
+CONTENTS AND COPYRIGHT
+
+The source code under src/ucsc comes from Jim Kent's source utilities.
+Any usage of this code should follow the license restriction.
+
+The following lines are taken from README of Kent's utilities.
+
+This directory contains the entire source tree for the
+UCSC Genome Bioinformatics Group's suite of biological analysis
+and web display programs as well as some of Jim Kent's own tools.
+All files are copyrighted, but license is hereby granted for personal,
+academic, and non-profit use.  A license is also granted for the contents
+of the src/lib, src/inc and src/utils and python directories for commercial
+users.  Commercial users should contact kent@soe.ucsc.edu for access to other
+modules.  Commercial users interested in the UCSC Genome Browser in particular
+please see
+    http://genome.ucsc.edu/license/.

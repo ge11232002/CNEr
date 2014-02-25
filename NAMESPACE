@@ -1,0 +1,110 @@
+useDynLib(CNEr, .registration = TRUE)
+
+### -----------------------------------------------------------------
+### Import
+### -----------------------------------------------------------------
+import(IRanges)
+
+### -----------------------------------------------------------------
+### Import S4 classes defined in other packages
+###
+#import(Biostrings)
+#import(GenomicRanges)
+importClassesFrom(methods, ANY, character, integer, missing)
+
+### -----------------------------------------------------------------
+### Import S4 methods defined in other packages
+###
+importMethodsFrom(rtracklayer, import.bed)
+importMethodsFrom(GenomicRanges, seqnames, seqlengths, strand)
+importMethodsFrom(XVector, subseq)
+importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
+importMethodsFrom(methods, initialize, show)
+
+### -----------------------------------------------------------------
+### Import ordinary functions, variables in other packages
+###
+importFrom(GenomicRanges, GRanges, Seqinfo)
+importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
+importFrom(Biostrings, DNAStringSet)
+importFrom(RMySQL, MySQL)
+importFrom(RSQLite, SQLite)
+importFrom(methods, is, new)
+
+### -----------------------------------------------------------------
+### Export S4 classes defined in CNEr
+###
+exportClasses(Axt,
+              CNE)
+
+### -----------------------------------------------------------------
+### Export S4 methods for generics not defined in CNEr
+###
+exportMethods(
+  "[", 
+  c,
+  ## class.r
+  length,
+  score
+)
+
+### -----------------------------------------------------------------
+### Export non-generic functions
+###
+
+export(
+  ## utils.r
+  reverseCigar,
+  binFromCoordRange,
+  binRangesFromCoordRange,
+  binRestrictionString,
+  readCNERangesFromSQLite,
+  #queryAnnotationSQLite,
+  fetchChromSizes,
+
+  ## AllClasses.r
+  Axt,
+  CNE,
+
+  # io.r
+  readBed,
+  readAxt,
+  axtInfo,
+  writeAxt,
+
+  ## ceScan.r
+  ceScan, 
+  cneMerge,
+  blatCNE,
+  ceScanOneStep,
+
+  ## makeGeneDbFromUCSC.r
+  #supportedUCSCtables,
+  #queryrefGene, queryknownGene, queryensGene,
+  #makeGeneDbFromUCSC,
+
+  ## plot.r
+  CNEDensity
+)
+
+### -----------------------------------------------------------------
+### Export S4 generics defined in CNEr + export corresponding methods
+###
+
+exportMethods(
+  ## AllClasses.r
+  targetRanges, queryRanges,
+  targetSeqs, querySeqs,
+  symCount,
+  subAxt,
+  assembly1, assembly2,
+  CNE1, CNE2,
+  thresholds,
+  CNEMerged, CNERepeatsFiltered,
+  
+  ## utils.r
+  saveCNEToSQLite,
+  ## plot.r
+  CNEDensity
+)
+
