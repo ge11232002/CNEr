@@ -4,7 +4,7 @@
 
 ### -----------------------------------------------------------------
 ### Scoring matrix used in lastz from http://genomewiki.ucsc.edu/index.php/Hg19_100way_conservation_lastz_parameters.
-### Exported!
+### NOT Exported yet!
 
 ## This is the scoring matrix for highly divergent species.
 HOXD55_MATRIX <- matrix(c(91, -90, -25, -100,
@@ -49,18 +49,46 @@ normarg_scoringMat <- function(scoringMat){
          ")' must be the 4 DNA bases ('DNA_BASES')")
   if(any(is.na(scoringMat)))
     stop("'", deparse(substitute(scoringMat)), "' contains NAs")
+  if(!isSymmetric(scoringMat))
+    stop("'", deparse(substitute(scoringMat)), "' must be symmetric")
   return(scoringMat)
 }
 
 ### -----------------------------------------------------------------
 ### calculate the threshold score based on window size, identity and 
 ### scoring matrix
-### Exported!
+### NOT Exported yet!
 ## This function tries to be compatible with the minScore_winSize thresholds
 ## used in previous CNEs identification.
 ## This function will output the equivilent threshold with a scoring matrix.
-EScore <- function(scoringMat, winSize, minScore, gapOpen=NULL, gapExt=NULL){
+EScore <- function(scoringMat, winSize, minScore, 
+                   ## NOT FINISHED!
+                   bg=c(A=0.25, C=0.25, G=0.25, T=0.25),
+                   gapOpen=NULL, gapExt=NULL){
+  bg <- normargPriorParams(bg)
+  scoringMat <- normarg_scoringMat(scoringMat)
+  ans <- 0
+  ## first calculate the scores from matches
+  for(base in names(bg)){
+    ans <- ans + minScore * bg[base] * scoringMat[base, base]
+  }
+  ## second calculate the scores from 
 
+}
 
+### Typical 'prior.params' vector: c(A=0.25, C=0.25, G=0.25, T=0.25)
+### This is taken from Biostrings package.
+normargPriorParams <- function(prior.params)
+{
+    if (!is.numeric(prior.params))
+        stop("'prior.params' must be a numeric vector")
+    if (length(prior.params) != length(DNA_BASES) ||
+        !setequal(names(prior.params), DNA_BASES))
+        stop("'prior.params' elements must be named A, C, G and T")
+    ## Re-order the elements.
+    prior.params <- prior.params[DNA_BASES]
+    if (any(is.na(prior.params)) || any(prior.params < 0))
+        stop("'prior.params' contains NAs and/or negative values")
+    prior.params
 }
 
