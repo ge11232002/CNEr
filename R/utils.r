@@ -279,19 +279,16 @@ queryAnnotationSQLite <- function(dbname, tablename, chr, start, end){
 fetchChromSizes <- function(assembly){
   # UCSC
   message("Trying UCSC...")
-  con <- try(dbConnect(MySQL(), user="genome", password="", 
-                       dbname=assembly, host="genome-mysql.cse.ucsc.edu"), 
-             silent=TRUE)
-  if(class(con) != "try-error"){
-    on.exit(dbDisconnect(con))
-    sqlCmd <- "SELECT chrom,size FROM chromInfo ORDER BY size DESC"
-    ans <- try(dbGetQuery(con, sqlCmd))
-    if(class(ans) == "try-error"){
-      return(NULL)
-    }else{
-      ans <- Seqinfo(seqnames=ans$chrom, seqlengths=ans$size, genome=assembly)
-      return(ans)
-    }
+  goldenPath <- "ftp://hgdownload.cse.ucsc.edu/goldenPath/"
+  targetURL <- paste0(goldenPath, assembly, "/database/chromInfo.txt.gz")
+  targteFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
+  download <- try(download.file(url=targetURL, destfile=targteFile, 
+                                method="wget", quiet=TRUE)
+  )
+  if(class(download) != "try-error"){
+    ans <- read.table(targteFile, header=FALSE, stringsAsFactors=FALSE)
+    ans <- Seqinfo(seqnames=ans$V1, seqlengths=ans$V2, genome=assembly)
+    return(ans)
   }
   # other sources? Add later
   return(NULL)

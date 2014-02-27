@@ -26,8 +26,8 @@ importMethodsFrom(methods, initialize, show)
 ###
 importFrom(GenomicRanges, GRanges, Seqinfo)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
-importFrom(Biostrings, DNAStringSet)
-importFrom(RMySQL, MySQL)
+importFrom(Biostrings, DNAStringSet, DNA_BASES)
+#importFrom(RMySQL, MySQL)
 importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 

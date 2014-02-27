@@ -675,11 +675,9 @@ void freeSlThreshold(struct slThreshold **p_thresholds)
   nextThreshold = *p_thresholds;
   while(nextThreshold != NULL)
   {
-    //Rprintf("I am in free Slthreshold\n");
     el_threshold = nextThreshold;
     nextCNE = el_threshold->CNE;
     while(nextCNE != NULL){
-      // Rprintf("I am in free CNE\n");
       el_CNE = nextCNE;
       nextCNE = el_CNE->next;
       free(el_CNE->cigar);

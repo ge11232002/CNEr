@@ -1,15 +1,11 @@
-Package: CNEr
-Version: 0.99.8
-Date: 2014-02-13
+Package: CNEr 
+Version: 0.99.9
+Date: 2014-02-27
 Title: CNE detection and visualization.
-Description: Large-scale identification and advanced visualization of
-        sets of conserved noncoding elements.
-Author: Ge Tan <ge.tan09@imperial.ac.uk>
+Description: Large-scale identification and advanced visualization of sets of conserved noncoding elements.
+Author: Ge Tan <ge.tan09@imperial.ac.uk> 
 Maintainer: Ge Tan <ge.tan09@imperial.ac.uk>
-Imports: Biostrings(>= 2.26.3), RSQLite(>= 0.11.4), GenomicRanges(>=
-        1.12.5), rtracklayer(>= 1.20.4), RMySQL(>= 0.9-3), XVector(>=
-        0.2.0), DBI(>= 0.2-7), GenomicAlignments(>= 0.99.17), methods,
-        IRanges(>= 1.19.38)
+Imports: Biostrings(>= 2.26.3), RSQLite(>= 0.11.4), GenomicRanges(>= 1.12.5), rtracklayer(>= 1.20.4), XVector(>= 0.2.0), DBI(>= 0.2-7), GenomicAlignments(>= 0.99.17), methods, IRanges(>= 1.19.38)
 Depends: R (>= 3.0.2)
 Suggests: Gviz(>= 1.7.4), RUnit, BiocGenerics
 LinkingTo: IRanges, XVector
@@ -21,5 +17,5 @@ Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
 LazyData: no
-Collate: AllGenerics.r AllClasses.r utils.r ceScan.r plot.r
-        makeGeneDbFromUCSC.r io.r
+Collate: AllGenerics.r AllClasses.r utils.r ceScan.r plot.r makeGeneDbFromUCSC.r io.r scoringMatrix.r
+

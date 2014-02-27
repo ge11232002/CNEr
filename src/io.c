@@ -7,15 +7,11 @@
 /* --- .Call ENTRY POINT --- */
 SEXP myReadBed(SEXP filepath){
   // load a filter file into R, and to be a GRanges in 1-based coordinates
-  // This is tested and without memory leak!
   filepath = AS_CHARACTER(filepath);
   if(!IS_CHARACTER(filepath) || LENGTH(filepath) != 1)
     error("'filepath' must be a single string");
   if(STRING_ELT(filepath, 0) == NA_STRING)
     error("'filepath' is NA");
-  // If filepath_elt is defined this way, 
-  // the memory will be reclaimed by the end of .Call by R, 
-  // do not need the free()
   char *filepath_elt = 
     R_alloc(strlen(CHAR(STRING_ELT(filepath, 0))) + 1, sizeof(char));
   strcpy(filepath_elt, CHAR(STRING_ELT(filepath, 0)));
