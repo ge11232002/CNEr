@@ -79,6 +79,7 @@ setMethod("queryRanges", "Axt", function(x) x@queryRanges)
 setMethod("querySeqs", "Axt", function(x) x@querySeqs)
 setMethod("score", "Axt", function(x) x@score)
 setMethod("symCount", "Axt", function(x) x@symCount)
+setMethod("nchar", "Axt", function(x) x@symCount)
 setMethod("length", "Axt", function(x) length(targetRanges(x)))
 
 ### -----------------------------------------------------------------
