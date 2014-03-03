@@ -186,13 +186,21 @@ and more assemblies from other sources will be implemented in the future.
 A object of \Robject{Seqinfo} is returned 
 which suits the input to downstream analysis.
 
-<<rtl-chromSizes, eval=TRUE, results = verbatim>>=
+<<rtl-chromSizes, eval=FALSE, results = verbatim>>=
 qSizesHg19 <- fetchChromSizes("hg19")
-qSizesHg19
 qSizesDanRer7 <- fetchChromSizes("danRer7")
-qSizesDanRer7
 @
 
+
+<<chromSizesData, eval=TRUE, echo=FALSE, results = hide>>=
+data(qSizesHg19)
+data(qSizesDanRer7)
+@
+
+<<showchromSizesData, eval=TRUE, results = verbatim>>=
+qSizesHg19
+qSizesDanRer7
+@
 \Robject(Seqinfo) can also be generated from local two bit file 
 with \Rfunction{seqinfo} from 
 \Rpackage{rtracklayer}.

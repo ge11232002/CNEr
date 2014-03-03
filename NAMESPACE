@@ -43,9 +43,10 @@ exportClasses(Axt,
 exportMethods(
   "[", 
   c,
-  ## class.r
+  ## AllClasses.r
   length,
-  score
+  score,
+  nchar
 )
 
 ### -----------------------------------------------------------------
