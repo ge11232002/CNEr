@@ -186,7 +186,7 @@ and more assemblies from other sources will be implemented in the future.
 A object of \Robject{Seqinfo} is returned 
 which suits the input to downstream analysis.
 
-<<rtl-chromSizes, eval=TRUE, results = verbatim>>=
+<<rtl-chromSizes, eval=FALSE, results = verbatim>>=
 qSizesHg19 <- fetchChromSizes("hg19")
 qSizesHg19
 qSizesDanRer7 <- fetchChromSizes("danRer7")

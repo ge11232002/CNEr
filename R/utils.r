@@ -281,12 +281,13 @@ fetchChromSizes <- function(assembly){
   message("Trying UCSC...")
   goldenPath <- "ftp://hgdownload.cse.ucsc.edu/goldenPath/"
   targetURL <- paste0(goldenPath, assembly, "/database/chromInfo.txt.gz")
-  targteFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
-  download <- try(download.file(url=targetURL, destfile=targteFile, 
+  targetFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
+  download <- try(download.file(url=targetURL, destfile=targetFile, 
                                 method="wget", quiet=TRUE)
   )
   if(class(download) != "try-error"){
-    ans <- read.table(targteFile, header=FALSE, stringsAsFactors=FALSE)
+    ans <- read.table(targetFile, header=FALSE, stringsAsFactors=FALSE)
+    unlink(targetFile)
     ans <- Seqinfo(seqnames=ans$V1, seqlengths=ans$V2, genome=assembly)
     return(ans)
   }
