@@ -210,6 +210,7 @@ setMethod("c", "Axt",
 
 
 setMethod("subAxt", "Axt",
+          #### TO DO: ADD start end missing. A S4 class!!!
 ## This is to fetch the Axts within the specific chrs, starts, ends 
 ## based on target sequences.
           function(x, chr, start, end, #strand=c("+", "-", "*"), 

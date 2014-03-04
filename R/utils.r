@@ -283,7 +283,7 @@ fetchChromSizes <- function(assembly){
   targetURL <- paste0(goldenPath, assembly, "/database/chromInfo.txt.gz")
   targetFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
   download <- try(download.file(url=targetURL, destfile=targetFile, 
-                                method="wget", quiet=TRUE)
+                                method="auto", quiet=TRUE)
   )
   if(class(download) != "try-error"){
     ans <- read.table(targetFile, header=FALSE, stringsAsFactors=FALSE)
