@@ -647,9 +647,9 @@ return ok;
 
 static boolean dumpStackOnSignal = FALSE;  // should a stack dump be generated?
 
-static void catchSignal(int sigNum)
+//static void catchSignal(int sigNum)
 /* handler for various terminal signals for logging purposes */
-{
+/*{
 char *sig = NULL;
 switch (sigNum)
     {
@@ -685,12 +685,12 @@ if (sigNum == SIGTERM || sigNum == SIGHUP)
     exit(1);   // so that atexit cleanup get called
 
 raise(SIGKILL);
-}
+}*/
 
-void initSigHandlers(boolean dumpStack)
+//void initSigHandlers(boolean dumpStack)
 /* set handler for various terminal signals for logging purposes.
  * if dumpStack is TRUE, attempt to dump the stack. */
-{
+/*{
 if (cgiIsOnWeb())
     {
     // SIGKILL is not trappable or ignorable
@@ -702,7 +702,7 @@ if (cgiIsOnWeb())
     signal(SIGBUS, catchSignal);
     dumpStackOnSignal = dumpStack;
     }
-}
+}*/
 
 
 static void initCgiInput()
