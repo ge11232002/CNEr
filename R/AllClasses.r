@@ -211,10 +211,11 @@ setMethod("c", "Axt",
 
 setMethod("subAxt", signature(x="Axt", chr="character",
                               start="integer", end="integer"),
-          .subAxtFull()
+          function(x, chr, start, end, select=c("target", "query")){
+            .subAxtFull(x, chr=chr, start=start, end=end, select=select)
+          }
           )
           
-          #### TO DO: ADD start end missing. A S4 class!!!
 ## This is to fetch the Axts within the specific chrs, starts, ends 
 ## based on target sequences.
 .subAxtFull <- function(x, chr, start, end, 
@@ -277,27 +278,41 @@ setMethod("subAxt", signature(x="Axt", chr="character",
       for(i in 1:length(indexPartial)){
         newAxts[[i]] <- subAln(x[indexPartial[i]], newStarts[i], newEnds[i],
                                select="query")
+      }
     }
     # then search Axts on negative strand.
     # we need to prepare the searchGRanges on negative strand.
-              searchGRanges <- GRanges(seqnames=chr,
-                                      ranges=IRanges(start=qSize-end+1,
-                                                     end=qSize-start+1),
-                                      strand="-")
-              indexNegative <- queryHits(findOverlaps(queryRanges(x),
-                                                     searchGRanges, type=type,
-                                                     select="all"))
-              index <- sort(c(indexPositive, indexNegative))
-            }else{
-              stop("Wrong select!")
-            }
-            return(x[index])
+    searchGRanges <- GRanges(seqnames=chr,
+                             ranges=IRanges(start=qSize-end+1,
+                                            end=qSize-start+1),
+                             strand="-")
+    indexNegativeWithin <- queryHits(findOverlaps(queryRanges(x),
+                                                  searchGRanges, type="within" 
+                                                  select="all"))
+    indexNegativeAny <- queryHits(findOverlaps(queryRanges(x),
+                                               searchGRanges, type="any",
+                                               select="all"))
+    indexPartial <- setdiff(indexNegativeAny, indexNegativeWithin)
+    newAxts2 = list()
+    if(length(indexPartial) > 0L){
+      newStarts <- pmax(start(queryRanges(x))[indexPartial], qSize-end+1)
+      newEnds <- pmin(end(queryRanges(x))[indexPartial], qSize-start+1)
+      for(i in 1:length(indexPartial)){
+        newAxts2[[i]] <- searchAln(x[indexPartial[i]], newStarts[i], newEnds[i],
+                                   select="query")
+      }
+    }
+    index <- sort(c(indexPositiveWithin, indexNegativeWithin))
+    ans <- c(x[index], do.call(c, newAxts), do.call(cm newAxts2))
+    return(ans)
+  }
 }
 
 subAln <- function(x, start, end, select=c("target", "query")){
   if(length(x) != 1L){
     stop("subAln only operates on Axt of length 1")
   }
+  select <- match.arg(select)
   alignedSeq1 <- strsplit(as.character(targetSeqs(x)[[1]]), "")[[1]]
   alignedSeq2 <- strsplit(as.character(querySeqs(x)[[1]]), "")[[1]]
   indexGap <- alignedSeq1 == "-" | alignedSeq1 == "." | alignedSeq1 == "_"
