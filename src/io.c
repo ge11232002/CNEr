@@ -64,6 +64,7 @@ SEXP axt_info(SEXP filepath){
   width_buf = new_IntAE(0, 0, 0);
   char *filepath_elt;
   for(i = 0; i < nrAxtFiles; i++){
+    R_CheckUserInterrupt();
     filepath_elt = 
       (char *) R_alloc(strlen(CHAR(STRING_ELT(filepath, i)))+1, sizeof(char));
     strcpy(filepath_elt, CHAR(STRING_ELT(filepath, i)));
@@ -139,6 +140,7 @@ SEXP myReadAxt(SEXP filepath){
   int j = 0;
   i = 0;
   for(j = 0; j < nrAxtFiles; j++){
+    R_CheckUserInterrupt();
     char *filepath_elt = 
       (char *) R_alloc(strlen(CHAR(STRING_ELT(filepath, j)))+1, sizeof(char));
     strcpy(filepath_elt, CHAR(STRING_ELT(filepath, j)));
