@@ -9,9 +9,7 @@
 }
 
 \usage{
-  subAxt(x, chr, start, end,
-      select=c("target", "query"), type=c("any", "within"),
-      qSize=NULL)
+  subAxt(x, chr, start, end, select=c("target", "query"), qSize=NULL)
 }
 
 \arguments{
@@ -23,18 +21,16 @@
   }
   \item{start, end}{
     A object of \code{integer}. 
-    The range to extract is based on the positive strand.
+    These ranges should be based on the positive strand.
+    When select is "query",
+    the reverse complement alignments which lay inside this range will also be 
+    selected.
   }
   \item{select}{
     When select is "target", 
     the subset criteria is for target alignments in axts.
     When select is "query", 
     the subset criteria is for query alignments in axts.
-  }
-  \item{type}{
-    By default, any overlap is accepted. 
-    If "type" is "within", 
-    the selected axts must be wholly contained within the subject interval.
   }
   \item{qSize}{
     When select is "query", 
@@ -51,6 +47,12 @@
   When the chr is query sequence, it can be on the negative strand.
   Hence, the size of chromosome is necessary to 
   convert the search range to a range on negative strand coordinate.
+
+  When one axt is partially overlapped with the range, 
+  subset of the axt will be extract.
+  If the extracted axt alignment has gaps at the beginning or the end,
+  the gap columns will be chopped. 
+  Therefore, the coordinate of alignments will be changed accordingly.
 }
 
 \value{
@@ -66,7 +68,7 @@
                                   "hg19.danRer7.net.axt")
   axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
   subAxt(axtHg19DanRer7, chr="chr11", start=31500000, end=32500000,
-         select="target", type="any")
+         select="target")
 }
 
 \keyword{methods}
