@@ -5,8 +5,8 @@
 setMethod("subAxt", signature(x="Axt", chr="character",
                               start="numeric", end="numeric"),
           function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
-            .subAxtFull(x, chr=chr, start=start, end=end,
-                        select=select, qSize=qSize)
+            .subAxtMultiple(x, chr=chr, start=start, end=end,
+                            select=select, qSize=qSize)
           }
           )
 
@@ -116,6 +116,110 @@ setMethod("subAxt", signature(x="Axt", chr="character",
     return(ans)
   }
 }
+
+.subAxtMultiple <- function(x, chr, start, end,
+                            select=c("target", "query"),
+                            qSize=NULL){
+  ## We will allow multiple chr, start, end
+  select <- match.arg(select)
+  if(select == "query"){
+    if(is.null(qSize)){
+      stop("When selecting on query alignments,
+           qSize must be provided.")
+    }
+    if(!is(qSize, "integer")){
+      stop("qSize must be an integer object.")
+    }
+  }
+  start <- as.integer(start)
+  end <- as.integer(end)
+  searchGRanges <- GRanges(seqnames=chr,
+                           ranges=IRanges(start=start, end=end),
+                           strand="+")
+  searchGRanges <- reduce(searchGRanges)
+  if(select == "target"){
+    ## First we find the axts totally within the coordinates
+    hitsWithin <- findOverlaps(targetRanges(x),
+                               searchGRanges, type="within",
+                               select="all")
+    indexWithin <- queryHits(hitsWithin)
+    hitsAny <- findOverlaps(targetRanges(x),
+                            searchGRanges, type="any",
+                            select="all")
+    indexAny <- queryHits(hitsAny)
+    ## Specially take care of the axt just partially overlapped with the range
+    hitsPartial <- setdiff(hitsAny, hitsWithin)
+    newAxts = list()
+    if(length(hitsPartial) > 0L){
+      newStarts <- pmax(start(targetRanges(x)[queryHits(hitsPartial)]), 
+                        start[subjectHits(hitsPartial)])
+      newEnds <- pmin(end(targetRanges(x)[queryHits(hitsPartial)]), 
+                      end[subjectHits(hitsPartial)])
+      for(i in 1:length(hitsPartial)){
+        newAxts[[i]] <- subAln(x[queryHits(hitsPartial[i])], 
+                               newStarts[i], newEnds[i],
+                               select="target")
+      }
+    }
+    ans <- c(x[indexWithin], do.call(c, newAxts))
+    return(ans)
+  }else{
+    ## first search Axts on positive strand
+    hitsPositiveWithin <- findOverlaps(queryRanges(x),
+                                       searchGRanges, type="within",
+                                       select="all")
+    indexPositiveWithin <- queryHits(hitsPositiveWithin)
+    hitsPositiveAny <- findOverlaps(queryRanges(x),
+                                    searchGRanges, type="any",
+                                    select="all")
+    indexPositiveAny <- queryHits(hitsPositiveAny)
+    hitsPartial <- setdiff(hitsPositiveAny, hitsPositiveWithin)
+    newAxts = list()
+    if(length(hitsPartial) > 0L){
+      newStarts <- pmax(start(queryRanges(x))[queryHits(hitsPartial)], 
+                        start[subjectHits(hitsPartial)])
+      newEnds <- pmin(end(queryRanges(x))[queryHits(hitsPartial)], 
+                      end[subjectHits(hitsPartial)])
+      for(i in 1:length(hitsPartial)){
+        newAxts[[i]] <- subAln(x[queryHits(hitsPartial[i])], 
+                               newStarts[i], newEnds[i],
+                               select="query")
+      }
+    }
+    # then search Axts on negative strand.
+    # we need to prepare the searchGRanges on negative strand.
+    searchGRanges <- GRanges(seqnames=chr,
+                             ranges=IRanges(start=qSize-end+1,
+                                            end=qSize-start+1),
+                             strand="-")
+    hitsNegativeWithin <- findOverlaps(queryRanges(x),
+                                       searchGRanges, type="within",
+                                       select="all")
+    indexNegativeWithin <- queryHits(hitsNegativeWithin)
+    hitsNegativeAny <- findOverlaps(queryRanges(x),
+                                    searchGRanges, type="any",
+                                    select="all")
+    indexNegativeAny <- queryHits(hitsNegativeAny)
+    hitsPartial <- setdiff(hitsNegativeAny, hitsNegativeWithin)
+    newAxts2 = list()
+    if(length(hitsPartial) > 0L){
+      newStarts <- pmax(start(queryRanges(x))[queryHits(hitsPartial)], 
+                        qSize-end+1[subjectHits(hitsPartial)])
+      newEnds <- pmin(end(queryRanges(x))[queryHits(hitsPartial)], 
+                      qSize-start+1[subjectHits(hitsPartial)])
+      for(i in 1:length(hitsPartial)){
+        newAxts2[[i]] <- subAln(x[queryHits(hitsPartial[i])], 
+                                newStarts[i], newEnds[i],
+                                select="query")
+      }
+    }
+    index <- sort(c(indexPositiveWithin, indexNegativeWithin))
+    ans <- c(x[index], do.call(c, newAxts), do.call(c, newAxts2))
+    return(ans)
+  }
+}
+
+
 
 subAln <- function(x, start, end, select=c("target", "query")){
   if(length(x) != 1L){
