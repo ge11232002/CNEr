@@ -17,5 +17,6 @@ Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
 LazyData: no
-Collate: AllGenerics.r AllClasses.r utils.r ceScan.r plot.r makeGeneDbFromUCSC.r io.r scoringMatrix.r subAxt-methods.R
+Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
+         makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
 
