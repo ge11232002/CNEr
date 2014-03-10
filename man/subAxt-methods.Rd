@@ -2,7 +2,9 @@
 \docType{methods}
 \alias{subAxt}
 \alias{subAxt-methods}
-\alias{subAxt,Axt-method}
+\alias{subAxt,Axt,character,missing,missing-method}
+\alias{subAxt,Axt,character,numeric,numeric-method}
+
 \title{ \code{subAxt} method}
 \description{
   Get subset of Axt alignments based on chromosome and ranges.
