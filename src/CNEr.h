@@ -13,6 +13,8 @@
 #include "ucsc/binRange.h"
 #include "XVector_interface.h"
 #include <R_ext/Rdynload.h>
+#include <R_ext/Utils.h>
+
 
 /* Data structures to represent start and end coordinate pairs.
  *  * Used to store filters in memory. */

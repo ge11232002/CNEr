@@ -75,14 +75,14 @@ a.tv_sec -= b.tv_sec;
 return a;
 }
 
-static int netConnectWithTimeout(char *hostName, int port, long msTimeout)
+//static int netConnectWithTimeout(char *hostName, int port, long msTimeout)
 /* In order to avoid a very long default timeout (several minutes) for hosts that will
  * not answer the port, we are forced to connect non-blocking.
  * After the connection has been established, we return to blocking mode. */
-{
-int sd;
-struct sockaddr_in sai;		/* Some system socket info. */
-int res;
+//{
+//int sd;
+//struct sockaddr_in sai;		/* Some system socket info. */
+/*int res;
 fd_set mySet;
 
 if (hostName == NULL)
@@ -190,38 +190,38 @@ if (setSocketNonBlocking(sd, FALSE) < 0)
 
 return sd;
 
-}
+}*/
 
 
-int netConnect(char *hostName, int port)
+//int netConnect(char *hostName, int port)
 /* Start connection with a server. */
-{
-return netConnectWithTimeout(hostName, port, DEFAULTCONNECTTIMEOUTMSEC); // 10 seconds connect timeout
-}
+//{
+//return netConnectWithTimeout(hostName, port, DEFAULTCONNECTTIMEOUTMSEC); // 10 seconds connect timeout
+//}
 
-int netMustConnect(char *hostName, int port)
+//int netMustConnect(char *hostName, int port)
 /* Start connection with server or die. */
-{
-int sd = netConnect(hostName, port);
-if (sd < 0)
-   noWarnAbort();
-return sd;
-}
+//{
+//int sd = netConnect(hostName, port);
+//if (sd < 0)
+//   noWarnAbort();
+//return sd;
+//}
 
-int netMustConnectTo(char *hostName, char *portName)
+//int netMustConnectTo(char *hostName, char *portName)
 /* Start connection with a server and a port that needs to be converted to integer */
-{
-if (!isdigit(portName[0]))
-    errAbort("netConnectTo: ports must be numerical, not %s", portName);
-return netMustConnect(hostName, atoi(portName));
-}
+//{
+//if (!isdigit(portName[0]))
+//    errAbort("netConnectTo: ports must be numerical, not %s", portName);
+//return netMustConnect(hostName, atoi(portName));
+//}
 
 
-int netAcceptingSocketFrom(int port, int queueSize, char *host)
+//int netAcceptingSocketFrom(int port, int queueSize, char *host)
 /* Create a socket that can accept connections from a 
  * IP address on the current machine if the current machine
  * has multiple IP addresses. */
-{
+/*{
 struct sockaddr_in sai;
 int sd;
 int flag = 1;
@@ -241,14 +241,14 @@ if (bind(sd, (struct sockaddr*)&sai, sizeof(sai)) == -1)
     }
 listen(sd, queueSize);
 return sd;
-}
+}*/
 
-int netAcceptingSocket(int port, int queueSize)
+//int netAcceptingSocket(int port, int queueSize)
 /* Create a socket that can accept connections from
  * anywhere. */
-{
-return netAcceptingSocketFrom(port, queueSize, NULL);
-}
+//{
+//return netAcceptingSocketFrom(port, queueSize, NULL);
+//}
 
 int netAccept(int sd)
 /* Accept incoming connection from socket descriptor. */
@@ -257,14 +257,14 @@ socklen_t fromLen;
 return accept(sd, NULL, &fromLen);
 }
 
-int netAcceptFrom(int acceptor, unsigned char subnet[4])
+//int netAcceptFrom(int acceptor, unsigned char subnet[4])
 /* Wait for incoming connection from socket descriptor
  * from IP address in subnet.  Subnet is something
  * returned from netParseSubnet or internetParseDottedQuad. 
  * Subnet may be NULL. */
-{
-struct sockaddr_in sai;		/* Some system socket info. */
-ZeroVar(&sai);
+//{
+//struct sockaddr_in sai;		/* Some system socket info. */
+/*ZeroVar(&sai);
 sai.sin_family = AF_INET;
 for (;;)
     {
@@ -289,7 +289,7 @@ for (;;)
 	    }
 	}
     }
-}
+}*/
 
 FILE *netFileFromSocket(int socket)
 /* Wrap a FILE around socket.  This should be fclose'd
@@ -767,16 +767,16 @@ return t;
 }    
 
 
-static int openFtpControlSocket(char *host, int port, char *user, char *password)
+//static int openFtpControlSocket(char *host, int port, char *user, char *password)
 /* Open a socket to host,port; authenticate anonymous ftp; set type to I; 
  * return socket desc or -1 if there was an error. */
-{
+/*{
 int sd = netConnect(host, port);
 if (sd < 0)
     return -1;
-
+*/
 /* First read the welcome msg */
-if (readReadyWait(sd, NET_FTP_TIMEOUT))
+/*if (readReadyWait(sd, NET_FTP_TIMEOUT))
     sendFtpCommand(sd, "", NULL, NULL);
 
 char cmd[256];
@@ -803,16 +803,17 @@ if (!sendFtpCommand(sd, "TYPE I\r\n", NULL, NULL))
     close(sd);
     return -1;
     }
+    */
 /* 200 Type set to I */
 /* (send the data as binary, so can support compressed files) */
-return sd;
-}
+//return sd;
+//}
 
-boolean netGetFtpInfo(char *url, long long *retSize, time_t *retTime)
+//boolean netGetFtpInfo(char *url, long long *retSize, time_t *retTime)
 /* Return date in UTC and size of ftp url file */
-{
+//{
 /* Parse the URL and connect. */
-struct netParsedUrl npu;
+/*struct netParsedUrl npu;
 netParseUrl(url, &npu);
 if (!sameString(npu.protocol, "ftp"))
     errAbort("netGetFtpInfo: url (%s) is not for ftp.", url);
@@ -836,9 +837,9 @@ if (!sendFtpCommand(sd, cmd, &rs, NULL))
     close(sd);
     return FALSE;
     }
-*retSize = parseFtpSIZE(rs->string);
+*retSize = parseFtpSIZE(rs->string);*/
 /* 200 12345 */
-dyStringFree(&rs);
+/*dyStringFree(&rs);
 
 safef(cmd,sizeof(cmd),"MDTM %s\r\n", npu.file);
 if (!sendFtpCommand(sd, cmd, &rs, NULL))
@@ -846,12 +847,12 @@ if (!sendFtpCommand(sd, cmd, &rs, NULL))
     close(sd);
     return FALSE;
     }
-*retTime = parseFtpMDTM(rs->string);
+*retTime = parseFtpMDTM(rs->string);*/
 /* 200 YYYYMMDDhhmmss */
-dyStringFree(&rs);
+/*dyStringFree(&rs);
 close(sd);   
 return TRUE;
-}
+}*/
 
 struct netConnectFtpParams
 /* params to pass to thread */
@@ -905,17 +906,17 @@ close(params->sdata);
 return NULL;
 }
 
-static int netGetOpenFtpSockets(char *url, int *retCtrlSd)
+//static int netGetOpenFtpSockets(char *url, int *retCtrlSd)
 /* Return a socket descriptor for url data (url can end in ";byterange:start-end",
  * or -1 if error.
  * If retCtrlSd is non-null, keep the control socket alive and set *retCtrlSd.
  * Otherwise, create a pipe and fork to keep control socket alive in the child 
  * process until we are done fetching data. */
-{
-char cmd[256];
+//{
+//char cmd[256];
 
 /* Parse the URL and connect. */
-struct netParsedUrl npu;
+/*struct netParsedUrl npu;
 netParseUrl(url, &npu);
 if (!sameString(npu.protocol, "ftp"))
     errAbort("netGetOpenFtpSockets: url (%s) is not for ftp.", url);
@@ -928,10 +929,10 @@ if (!sendFtpCommand(sd, "PASV\r\n", &rs, NULL))
     {
     close(sd);
     return -1;
-    }
+    }*/
 /* 227 Entering Passive Mode (128,231,210,81,222,250) */
 
-if (npu.byteRangeStart != -1)
+/*if (npu.byteRangeStart != -1)
     {
     safef(cmd,sizeof(cmd),"REST %lld\r\n", (long long) npu.byteRangeStart);
     if (!sendFtpCommand(sd, cmd, NULL, NULL))
@@ -940,9 +941,9 @@ if (npu.byteRangeStart != -1)
 	return -1;
 	}
     }
-
+*/
 /* RETR for files, LIST for directories ending in / */
-safef(cmd,sizeof(cmd),"%s %s\r\n",((npu.file[strlen(npu.file)-1]) == '/') ? "LIST" : "RETR", npu.file);
+/*safef(cmd,sizeof(cmd),"%s %s\r\n",((npu.file[strlen(npu.file)-1]) == '/') ? "LIST" : "RETR", npu.file);
 sendFtpCommandOnly(sd, cmd);
 
 int sdata = netConnect(npu.host, parsePasvPort(rs->string));
@@ -965,8 +966,8 @@ while (TRUE)
 	}
     if (readReadyWait(sdata, NET_FTP_TIMEOUT))
 	break;   // we have some data
-    if (readReadyWait(sd, 0)) /* wait in microsec */
-	{
+    if (readReadyWait(sd, 0)) *//* wait in microsec */
+/*	{
 	// this can see an error like bad filename
 	if (!receiveFtpReply(sd, cmd, NULL, NULL))
 	    {
@@ -984,11 +985,11 @@ if (retCtrlSd != NULL)
     return sdata;
     }
 else
-    {
+    {*/
     /* Because some FTP servers will kill the data connection
      * as soon as the control connection closes,
      * we have to develop a workaround using a partner process. */
-    fflush(stdin);
+/*    fflush(stdin);
     fflush(stdout);
     fflush(stderr);
 
@@ -996,9 +997,9 @@ else
     AllocVar(params);
     params->sd = sd;
     params->sdata = sdata;
-    params->npu = npu;
+    params->npu = npu;*/
     /* make a pipe (fds go in pipefd[0] and pipefd[1])  */
-    if (pipe(params->pipefd) != 0)
+/*    if (pipe(params->pipefd) != 0)
 	errAbort("netGetOpenFtpSockets: failed to create pipe: %s", strerror(errno));
     int rc;
     rc = pthread_create(&params->thread, NULL, sendFtpDataToPipeThread, (void *)params);
@@ -1009,12 +1010,12 @@ else
 
     return params->pipefd[0];
     }
-}
+}*/
 
 
-int connectNpu(struct netParsedUrl npu, char *url)
+//int connectNpu(struct netParsedUrl npu, char *url)
 /* Connect using NetParsedUrl. */
-{
+/*{
 int sd = -1;
 if (sameString(npu.protocol, "http"))
     {
@@ -1027,10 +1028,10 @@ else if (sameString(npu.protocol, "https"))
 else
     {
     errAbort("netHttpConnect: url (%s) is not for http.", url);
-    return -1;  /* never gets here, fixes compiler complaint */
-    }
+    return -1;*/  /* never gets here, fixes compiler complaint */
+/*    }
 return sd;
-}
+}*/
 
 void setAuthorization(struct netParsedUrl npu, char *authHeader, struct dyString *dy)
 /* Set the specified authorization header with BASIC auth base64-encoded user and password */
@@ -2497,25 +2498,25 @@ return s;
 }
 
 
-struct lineFile *netHttpLineFileMayOpen(char *url, struct netParsedUrl **npu)
+//struct lineFile *netHttpLineFileMayOpen(char *url, struct netParsedUrl **npu)
 /* Parse URL and open an HTTP socket for it but don't send a request yet. */
-{
-int sd;
-struct lineFile *lf;
+//{
+//int sd;
+//struct lineFile *lf;
 
 /* Parse the URL and try to connect. */
-AllocVar(*npu);
+/*AllocVar(*npu);
 netParseUrl(url, *npu);
 if (!sameString((*npu)->protocol, "http"))
     errAbort("netHttpLineFileMayOpen: url (%s) is not for http.", url);
 sd = netConnect((*npu)->host, atoi((*npu)->port));
 if (sd < 0)
     return NULL;
-
+*/
 /* Return handle. */
-lf = lineFileAttach(url, TRUE, sd);
-return lf;
-} /* netHttpLineFileMayOpen */
+//lf = lineFileAttach(url, TRUE, sd);
+//return lf;
+//} /* netHttpLineFileMayOpen */
 
 
 void netHttpGet(struct lineFile *lf, struct netParsedUrl *npu,

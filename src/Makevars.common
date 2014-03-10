@@ -5,11 +5,11 @@ UCSC_OBJECTS = \
   axt.o base64.o binRange.o bits.o chain.o \
   cheapcgi.o cirTree.o common.o dlist.o dnaseq.o \
   dnautil.o dystring.o errabort.o hash.o https.o \
-  internet.o intExp.o kxTok.o linefile.o localmem.o \
-  memalloc.o mime.o net.o obscure.o options.o \
+  intExp.o kxTok.o linefile.o localmem.o \
+  memalloc.o mime.o obscure.o options.o \
   osunix.o pipeline.o portimpl.o servBrcMcw.o servcis.o \
   servcl.o servCrunx.o servmsII.o servpws.o sqlList.o \
-  sqlNum.o udc.o verbose.o wildcmp.o
+  sqlNum.o verbose.o wildcmp.o
 
 PKG_CFLAGS = -g
 PKG_LIBS += -pthread$

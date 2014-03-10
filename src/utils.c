@@ -1,3 +1,7 @@
+/********************************************************************
+ *                          Utility functions
+ *                          Author: Ge Tan
+ *******************************************************************/
 #include "CNEr.h"
 
 // This is borrowed from Jim Kend's source, binRange.c.

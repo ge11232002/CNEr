@@ -385,18 +385,18 @@ cirTreeFileBulkIndexToOpenFile(itemArray, itemSize, itemCount, blockSize, itemsP
 carefulClose(&f);
 }
 
-struct cirTreeFile *cirTreeFileAttach(char *fileName, struct udcFile *udc)
+//struct cirTreeFile *cirTreeFileAttach(char *fileName, struct udcFile *udc)
 /* Open up r-tree index file on previously open file, with cirTree
  * header at current file position. */
-{
+//{
 /* Open file and allocate structure to hold info from header etc. */
-struct cirTreeFile *crt = needMem(sizeof(*crt));
+/*struct cirTreeFile *crt = needMem(sizeof(*crt));
 crt->fileName = fileName;
 crt->udc = udc;
-
+*/
 /* Read magic number at head of file and use it to see if we are proper file type, and
  * see if we are byte-swapped. */
-bits32 magic;
+/*bits32 magic;
 boolean isSwapped = FALSE;
 udcMustReadOne(udc, magic);
 if (magic != cirTreeSig)
@@ -406,9 +406,9 @@ if (magic != cirTreeSig)
     if (magic != cirTreeSig)
        errAbort("%s is not a chromosome id r-tree index file", fileName);
     }
-
+*/
 /* Read rest of defined bits of header, byte swapping as needed. */
-crt->blockSize = udcReadBits32(udc, isSwapped);
+/*crt->blockSize = udcReadBits32(udc, isSwapped);
 crt->itemCount = udcReadBits64(udc, isSwapped);
 crt->startChromIx = udcReadBits32(udc, isSwapped);
 crt->startBase = udcReadBits32(udc, isSwapped);
@@ -416,22 +416,22 @@ crt->endChromIx = udcReadBits32(udc, isSwapped);
 crt->endBase = udcReadBits32(udc, isSwapped);
 crt->fileSize = udcReadBits64(udc, isSwapped);
 crt->itemsPerSlot = udcReadBits32(udc, isSwapped);
-
+*/
 /* Skip over reserved bits of header. */
-bits32 reserved32;
+/*bits32 reserved32;
 udcMustReadOne(udc, reserved32);
-
+*/
 /* Save position of root block of r tree. */
-crt->rootOffset = udcTell(udc);
+/*crt->rootOffset = udcTell(udc);
 
 return crt;
-}
+}*/
 
-struct cirTreeFile *cirTreeFileOpen(char *fileName)
+//struct cirTreeFile *cirTreeFileOpen(char *fileName)
 /* Open up r-tree index file - reading header and verifying things. */
-{
-return cirTreeFileAttach(cloneString(fileName), udcFileOpen(fileName, udcDefaultDir()));
-}
+//{
+//return cirTreeFileAttach(cloneString(fileName), udcFileOpen(fileName, udcDefaultDir()));
+//}
 
 void cirTreeFileDetach(struct cirTreeFile **pCrt)
 /* Detatch and free up cirTree file opened with cirTreeFileAttach. */
@@ -439,9 +439,9 @@ void cirTreeFileDetach(struct cirTreeFile **pCrt)
 freez(pCrt);
 }
 
-void cirTreeFileClose(struct cirTreeFile **pCrt)
+//void cirTreeFileClose(struct cirTreeFile **pCrt)
 /* Close and free up cirTree file opened with cirTreeFileAttach. */
-{
+/*{
 struct cirTreeFile *crt = *pCrt;
 if (crt != NULL)
     {
@@ -449,7 +449,7 @@ if (crt != NULL)
     udcFileClose(&crt->udc);
     cirTreeFileDetach(pCrt);
     }
-}
+}*/
 
 INLINE int cmpTwoBits32(bits32 aHi, bits32 aLo, bits32 bHi, bits32 bLo)
 /* Return - if b is less than a , 0 if equal, else +*/
@@ -476,17 +476,17 @@ return cmpTwoBits32(qChrom, qStart, rEndChrom, rEndBase) > 0 &&
        cmpTwoBits32(qChrom, qEnd, rStartChrom, rStartBase) < 0;
 }
 
-static void rFindOverlappingBlocks(struct cirTreeFile *crt, int level, bits64 indexFileOffset,
-	bits32 chromIx, bits32 start, bits32 end, struct fileOffsetSize **retList)
+//static void rFindOverlappingBlocks(struct cirTreeFile *crt, int level, bits64 indexFileOffset,
+//	bits32 chromIx, bits32 start, bits32 end, struct fileOffsetSize **retList)
 /* Recursively find blocks with data. */
-{
-struct udcFile *udc = crt->udc;
+//{
+//struct udcFile *udc = crt->udc;
 
 /* Seek to start of block. */
-udcSeek(udc, indexFileOffset);
+//udcSeek(udc, indexFileOffset);
 
 /* Read block header. */
-UBYTE isLeaf;
+/*UBYTE isLeaf;
 UBYTE reserved;
 bits16 i, childCount;
 udcMustReadOne(udc, isLeaf);
@@ -497,9 +497,9 @@ childCount = udcReadBits16(udc, isSwapped);
 verbose(3, "rFindOverlappingBlocks %llu %u:%u-%u.  childCount %d. isLeaf %d\n", indexFileOffset, chromIx, start, end, (int)childCount, (int)isLeaf);
 
 if (isLeaf)
-    {
+    {*/
     /* Loop through node adding overlapping leaves to block list. */
-    for (i=0; i<childCount; ++i)
+/*    for (i=0; i<childCount; ++i)
         {
 	bits32 startChromIx = udcReadBits32(udc, isSwapped);
 	bits32 startBase = udcReadBits32(udc, isSwapped);
@@ -518,9 +518,9 @@ if (isLeaf)
 	}
     }
 else
-    {
+    {*/
     /* Read node into arrays. */
-    bits32 startChromIx[childCount], startBase[childCount];
+/*    bits32 startChromIx[childCount], startBase[childCount];
     bits32 endChromIx[childCount], endBase[childCount];
     bits64 offset[childCount];
     for (i=0; i<childCount; ++i)
@@ -531,9 +531,9 @@ else
 	endBase[i] = udcReadBits32(udc, isSwapped);
 	offset[i] = udcReadBits64(udc, isSwapped);
 	}
-
+*/
     /* Recurse into child nodes that we overlap. */
-    for (i=0; i<childCount; ++i)
+/*    for (i=0; i<childCount; ++i)
 	{
 	if (cirTreeOverlaps(chromIx, start, end, startChromIx[i], startBase[i], 
 		endChromIx[i], endBase[i]))
@@ -542,17 +542,17 @@ else
 	    }
 	}
     }
-}
+}*/
 
-struct fileOffsetSize *cirTreeFindOverlappingBlocks(struct cirTreeFile *crt, 
-	bits32 chromIx, bits32 start, bits32 end)
+//struct fileOffsetSize *cirTreeFindOverlappingBlocks(struct cirTreeFile *crt, 
+//	bits32 chromIx, bits32 start, bits32 end)
 /* Return list of file blocks that between them contain all items that overlap
  * start/end on chromIx.  Also there will be likely some non-overlapping items
  * in these blocks too. When done, use slListFree to dispose of the result. */
-{
+/*{
 struct fileOffsetSize *blockList = NULL;
 rFindOverlappingBlocks(crt, 0, crt->rootOffset, chromIx, start, end, &blockList);
 slReverse(&blockList);
 return blockList;
-}
+}*/
 
