@@ -3361,6 +3361,8 @@ char *splitOffNumber(char *db)
 return cloneString(skipToNumeric(db));
 }
 
+#ifndef WIN32
+
 time_t mktimeFromUtc (struct tm *t)
 /* Return time_t for tm in UTC (GMT)
  * Useful for stuff like converting to time_t the
@@ -3486,3 +3488,5 @@ if (strptime(date,format, &tp))
     }
 return cloneString(newDate);  // newDate is never freed!
 }
+
+#endif
