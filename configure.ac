@@ -10,7 +10,7 @@ AC_CHECK_HEADERS([arpa/inet.h netinet/in.h signal.h stdio.h stdlib.h
                   stdarg.h string.h ctype.h sys/types.h sys/stat.h 
                   strings.h fcntl.h assert.h setjmp.h sys/time.h math.h 
                   errno.h unistd.h libgen.h pthread.h sys/socket.h 
-                  netdb.h utime.h limits.h sys/utsname.h pwd.h termios.h 
+                  netdb.h utime.h limits.h pwd.h termios.h 
                   sys/wait.h regex.h dirent.h sys/file.h])
 
 ## Checks for typedefs, structures, and compiler characteristics.
