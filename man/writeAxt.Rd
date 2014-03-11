@@ -29,10 +29,12 @@ writeAxt(axt, con)
   \code{\link{readAxt}}
 }
 \examples{
+  \donttest{
   axtFilesHg19DanRer7 = file.path(system.file("extdata", package="CNEr"),
                                   "hg19.danRer7.net.axt")
   axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
   writeAxt(axtHg19DanRer7, con=tempfile())
+  }
 }
 
 

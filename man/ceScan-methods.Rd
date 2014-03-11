@@ -105,6 +105,7 @@ qSizes = "missing")}}{
 }
 
 \examples{
+  \donttest{
   axtFilesHg19DanRer7 = file.path(system.file("extdata", package="CNEr"), 
                                   "hg19.danRer7.net.axt")
   axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
@@ -125,7 +126,7 @@ qSizes = "missing")}}{
   CNEDanRer7Hg19 = ceScan(axts=axtDanRer7Hg19, tFilter=bedDanRer7,
                           qFilter=bedHg19, qSizes=qSizesHg19,
                           thresholds=c("45_50", "48_50", "49_50"))
-
+  }
 }
 \keyword{methods}
 \keyword{ ~~ other possible keyword(s) ~~ }
