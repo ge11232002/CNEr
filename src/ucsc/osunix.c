@@ -11,11 +11,13 @@
 #include <termios.h>
 #include "portable.h"
 #include "portimpl.h"
+#include "_portimpl.h"
 #include <sys/wait.h>
 #include <regex.h>
 #include <utime.h>
 
 
+static char const rcsid[] = "$Id: osunix.c,v 1.48 2010/06/03 05:14:39 kent Exp $";
 
 
 off_t fileSize(char *pathname)
@@ -152,28 +154,6 @@ slNameSort(&list);
 return list;
 }
 
-struct fileInfo *newFileInfo(char *name, off_t size, bool isDir, int statErrno, 
-	time_t lastAccess)
-/* Return a new fileInfo. */
-{
-int len = strlen(name);
-struct fileInfo *fi = needMem(sizeof(*fi) + len);
-fi->size = size;
-fi->isDir = isDir;
-fi->statErrno = statErrno;
-fi->lastAccess = lastAccess;
-strcpy(fi->name, name);
-return fi;
-}
-
-int cmpFileInfo(const void *va, const void *vb)
-/* Compare two fileInfo. */
-{
-const struct fileInfo *a = *((struct fileInfo **)va);
-const struct fileInfo *b = *((struct fileInfo **)vb);
-return strcmp(a->name, b->name);
-}
-
 boolean makeDir(char *dirName)
 /* Make dir.  Returns TRUE on success.  Returns FALSE
  * if failed because directory exists.  Prints error
@@ -191,7 +171,6 @@ if ((err = mkdir(dirName, 0777)) < 0)
     }
 return TRUE;
 }
-
 
 struct fileInfo *listDirXExt(char *dir, char *pattern, boolean fullPath, boolean ignoreStatFailures)
 /* Return list of files matching wildcard pattern with
@@ -615,8 +594,8 @@ va_end(args);
 
 boolean maybeTouchFile(char *fileName)
 /* If file exists, set its access and mod times to now.  If it doesn't exist, create it.
- * Return FALSE if we have a problem doing so (e.g. when qateam is gdb'ing and code tries 
- * to touch some file owned by www). */
+     * Return FALSE if we have a problem doing so (e.g. when qateam is gdb'ing and code tries 
+     * to touch some file owned by www). */
 {
 if (fileExists(fileName))
     {
@@ -624,30 +603,18 @@ if (fileExists(fileName))
     ut.actime = ut.modtime = clock1();
     int ret = utime(fileName, &ut);
     if (ret != 0)
-	{
-	warn("utime(%s) failed (ownership?)", fileName);
-	return FALSE;
-	}
+        {
+        warn("utime(%s) failed (ownership?)", fileName);
+        return FALSE;
+        }
     }
 else
     {
     FILE *f = fopen(fileName, "w");
     if (f == NULL)
-	return FALSE;
+       return FALSE;
     else
-	carefulClose(&f);
+       carefulClose(&f);
     }
 return TRUE;
-}
-
-boolean isRegularFile(char *fileName)
-/* Return TRUE if fileName is a regular file. */
-{
-struct stat st;
-
-if (stat(fileName, &st) < 0)
-    return FALSE;
-if (S_ISREG(st.st_mode))
-    return TRUE;
-return FALSE;
 }

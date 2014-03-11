@@ -66,11 +66,13 @@
 }
 
 \examples{
-  axtFilesHg19DanRer7 = file.path(system.file("extdata", package="CNEr"), 
+  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                   "hg19.danRer7.net.axt")
-  axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
+  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
   subAxt(axtHg19DanRer7, chr="chr11", start=31500000, end=32500000,
          select="target")
+  subAxt(axtHg19DanRer7, chr="chr11", start=c(31082021, 32461267), 
+         end=c(31082862,32461581), select="target")
 }
 
 \keyword{methods}

@@ -12,19 +12,22 @@
  * This file is copyright 2002 Jim Kent, but license is hereby
  * granted for all use - public, private or commercial. */
 
-// developer: this include is for an occasionally useful means of getting stack info without
-// crashing
+// developer: this include is for an occasionally useful means of getting stack info without crashing
 // however, it is not supported on cygwin.  Conditionally compile this in when desired.
+
 //#define BACKTRACE_EXISTS
 #ifdef BACKTRACE_EXISTS
 #include <execinfo.h>
 #endif///def BACKTRACE_EXISTS
+#ifndef WIN32
 #include <pthread.h>
+#endif
 #include "common.h"
 #include "hash.h"
 #include "dystring.h"
 #include "errabort.h"
 
+static char const rcsid[] = "$Id: errabort.c,v 1.16 2010/01/12 18:16:27 markd Exp $";
 
 
 #define maxWarnHandlers 20
@@ -34,8 +37,8 @@ struct perThreadAbortVars
     {
     boolean debugPushPopErr;        // generate stack dump on push/pop error
     boolean errAbortInProgress;     /* Flag to indicate that an error abort is in progress.
-                                      * Needed so that a warn handler can tell if it's really
-                                      * being called because of a warning or an error. */
+				     * Needed so that a warn handler can tell if it's really
+				     * being called because of a warning or an error. */
     WarnHandler warnArray[maxWarnHandlers];
     int warnIx;
     AbortHandler abortArray[maxAbortHandlers];
@@ -103,20 +106,10 @@ if (strings == NULL)
     dyStringAppend(dy,"\nno backtrace_symbols available in errabort::warnWithBackTrace().");
 else
     {
-    int ix = 1;
-    dyStringAppend(dy,"\nBACKTRACE (use on cmdLine):");
-    if (strings[1] != NULL)
-        {
-        strSwapChar(strings[1],' ','\0');
-        dyStringPrintf(dy,"\naddr2line -Cfise %s",strings[1]);
-        strings[1] += strlen(strings[1]) + 1;
-        }
-    for (; ix < count && strings[ix] != NULL; ix++)
-        {
-        strings[ix] = skipBeyondDelimit(strings[ix],'[');
-        strSwapChar(strings[ix],']','\0');
-        dyStringPrintf(dy," %s",strings[ix]);
-        }
+    dyStringAppend(dy,"\nBACKTRACE [can use 'addr2line -Cfise {exe} addr addr ...']:");
+    int ix;
+    for (ix = 1; ix < count && strings[ix] != NULL; ix++)
+        dyStringPrintf(dy,"\n%s", strings[ix]);
 
     free(strings);
     }
@@ -143,8 +136,10 @@ void pushWarnHandler(WarnHandler handler)
 struct perThreadAbortVars *ptav = getThreadVars();
 if (ptav->warnIx >= maxWarnHandlers-1)
     {
+#ifndef WIN32
     if (ptav->debugPushPopErr)
         dumpStack("pushWarnHandler overflow");
+#endif
     errAbort("Too many pushWarnHandlers, can only handle %d\n", maxWarnHandlers-1);
     }
 ptav->warnArray[++ptav->warnIx] = handler;
@@ -156,8 +151,10 @@ void popWarnHandler()
 struct perThreadAbortVars *ptav = getThreadVars();
 if (ptav->warnIx <= 0)
     {
+#ifndef WIN32
     if (ptav->debugPushPopErr)
         dumpStack("popWarnHandler underflow");
+#endif
     errAbort("Too few popWarnHandlers");
     }
 --ptav->warnIx;
@@ -178,7 +175,7 @@ void noWarnAbort()
 {
 struct perThreadAbortVars *ptav = getThreadVars();
 ptav->abortArray[ptav->abortIx]();
-exit(-1);               /* This is just to make compiler happy.
+exit(-1);		/* This is just to make compiler happy.
                          * We have already exited or longjmped by now. */
 }
 
@@ -222,8 +219,10 @@ void pushAbortHandler(AbortHandler handler)
 struct perThreadAbortVars *ptav = getThreadVars();
 if (ptav->abortIx >= maxAbortHandlers-1)
     {
+#ifndef WIN32
     if (ptav->debugPushPopErr)
         dumpStack("pushAbortHandler overflow");
+#endif
     errAbort("Too many pushAbortHandlers, can only handle %d", maxAbortHandlers-1);
     }
 ptav->abortArray[++ptav->abortIx] = handler;
@@ -235,8 +234,10 @@ void popAbortHandler()
 struct perThreadAbortVars *ptav = getThreadVars();
 if (ptav->abortIx <= 0)
     {
+#ifndef WIN32
     if (ptav->debugPushPopErr)
         dumpStack("popAbortHandler underflow");
+#endif
     errAbort("Too many popAbortHandlers\n");
     }
 --ptav->abortIx;
@@ -295,30 +296,25 @@ return ptav->errAbortInProgress;
 static struct perThreadAbortVars *getThreadVars()
 /* Return a pointer to the perThreadAbortVars for the current pthread. */
 {
-pthread_t pid = pthread_self(); //  can be a pointer or a number
-// Don't safef, theoretically that could abort.
-char pidStr[64];
-snprintf(pidStr, sizeof(pidStr), "%lld",  ptrToLL(pid));
-pidStr[ArraySize(pidStr)-1] = '\0';
-
-static char pidInUse[64] = "";  // use a string since there is no known unused value for pthread_t variable
-if (sameString(pidStr, pidInUse)) // avoid deadlock on self
-    {  // this only happens when it has aborted already due to out of memory
-       // which should be a rare occurrence.
-    char *errMsg = "errAbort re-entered due to out-of-memory condition. Exiting.";
-    write(STDERR_FILENO, errMsg, strlen(errMsg)); 
-    exit(1);
-    }
-
-static pthread_mutex_t ptavMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_lock( &ptavMutex );
-snprintf(pidInUse, sizeof(pidInUse), "%lld",  ptrToLL(pid));
-pidInUse[ArraySize(pidInUse)-1] = '\0';
-
+  // A true integer has function would be nicer, but this will do.  
+  // Don't safef, theoretically that could abort.
+  char key[64];
+  
+#ifndef WIN32
+  static pthread_mutex_t ptavMutex = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_lock( &ptavMutex );
+  pthread_t pid = pthread_self(); //  can be a pointer or a number
+  snprintf(key, sizeof(key), "%lld",  ptrToLL(pid));
+  key[ArraySize(key)-1] = '\0';
+#else
+  key[0] = '\0';
+#endif
+  
 static struct hash *perThreadVars = NULL;
+
 if (perThreadVars == NULL)
     perThreadVars = hashNew(0);
-struct hashEl *hel = hashLookup(perThreadVars, pidStr);
+struct hashEl *hel = hashLookup(perThreadVars, key);
 if (hel == NULL)
     {
     // if it is the first time, initialization the perThreadAbortVars
@@ -330,10 +326,11 @@ if (hel == NULL)
     ptav->warnArray[0] = defaultVaWarn;
     ptav->abortIx = 0;
     ptav->abortArray[0] = defaultAbort;
-    hel = hashAdd(perThreadVars, pidStr, ptav);
+    hel = hashAdd(perThreadVars, key, ptav);
     }
-pidInUse[0] = '\0';
+ #ifndef WIN32
 pthread_mutex_unlock( &ptavMutex );
+ #endif
 return (struct perThreadAbortVars *)(hel->val);
 }
 
