@@ -12,6 +12,7 @@ setGeneric("subAxt", function(x, chr, start, end, #strand=c("+", "-", "*"),
                               qSize=NULL) 
                       standardGeneric("subAxt")
                       )
+setGeneric("matchDistr", function(x) standardGeneric("matchDistr"))
 
 ### -----------------------------------------------------------------
 ### CNE class related

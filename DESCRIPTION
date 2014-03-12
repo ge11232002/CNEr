@@ -19,4 +19,5 @@ NeedsCompilation: yes
 LazyData: no
 Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
          makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
+         Axt-methods.R
 
