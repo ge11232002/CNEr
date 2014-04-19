@@ -9,6 +9,7 @@
 #include "Rdefines.h"
 #include "Rinternals.h"
 #include <string.h>
+#include "S4Vectors_interface.h"
 #include "IRanges_interface.h"
 #include "ucsc/binRange.h"
 #include "XVector_interface.h"

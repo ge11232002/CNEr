@@ -1,5 +1,6 @@
 PKG_OBJECTS = \
-  IRanges_stubs.o XVector_stubs.o R_init_CNEr.o utils.o io.o ceScan.o
+  S4Vectors_stubs.o IRanges_stubs.o XVector_stubs.o R_init_CNEr.o \
+  utils.o io.o ceScan.o
 
 UCSC_OBJECTS = \
   axt.o base64.o binRange.o bits.o chain.o \
