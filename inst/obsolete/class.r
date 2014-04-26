@@ -67,7 +67,7 @@ axt = function(targetNames=Rle(), targetRanges=IRanges(),
     strand = Rle(strand)
   if(!is.factor(runValue(strand)) || !identical(levels(runValue(strand)), levels(strand())))
     runValue(strand) = strand(runValue(strand))
-  if(IRanges:::anyMissing(runValue(strand))){
+  if(S4Vectors:::anyMissing(runValue(strand))){
     warning("missing values in strand converted to \"*\"")
     runValue(strand)[is.na(runValue(strand))] = "*"
   }
@@ -143,7 +143,7 @@ setMethod("[", "axt",
           stop("invalid subsetting")
         if(missing(i))
           return(x)
-        i <- IRanges:::normalizeSingleBracketSubscript(i, x)
+        i <- normalizeSingleBracketSubscript(i, x)
         ans_targetNames = targetNames(x)[i]
         ans_targetRanges = targetRanges(x)[i]
         ans_targetSeqs = targetSeqs(x)[i]
@@ -169,7 +169,7 @@ setMethod("[", "axt2",
               stop("invalid subsetting")
             if(missing(i))
               return(x)
-            i = IRanges:::normalizeSingleBracketSubscript(i, x)
+            i = normalizeSingleBracketSubscript(i, x)
             ans_target = target(x)[i]
             ans_query = query(x)[i]
             ans_score = score(x)[i]
