@@ -17,7 +17,8 @@ importClassesFrom(methods, ANY, character, integer, missing)
 ### Import S4 methods defined in other packages
 ###
 importMethodsFrom(rtracklayer, import.bed)
-importMethodsFrom(GenomicRanges, seqnames, seqlengths, strand, reduce)
+importMethodsFrom(GenomeInfoDb, seqnames, seqlengths)
+importMethodsFrom(GenomicRanges, strand, reduce)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
@@ -25,7 +26,8 @@ importMethodsFrom(methods, initialize, show)
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
 ###
-importFrom(GenomicRanges, GRanges, Seqinfo)
+importFrom(GenomeInfoDb, Seqinfo)
+importFrom(GenomicRanges, GRanges)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
 importFrom(Biostrings, DNAStringSet, DNA_BASES)
 #importFrom(RMySQL, MySQL)
