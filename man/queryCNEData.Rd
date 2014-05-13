@@ -10,7 +10,7 @@
 }
 \usage{
   queryCNEData(dbName, target, query, winSize, identity,
-               type=c("target", "query", "all"))
+               type=c("target", "all"))
 }
 
 \arguments{
