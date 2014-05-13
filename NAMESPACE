@@ -87,6 +87,9 @@ export(
   #queryrefGene, queryknownGene, queryensGene,
   #makeGeneDbFromUCSC,
 
+  ## DB.R
+  queryCNEData,
+
   ## plot.r
   CNEDensity
 )
