@@ -29,10 +29,11 @@ importMethodsFrom(methods, initialize, show)
 importFrom(GenomeInfoDb, Seqinfo)
 importFrom(GenomicRanges, GRanges)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
-importFrom(Biostrings, DNAStringSet, DNA_BASES)
+importFrom(Biostrings, DNAStringSet, DNA_BASES, fasta.info)
 #importFrom(RMySQL, MySQL)
 importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
+importFrom(rtracklayer, TwoBitFile)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -89,6 +90,9 @@ export(
 
   ## DB.R
   queryCNEData,
+
+  ## AssemblyStats.R
+  N50, N90,
 
   ## plot.r
   CNEDensity
