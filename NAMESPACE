@@ -22,6 +22,7 @@ importMethodsFrom(GenomicRanges, strand, reduce)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
+importMethodsFrom(Biostrings, mismatchSummary)
 
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
@@ -50,7 +51,10 @@ exportMethods(
   ## AllClasses.r
   length,
   score,
-  nchar
+  nchar,
+
+  ## Axt-methods.R
+  mismatchSummary
 )
 
 ### -----------------------------------------------------------------
