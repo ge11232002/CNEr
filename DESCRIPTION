@@ -9,7 +9,7 @@ Imports: Biostrings(>= 2.33.4), RSQLite(>= 0.11.4), GenomeInfoDb(>= 1.1.3), Geno
 Depends: R (>= 3.0.2)
 Suggests: Gviz(>= 1.7.4), RUnit, BiocGenerics
 LinkingTo: S4Vectors, IRanges, XVector
-System Requirements: blat
+SystemRequirements: blat
 License: GPL-2 | file LICENSE
 License_restricts_use: yes
 URL: http://ancora.genereg.net/
