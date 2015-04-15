@@ -18,12 +18,11 @@ importClassesFrom(methods, ANY, character, integer, missing)
 ###
 importMethodsFrom(rtracklayer, import.bed)
 importMethodsFrom(GenomeInfoDb, seqnames, seqlengths)
-importMethodsFrom(GenomicRanges, reduce)
+importMethodsFrom(GenomicRanges, reduce, "strand<-", strand)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
-importMethodsFrom(BiocGenerics, "strand<-", strand)
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
 ###
