@@ -9,12 +9,12 @@
   Calculate the N50, N90 values for a fasta or 2bit file.
 }
 \usage{
-N50(x)
-N90(x)
+N50(filepath)
+N90(filepath)
 }
 
 \arguments{
-  \item{x}{
+  \item{filepath}{
     The path name of a fasta or 2bit file.
 }
 }
