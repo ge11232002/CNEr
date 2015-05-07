@@ -255,8 +255,10 @@ blatCNE <- function(CNE, winSize, cutoffs1, cutoffs2,
                          "-tileSize=10 -minScore=28 -repMatch=4096",
                          "DEF_BLAT_OPT_WSHI"=
                          "-tileSize=11 -minScore=30 -repMatch=1024")
-  if(!is(winSize, "integer"))
-    stop("winSize must be an integer!")
+  if(!is(winSize, "integer")){
+    winSize <- as.integer(winSize)
+    warning("The windize has been rounded to ", winSize)
+  }
   if(is.null(blatOptions)){
     if(winSize > 45L)
       blatOptions <- blatOptionsALL[["DEF_BLAT_OPT_WSHI"]]
@@ -279,11 +281,15 @@ blatCNE <- function(CNE, winSize, cutoffs1, cutoffs2,
     # For Blat, the start is 0-based and end is 1-based. 
     # So make cne's coordinates to comply with it.
     if(whichAssembly == 1){
-      cne <- paste0(assemblyTwobit, ":", cne[,"chr1"], 
-                    ":", cne[,"start1"]-1, "-", cne[,"end1"])
+      cne <- paste0(assemblyTwobit, ":", 
+                    cne[,"chr1"], 
+                    ":", format(cne[,"start1"]-1, scientific=FALSE), 
+                    "-", format(cne[,"end1"], scientific=FALSE))
     }else{
-      cne <- paste0(assemblyTwobit, ":", cne[,"chr2"], 
-                    ":", cne[,"start2"]-1, "-", cne[,"end2"])
+      cne <- paste0(assemblyTwobit, ":", 
+                    cne[,"chr2"], 
+                    ":", format(cne[,"start2"]-1, scientific=FALSE), 
+                    "-", format(cne[,"end2"], scientific=FALSE))
     }
     cne <- unique(cne)
     writeLines(cne, con=temp_cne)
