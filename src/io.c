@@ -60,7 +60,7 @@ SEXP axt_info(SEXP filepath){
   Rprintf("The number of axt files %d\n", nrAxtFiles);
   struct axt *curAxt;
   struct lineFile *lf;
-  IntAE width_buf;
+  IntAE *width_buf;
   width_buf = new_IntAE(0, 0, 0);
   char *filepath_elt;
   for(i = 0; i < nrAxtFiles; i++){
@@ -70,13 +70,13 @@ SEXP axt_info(SEXP filepath){
     strcpy(filepath_elt, CHAR(STRING_ELT(filepath, i)));
     lf = lineFileOpen(filepath_elt, TRUE);
     while((curAxt = axtRead(lf)) != NULL){
-      IntAE_insert_at(&width_buf, IntAE_get_nelt(&width_buf), curAxt->symCount);
+      IntAE_insert_at(width_buf, IntAE_get_nelt(width_buf), curAxt->symCount);
       axtFree(&curAxt);
     }
     lineFileClose(&lf);
   }
   SEXP width;
-  PROTECT(width = new_INTEGER_from_IntAE(&width_buf));
+  PROTECT(width = new_INTEGER_from_IntAE(width_buf));
   Rprintf("The number of axt alignments is %d\n", GET_LENGTH(width));
   UNPROTECT(1);
   return(width);
