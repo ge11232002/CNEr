@@ -4,6 +4,7 @@
 \alias{subAxt-methods}
 \alias{subAxt,Axt,character,missing,missing-method}
 \alias{subAxt,Axt,character,numeric,numeric-method}
+\alias{subAxt,Axt,character,integer,integer-method}
 
 \title{ \code{subAxt} method}
 \description{
