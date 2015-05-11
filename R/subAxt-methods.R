@@ -3,10 +3,18 @@
 ### Exported!!
 
 setMethod("subAxt", signature(x="Axt", chr="character",
-                              start="numeric", end="numeric"),
+                              start="integer", end="integer"),
           function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
             .subAxtMultiple(x, chr=chr, start=start, end=end,
                             select=select, qSize=qSize)
+          }
+          )
+
+setMethod("subAxt", signature(x="Axt", chr="character",
+                              start="numeric", end="numeric"),
+          function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
+            subAxt(x, chr, as.integer(start), as.integer(end), 
+                   select=select, qSize=qSize)
           }
           )
 
@@ -15,9 +23,9 @@ setMethod("subAxt", signature(x="Axt", chr="character",
           function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
             select <- match.arg(select)
             if(select == "target"){
-              ans <- x[seqnames(targetRanges(x)) == chr]
+              ans <- x[seqnames(targetRanges(x)) %in% chr]
             }else{
-              ans <- x[seqnames(queryRanges(x)) == chr]
+              ans <- x[seqnames(queryRanges(x)) %in% chr]
             }
             return(ans)
           }
@@ -265,7 +273,7 @@ subAln <- function(x, start, end, select=c("target", "query")){
                                  strand=strand(queryRanges(x))),
              querySeqs=DNAStringSet(paste0(alignedSeq2[alnStart:alnEnd],
                                            collapse="")),
-             score=score(x), symCount=symCount(x))
+             score=score(x), symCount=alnEnd-alnStart+1L)
   return(ans)
 }
 
