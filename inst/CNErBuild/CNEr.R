@@ -2,8 +2,8 @@
 
 R_dev CMD build CNEr
 R_dev CMD build --no-build-vignettes --no-manual CNEr
-R_dev CMD INSTALL CNEr_1.5.3.tar.gz
-R_dev CMD check CNEr_1.5.3.tar.gz
+R_dev CMD INSTALL CNEr_1.5.4.tar.gz
+R_dev CMD check CNEr_1.5.4.tar.gz
 
 library(devtools)
 reload(inst("CNEr"))
