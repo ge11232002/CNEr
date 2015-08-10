@@ -3,7 +3,7 @@
 \alias{mismatchSummary,Axt-method}
 
 \title{
-  utility functions related to Axt alignment.
+  Utility functions related to Axt alignment
 }
 \description{
   A collection of different functions used to deal with \code{Axt} object.
