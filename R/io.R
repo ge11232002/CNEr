@@ -3,7 +3,7 @@
 ###
 readBedR <- function(bedFile){
 ## This GRanges is in 1-based.
-  bed <- import.bed(bedFile, asRangedData=FALSE)
+  bed <- import.bed(bedFile)
   strand(bed) <- "+"
   bed <- reduce(bed)
 }
