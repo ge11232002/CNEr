@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.7.0
-Date: 2015-10-08
+Version: 1.7.1
+Date: 2015-11-06
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -17,12 +17,13 @@ System Requirements: blat
 VignetteBuilder: knitr
 License: GPL-2 | file LICENSE
 License_restricts_use: yes
-URL: http://ancora.genereg.net/
+URL: https://bitbucket.org/ge11232002/cner
+BugReports: https://bitbucket.org/ge11232002/cner/issues
 Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
 LazyData: no
 Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
          makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
-         Axt-methods.R DB.R AssemblyStats.R
+         Axt-methods.R DB.R AssemblyStats.R GRB.R
 

@@ -492,7 +492,7 @@ cneHg19DanRer7_49_50 <-
              minLength=minLength)
 ```
 
-```{r GvizDataTrack, eval=TRUE}
+```{r GvizDataTrack, eval=TRUE, echo=TRUE}
 data(cneHg19DanRer7_45_50)
 data(cneHg19DanRer7_48_50)
 data(cneHg19DanRer7_49_50)
