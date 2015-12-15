@@ -95,7 +95,7 @@ setMethod("CNERepeatsFiltered", "CNE", function(x) x@CNERepeatsFiltered)
 
 ### -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Axt Constructor.
-###
+### Exported!
 Axt <- function(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
                queryRanges=GRanges(), querySeqs=DNAStringSet(),
                score=integer(), symCount=integer()){
