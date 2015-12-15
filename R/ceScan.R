@@ -283,13 +283,13 @@ blatCNE <- function(CNE, winSize, cutoffs1, cutoffs2,
     if(whichAssembly == 1){
       cne <- paste0(assemblyTwobit, ":", 
                     cne[,"chr1"], 
-                    ":", format(cne[,"start1"]-1, scientific=FALSE), 
-                    "-", format(cne[,"end1"], scientific=FALSE))
+                    ":", format(cne[,"start1"]-1, trim=TRUE, scientific=FALSE), 
+                    "-", format(cne[,"end1"], trim=TRUE, scientific=FALSE))
     }else{
       cne <- paste0(assemblyTwobit, ":", 
                     cne[,"chr2"], 
-                    ":", format(cne[,"start2"]-1, scientific=FALSE), 
-                    "-", format(cne[,"end2"], scientific=FALSE))
+                    ":", format(cne[,"start2"]-1, trim=TRUE, scientific=FALSE), 
+                    "-", format(cne[,"end2"], trim=TRUE, scientific=FALSE))
     }
     cne <- unique(cne)
     writeLines(cne, con=temp_cne)
