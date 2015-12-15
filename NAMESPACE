@@ -17,7 +17,7 @@ importClassesFrom(methods, ANY, character, integer, missing)
 ### Import S4 methods defined in other packages
 ###
 importMethodsFrom(rtracklayer, import.bed)
-importMethodsFrom(GenomeInfoDb, seqnames, seqlengths)
+importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo)
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
