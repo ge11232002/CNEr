@@ -21,7 +21,7 @@ BugReports: https://github.com/ge11232002/CNEr/issues
 Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
-LazyData: yes
+LazyData: no
 Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
          makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
          Axt-methods.R DB.R AssemblyStats.R GRB.R
