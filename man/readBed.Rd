@@ -1,26 +1,24 @@
 \name{readBed}
 \alias{readBed}
 \title{
-readBed function
+  readBed function
 }
 \description{
-readBed reads bed file with an embeded C IO function.
+  readBed reads the coordiantes information from a bed file.
 }
 \usage{
-readBed(bedFile)
+  readBed(bedFile)
 }
 \arguments{
   \item{bedFile}{
-  The path of bed file.
-}
+    The filename of bed file.
+  }
 }
 \details{
-  This function is designed to read the bed file only 
-  with three mandatory columns, 
+  This function is designed to read the bed file for the 
+  first three columns,
   i.e., "chrom", "chromStart", "chromEnd".
-  This function utilises the C interface for speedy import.
-  For general bed file import, 
-  please use the \code{import.bed} from package \code{rtracklayer}.
+  The strand information is also stored when available.
   
   In bed file, the "chromStart" is on 0-based coordinate 
   while "chromEnd" is on 1-based coordinate.
@@ -31,6 +29,7 @@ readBed(bedFile)
   both the chromStart and chromEnd are on 1-based coordinate, i.e.,
   chromStart=1 and chromEnd=100.
 }
+
 \value{
   A \code{GRanges} is returned. 
   When no strand information is availabe in bed file,
@@ -39,7 +38,7 @@ readBed(bedFile)
 
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 
@@ -48,7 +47,7 @@ Ge Tan
 }
 
 \examples{
-  bedHg19Fn = file.path(system.file("extdata", package="CNEr"), 
-                        "filter_regions.hg19.bed")
-  bedHg19 = readBed(bedHg19Fn)
+  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
+                         "filter_regions.hg19.bed")
+  bedHg19 <- readBed(bedHg19Fn)
 }

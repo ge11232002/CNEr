@@ -34,6 +34,7 @@ importFrom(Biostrings, DNAStringSet, DNA_BASES, fasta.info)
 importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
+importFrom(readr, read_tsv)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr

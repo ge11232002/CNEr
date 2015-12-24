@@ -16,7 +16,8 @@ Imports: Biostrings(>= 2.33.4),
          GenomicAlignments(>= 1.1.9),
          methods, 
          S4Vectors(>= 0.0.4),
-         IRanges(>= 1.99.6)
+         IRanges(>= 1.99.6),
+         readr(>= 0.2.2)
 Depends: R (>= 3.0.2)
 Suggests: Gviz(>= 1.7.4),
           RUnit,
