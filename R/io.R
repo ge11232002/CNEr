@@ -1,14 +1,4 @@
 ### -----------------------------------------------------------------
-### read the bed file into GRanges.
-###
-readBedR <- function(bedFile){
-## This GRanges is in 1-based.
-  bed <- import.bed(bedFile)
-  strand(bed) <- "+"
-  bed <- reduce(bed)
-}
-
-### -----------------------------------------------------------------
 ### read the bed file (with only 3 columns) into GRanges.
 ### Exported!
 readBed <- function(bedFile){
