@@ -51,6 +51,10 @@ readAxt <- function(axtFiles){
 ### read the axt files and return the widths of all the alignments
 ### Exported!
 axtInfo <- function(axtFiles){
+  index_noexists <- !file.exists(axtFiles)
+  if(any(index_noexists)){
+    stop("No such file ", paste(axtFiles[index_noexists], sep=" "))
+  }
   ans <- .Call2("axt_info", axtFiles, PACKAGE="CNEr")
   return(ans)
 }
