@@ -26,7 +26,7 @@
 }
 
 \seealso{
-  \code{link{readAxt}}
+  \code{\link{readAxt}}
 }
 
 \examples{
