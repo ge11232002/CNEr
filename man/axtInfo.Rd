@@ -32,5 +32,5 @@
 \examples{
   axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                    "hg19.danRer7.net.axt")
-  ans <- axtInfo(axtFilesHg19DanRer7)
+  axtInfoHg19DanRer7 <- axtInfo(axtFilesHg19DanRer7)
 }

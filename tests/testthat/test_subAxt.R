@@ -7,6 +7,6 @@ test_that("test_subAxt", {
     expect_identical("GAGTGC-T", as.character(querySeqs(foo)))
     foo <- subAxt(axtHg19DanRer7, chr = "chr11", start = c(31082021, 
         32461267), end = c(31082862, 32461581), select = "target")
-    expect_identical(3L, length(foo))
+    expect_identical(length(foo), 3L)
 })
 
