@@ -12,7 +12,7 @@ readBed <- function(bedFile){
   if(is.null(bed[[4]])){
     strands <- factor("+")
   }else{
-    strands <- bed[[4]]
+    strands <- bed[[6]]
   }
   bed <- GRanges(seqnames=Rle(bed[[1]]),
                  ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),

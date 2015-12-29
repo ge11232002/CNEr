@@ -1,4 +1,19 @@
 test_that("test_axtInfo", {
+  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
+                         "filter_regions.hg19.bed")
+  bedHg19 <- readBed(bedHg19Fn)
+  ## Chekc the number of items
+  expect_identical(length(bedHg19), 5574L)
+  ## Check the first 5 ranges
+  expect_identical(ranges(bedHg19[1:5]),
+                   IRanges(start=c(30000001, 30000126, 30001660, 
+                                   30003969, 30004481),
+                           end=c(30000106, 30000274, 30003939, 30004060,
+                                 30004844)))
+  }
+)
+
+test_that("test_axtInfo", {
   axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                    "hg19.danRer7.net.axt")
   axtInfoHg19DanRer7 <- axtInfo(axtFilesHg19DanRer7)
