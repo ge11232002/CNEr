@@ -8,15 +8,15 @@
   Write an axt object into file.
 }
 \usage{
-writeAxt(axt, con)
+  writeAxt(axt, con)
 }
 
 \arguments{
   \item{axt}{
-    A \code{Axt} object to be written.
+    A \code{Axt} object to write.
   }
   \item{con}{
-    A connection object or a character string.
+    A \link{connection} object or a character string.
   }
 }
 
@@ -28,13 +28,12 @@ writeAxt(axt, con)
 \seealso{
   \code{\link{readAxt}}
 }
+
 \examples{
-  \donttest{
-  axtFilesHg19DanRer7 = file.path(system.file("extdata", package="CNEr"),
-                                  "hg19.danRer7.net.axt")
-  axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
+  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"),
+                                   "hg19.danRer7.net.axt")
+  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
   writeAxt(axtHg19DanRer7, con=tempfile())
-  }
 }
 
 
