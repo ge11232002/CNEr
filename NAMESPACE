@@ -3,8 +3,8 @@ useDynLib(CNEr, .registration = TRUE)
 ### -----------------------------------------------------------------
 ### Import
 ### -----------------------------------------------------------------
-import(S4Vectors)
-import(IRanges)
+#import(S4Vectors)
+#import(IRanges)
 
 ### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
@@ -13,16 +13,23 @@ import(IRanges)
 #import(GenomicRanges)
 importClassesFrom(methods, ANY, character, integer, missing)
 
+
 ### -----------------------------------------------------------------
 ### Import S4 methods defined in other packages
 ###
 importMethodsFrom(rtracklayer, import.bed)
 importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo)
-importMethodsFrom(GenomicRanges, reduce, "strand<-", strand)
+importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
+                                 findOverlaps, coverage)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
+importMethodsFrom(S4Vectors, Rle, queryHits, isConstant, runmean, subjectHits,
+                  elementLengths)
+importMethodsFrom(BiocGenerics, score, setdiff)
+importMethodsFrom(IRanges, slice, ranges)
+
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
 ###
@@ -35,6 +42,8 @@ importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
+importFrom(IRanges, IRanges)
+importFrom(S4Vectors, .Call2)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr

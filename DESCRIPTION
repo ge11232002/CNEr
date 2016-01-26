@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.7.3
-Date: 2015-12-15
+Version: 1.7.4
+Date: 2016-01-26
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -17,11 +17,10 @@ Imports: Biostrings(>= 2.33.4),
          methods, 
          S4Vectors(>= 0.0.4),
          IRanges(>= 1.99.6),
-         readr(>= 0.2.2)
-Depends: R (>= 3.0.2)
+         readr(>= 0.2.2),
+         BiocGenerics
+Depends: R (>= 3.2.2)
 Suggests: Gviz(>= 1.7.4),
-          RUnit,
-          BiocGenerics,
           BiocStyle,
           knitr,
           rmarkdown,
@@ -35,7 +34,7 @@ BugReports: https://github.com/ge11232002/CNEr/issues
 Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
-LazyData: no
+LazyData: yes
 Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
          makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
          Axt-methods.R DB.R AssemblyStats.R GRB.R

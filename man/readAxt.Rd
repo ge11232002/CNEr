@@ -1,22 +1,23 @@
 \name{readAxt}
 \alias{readAxt}
 \title{
-  Read axt files
+  readAxt
 }
 \description{
-  This function reads the axt files into a \code{Axt} object.
+  Read the axt files into a \code{Axt} object.
 }
 \usage{
   readAxt(axtFiles)
 }
 \arguments{
   \item{axtFiles}{
-    The filenames of axt files.
+    The \code{character}(n) file names of the 'axt' files to read.
   }
 }
 
 \details{
-  This function reads the axt files. 
+  This function reads the axt files of two assemblies.
+  It can be single big axt file or 
   The coordinates in \code{Axt} object is 1-based.
 }
 

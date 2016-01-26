@@ -1,5 +1,5 @@
 ### -----------------------------------------------------------------
-### read the bed file (with only 3 columns) into GRanges.
+### read the bed file into GRanges.
 ### Exported!
 readBed <- function(bedFile){
   ## GRanges: 1-based start
