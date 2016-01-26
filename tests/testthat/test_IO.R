@@ -1,4 +1,4 @@
-test_that("test_axtInfo", {
+test_that("test_readBed", {
   bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
                          "filter_regions.hg19.bed")
   bedHg19 <- readBed(bedHg19Fn)
@@ -10,6 +10,8 @@ test_that("test_axtInfo", {
                                    30003969, 30004481),
                            end=c(30000106, 30000274, 30003939, 30004060,
                                  30004844)))
+  ## Check the seqnames
+  expect_identical(unique(seqnames(bedHg19)), factor("chr11"))
   }
 )
 
@@ -78,16 +80,12 @@ test_that("test_readAxt", {
   }
 )
 
-test_that("test_readBed", {
-  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
-                         "filter_regions.hg19.bed")
-  bedHg19 <- readBed(bedHg19Fn)
+testthat("test_writeAxt", {
+  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
+                                   "hg19.danRer7.net.axt")
+  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
   
-  ## Check the number of bed files
-  expect_identical(length(bedHg19), 5574L)
-  
-  ## Check the seqnames
-  library(GenomicRanges)
-  expect_identical(unique(seqnames(bedHg19)), factor("chr11"))
+  ## Check we can output the axt
+  expect_silent(writeAxt(axtHg19DanRer7, con=tempfile()))
   
 })
