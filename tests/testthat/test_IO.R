@@ -78,3 +78,16 @@ test_that("test_readAxt", {
   }
 )
 
+test_that("test_readBed", {
+  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
+                         "filter_regions.hg19.bed")
+  bedHg19 <- readBed(bedHg19Fn)
+  
+  ## Check the number of bed files
+  expect_identical(length(bedHg19), 5574L)
+  
+  ## Check the seqnames
+  library(GenomicRanges)
+  expect_identical(unique(seqnames(bedHg19)), factor("chr11"))
+  
+})
