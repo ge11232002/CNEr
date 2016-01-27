@@ -105,10 +105,8 @@ export(
   queryCNEData,
 
   ## AssemblyStats.R
-  N50, N90,
+  N50, N90
 
-  ## plot.r
-  CNEDensity
 )
 
 ### -----------------------------------------------------------------
@@ -128,6 +126,7 @@ exportMethods(
   
   ## utils.r
   saveCNEToSQLite,
+
   ## plot.r
   CNEDensity
 )
