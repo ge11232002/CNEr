@@ -33,7 +33,7 @@ test_that("test_readAxt", {
   ## Check the number of alignments
   expect_identical(length(axtHg19DanRer7), 133L)
   ## Check the target ranges
-  suppressMessages(library(GenomicRanges))
+  library(GenomicRanges)
   ansTargetsRanges <- GRanges(seqnames=c("chr11"),
                               ranges=IRanges(start=c(31082021, 31082562, 
                                                      31085908,
@@ -68,7 +68,7 @@ test_that("test_readAxt", {
   expect_identical(axtHg19DanRer7@score[1:5],
                    c(246L, 4422L, 5679L, 1743L, 1556L))
   
-  suppressMessages(library(Biostrings))
+  library(Biostrings)
   ## Check the target seqs
   expect_equivalent(subseq(axtHg19DanRer7@targetSeqs[1:5], start=1, end=5),
                     DNAStringSet(c("ATTTT", "GGGAA", "GGGCT", "TTGTG", "TATTC"))

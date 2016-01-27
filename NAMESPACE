@@ -1,16 +1,8 @@
 useDynLib(CNEr, .registration = TRUE)
 
 ### -----------------------------------------------------------------
-### Import
-### -----------------------------------------------------------------
-#import(S4Vectors)
-#import(IRanges)
-
-### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
-#import(Biostrings)
-#import(GenomicRanges)
 importClassesFrom(methods, ANY, character, integer, missing)
 
 
@@ -37,7 +29,6 @@ importFrom(GenomeInfoDb, Seqinfo)
 importFrom(GenomicRanges, GRanges)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
 importFrom(Biostrings, DNAStringSet, DNA_BASES, fasta.info)
-#importFrom(RMySQL, MySQL)
 importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)

@@ -1,4 +1,4 @@
 library(testthat)
-suppressMessages(library(CNEr))
+library(CNEr)
 
 test_check("CNEr")
