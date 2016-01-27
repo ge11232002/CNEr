@@ -105,7 +105,7 @@ The alignments between two genomes can also be in one file or in several files,
 such as chr1.hg19.mm10.net.axt.gz, chr2.hg19.mm10.net.axt.gz, etc.
 
 ```{r Axt, eval=TRUE, echo=TRUE}
-library(CNEr)
+suppressMessages(library(CNEr))
 axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                 "hg19.danRer7.net.axt")
 axtFilesDanRer7Hg19 <- file.path(system.file("extdata", package="CNEr"), 
@@ -165,7 +165,7 @@ A few examples are given here:
 
 ```{r UCSC, eval=FALSE, echo=TRUE}
 ## To fetch rmak table from UCSC
-library(rtracklayer)
+suppressMessages(library(rtracklayer))
 mySession <- browserSession("UCSC")
 genome(mySession) <- "hg19"
 hg19.rmsk <- getTable(ucscTableQuery(mySession, track="RepeatMasker",
@@ -176,7 +176,7 @@ hg19.rmskGRanges <- GRanges(seqnames=hg19.rmsk$genoName,
                                            end=hg19.rmsk$genoEnd),
                             strand=hg19.rmsk$strand)
 ## To fetch ensembl gene exons from BioMart
-library(biomaRt)
+suppressMessages(library(biomaRt))
 ensembl <- useMart("ensembl")
 ensembl <-  useDataset("hsapiens_gene_ensembl",mart=ensembl)
 attributes <- listAttributes(ensembl)
@@ -188,7 +188,7 @@ exonsRanges <- GRanges(seqnames=exons$chromosome_name,
                        strand=ifelse(exons$strand==1L, "+", "-")
                        )
 ## Use the existing Bioconductor annotation package
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+suppressMessages(library(TxDb.Hsapiens.UCSC.hg19.knownGene))
 exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg19.knownGene)
 ```
 
@@ -421,7 +421,7 @@ we choose hg19 as the reference and
 show the range of developmental gene __PAX6__.
 
 ```{r queryUCSC, eval=FALSE, echo=TRUE}
-library(Gviz)
+suppressMessages(library(Gviz))
 genome <- "hg19"
 chr <- "chr11"
 start <- 31000000L
@@ -451,7 +451,7 @@ data(refGenes)
 ```
 
 ```{r plotAnnotation, eval=TRUE, echo=TRUE, fig.height=10, fig.width=7.5}
-library(Gviz)
+suppressMessages(library(Gviz))
 plotTracks(list(axisTrack, ideoTrack, cpgIslands, refGenes), 
            collapseTranscripts=TRUE, shape="arrow",
            showId=TRUE, transcriptAnnotation="symbol")
