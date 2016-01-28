@@ -1,4 +1,38 @@
 ### -----------------------------------------------------------------
+### scoringMatrix
+### Exported!
+scoringMatrix <- function(distance=c("far", "medium", "close")){
+  distance <- match.arg(distance)
+  lastzMatrix <- list(medium=matrix(c(91, -114, -31, -123,
+                                      -114, 100, -125, -31,
+                                      -31, -125, 100,-114,
+                                      -123, -31, -114, 91),
+                                    nrow=4, ncol=4,
+                                    dimnames=list(c("A", "C", "G", "T"),
+                                                  c("A", "C", "G", "T"))
+  ),
+  far=matrix(c(91, -90, -25, -100,
+               -90, 100, -100, -25,
+               -25, -100, 100, -90,
+               -100, -25, -90, 91),
+             nrow=4, ncol=4,
+             dimnames=list(c("A", "C", "G", "T"),
+                           c("A", "C", "G", "T"))
+  ),
+  near=matrix(c(90, -330, -236, -356,
+                -330, 100, -318, -236,
+                -236, -318, 100, -330,
+                -356, -236, -330, 90),
+              nrow=4, ncol=4,
+              dimnames=list(c("A", "C", "G", "T"),
+                            c("A", "C", "G", "T"))
+  )
+  )
+  return(lastzMatrix[[distance]])
+}
+
+
+### -----------------------------------------------------------------
 ### lastz wrapper
 ### Exported!
 lastz <- function(assemblyTarget, assemblyQuery,
@@ -16,34 +50,6 @@ lastz <- function(assemblyTarget, assemblyQuery,
     stop("The assembly must be in .2bit format!")
   }
   
-  # This matrix is taken from 
-  # http://genomewiki.ucsc.edu/index.php/GorGor3_conservation_lastz_parameters.
-  # HOXD70 is medium. HoxD55 is far. human-chimp.v2 is close.
-  lastzMatrix <- list(medium=matrix(c(91, -114, -31, -123,
-                                      -114, 100, -125, -31,
-                                      -31, -125, 100,-114,
-                                      -123, -31, -114, 91),
-                                      nrow=4, ncol=4,
-                                      dimnames=list(c("A", "C", "G", "T"),
-                                                    c("A", "C", "G", "T"))
-  ),
-  far=matrix(c(91, -90, -25, -100,
-               -90, 100, -100, -25,
-               -25, -100, 100, -90,
-               -100, -25, -90, 91),
-               nrow=4, ncol=4,
-               dimnames=list(c("A", "C", "G", "T"),
-                             c("A", "C", "G", "T"))
-  ),
-  near=matrix(c(90, -330, -236, -356,
-                -330, 100, -318, -236,
-                -236, -318, 100, -330,
-                -356, -236, -330, 90),
-                nrow=4, ncol=4,
-                dimnames=list(c("A", "C", "G", "T"),
-                              c("A", "C", "G", "T"))
-  )
-  )
   matrixFile <- tempfile(fileext=".lastzMatrix")
   ## The options used here is taken from RunLastzChain_sh.txt 
   ## genomewiki.ucsc.edu.
@@ -103,7 +109,7 @@ lastz <- function(assemblyTarget, assemblyQuery,
                   matrixFile),
     far=paste0("C=0 E=30 H=2000 K=2200 L=6000 M=50 O=400 T=2 Y=3400 Q=", matrixFile)
   )
-  write.table(lastzMatrix[[distance]], file=matrixFile, quote=FALSE,
+  write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
               sep=" ", row.names=FALSE, col.names=TRUE)
   message("Starting lastz")
   if(is.null(chrsTarget)){
@@ -176,7 +182,7 @@ validateLastz <- function(lavs){
 
 ### -----------------------------------------------------------------
 ### lavToPsl: convert lav files to psl files
-### 
+### Exported!
 lavToPsl <- function(lavs, 
                      psls=sub("\\.lav$", ".psl", lavs, ignore.case=TRUE),
                      removeLav=TRUE){
@@ -189,5 +195,49 @@ lavToPsl <- function(lavs,
   if(removeLav){
     unlink(lavs)
   }
+  invisible(unname(ans))
+}
+
+### -----------------------------------------------------------------
+### axtChain: wrapper for axtChain
+### Exported!
+axtChain <- function(psls,
+                     chains=sub("\\.psl$", ".chain", psls, ignore.case=TRUE), 
+                     assemblyTarget, assemblyQuery,
+                     distance=c("far", "medium", "far"),
+                     removePsl=TRUE){
+  distance <- match.arg(distance)
+  
+  if(file_ext(assemblyTarget) != "2bit" || file_ext(assemblyQuery) != "2bit"){
+    stop("The assembly must be in .2bit format!")
+  }
+  
+  chainOptions <- list(near="-minScore=5000 -linearGap=medium",
+                       medium="-minScore=3000 -linearGap=medium",
+                       far="-minScore=5000 -linearGap=loose")
+  matrixFile <- tempfile(fileext=".lastzMatrix")
+  write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
+              sep=" ", row.names=FALSE, col.names=TRUE)
+  if(distance == "far"){
+    linearGap <- "loose"
+  }else{
+    linearGap <- "medium"
+  }
+  
+  .runAxtChain <- function(psl, chain){
+    arguments <- c("-psl", chainOptions[[distance]],
+                   paste0("-scoreScheme=", matrixFile),
+                   paste0("-linearGap", linearGap),
+                   psl, assemblyTarget, assemblyQuery, chain)
+    system2(command="axtChain", args=arguments)
+    return(chain)
+  }
+  ans <- mapply(.runAxtChain, psls, chains)
+  
+  if(removePsl){
+    unlink(psls)
+  }
+  
+  unlink(matrixFile)
   invisible(unname(ans))
 }

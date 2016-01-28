@@ -14,20 +14,20 @@
 
 \arguments{
   \item{lavs}{
-    \code{character}(n): file names of input lav files
+    \code{character}(n): file names of input \emph{lav} files.
   }
   \item{psls}{
-    code{character}(n): file names of output psl files. 
+    code{character}(n): file names of output \emph{psl} files. 
     By default, in the same folder of input lav files with same names.
   }
   \item{removeLav}{
-    \code{boolean}: When \code{TRUE}, the input \code{lavs} files will be 
+    \code{boolean}: When \code{TRUE}, the input \emph{lavs} files will be 
     removed from the conversion.
   }
 }
 
 \value{
-  \code{character}(n): the file names of output psl files.
+  \code{character}(n): the file names of output \emph{psl} files.
 }
 \references{
   \url{http://hgdownload.cse.ucsc.edu/admin/exe/}

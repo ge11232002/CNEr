@@ -17,28 +17,25 @@
 \arguments{
   \item{assemblyTarget}{
     \code{character}(1): the file name of target assembly \emph{twoBit} file.
-}
+  }
   \item{assemblyQuery}{
     \code{character}(1): the file name of query assembly \emph{twoBit} file.
-}
+  }
   \item{outputDir}{
     \code{character}(1): the folder to put the generated \emph{lav} files.
-}
+  }
   \item{chrsTarget}{
     NULL or \code{character}(n): when it's NULL, all the available chromosomes
     from the target assembly will be aligned.
-}
+  }
   \item{chrsQuery}{
     NULL or \code{character}(n): when it's NULL, all the available chromosomes
     from the query assembly will be aligned.
-}
+  }
   \item{distance}{
     It can be "far", "medium" or "close". It decides the score matrix used in
-    \emph{lastz} aligner.
-    Generally, if two species are close to each other at human and chimp level,
-    "close" should be used.
-    If two species have a divergent time of 100 MYA, "far" should be used.
-    In other cases, use "medium".
+    \emph{lastz} aligner. 
+    See `?scoringMatrix` for more details.
 }
   \item{binary}{
     \code{character}(1): the name/filename of the binary \emph{lastz} to call.
