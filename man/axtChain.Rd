@@ -8,7 +8,7 @@
   Wrapper function of \emph{axtChain}: chain together psl alignments.
 }
 \usage{
-  axtChain(psls, chains = sub("\\.psl$", ".chain", psls, ignore.case = TRUE),
+  axtChain(psls, chains = sub("\\\.psl$", ".chain", psls, ignore.case = TRUE),
            assemblyTarget, assemblyQuery,
            distance = c("far", "medium", "far"),
            removePsl = TRUE)

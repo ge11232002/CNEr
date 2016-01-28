@@ -8,7 +8,7 @@
   Wrapper function of lavToPsl.
 }
 \usage{
-  lavToPsl(lavs, psls = sub("\\.lav$", ".psl", lavs, ignore.case = TRUE),
+  lavToPsl(lavs, psls = sub("\\\.lav$", ".psl", lavs, ignore.case = TRUE),
            removeLav = TRUE)
 }
 
