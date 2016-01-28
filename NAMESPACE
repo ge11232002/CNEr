@@ -35,6 +35,8 @@ importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
 importFrom(IRanges, IRanges)
 importFrom(S4Vectors, .Call2)
+importFrom(tools, file_ext)
+importFrom(parallel, mcmapply)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -94,6 +96,10 @@ export(
 
   ## DB.R
   queryCNEData,
+  
+  ## WholeGenomeAlignment.R
+  lastz,
+  lavToPsl,
 
   ## AssemblyStats.R
   N50, N90

@@ -18,7 +18,9 @@ Imports: Biostrings(>= 2.33.4),
          S4Vectors(>= 0.0.4),
          IRanges(>= 1.99.6),
          readr(>= 0.2.2),
-         BiocGenerics
+         BiocGenerics,
+         tools,
+         parallel
 Depends: R (>= 3.2.2)
 Suggests: Gviz(>= 1.7.4),
           BiocStyle,
@@ -49,6 +51,7 @@ Collate:
         DB.R
         AssemblyStats.R
         GRB.R
+        WholeGenomeAlignment.R
 
 
 
