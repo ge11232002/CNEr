@@ -19,7 +19,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
 
   # slice the density into GRBs
   s <- slice(density, lower=coveredAll*ratio, includeLower=FALSE)
-  clusterRanges <- GRanges(seqnames=rep(names(s), elementLengths(s)),
+  clusterRanges <- GRanges(seqnames=rep(names(s), elementNROWS(s)),
                            ranges=unlist(ranges(s)),
                            strand="+",
                            seqinfo=seqinfo(x))
