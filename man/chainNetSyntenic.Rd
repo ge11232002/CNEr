@@ -36,11 +36,11 @@
     \code{character}(1): file names of output \emph{netSyntenicFile} file.
   }
   \item{binaryChainNet}{
-    \code{character}(1): the name/filename of the binary \emph{chainNet}
+    \code{character}(1): the name/filename of the binary \command{chainNet}
     to call.
   }
   \item{binaryNetSyntenic}{
-    \code{character}(1): the name/filename of the binary \emph{netSyntenic}
+    \code{character}(1): the name/filename of the binary \command{netSyntenic}
     to call.
   }
 }
@@ -69,6 +69,8 @@
 }
 \examples{
   \dontrun{
+  ## This example doesn't run because it requires two bit files and external
+  ## Kent utilities.
     allPreChain <- file.path("/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
                              "danRer10.hg38.all.pre.chain")
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"

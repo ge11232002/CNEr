@@ -37,7 +37,7 @@
     removed after the conversion.
   }
   \item{binary}{
-    \code{character}(1): the name/filename of the binary \emph{chainMergeSort}
+    \code{character}(1): the name/filename of the binary \command{chainMergeSort}
     to call.
   }
 }
@@ -60,6 +60,8 @@
 }
 \examples{
   \dontrun{
+  ## This example doesn't run because it requires two bit files and external
+  ## Kent utilities.
     chains <- tools::list_files_with_exts(
                 dir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt", exts="chain")
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"

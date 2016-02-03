@@ -5,7 +5,7 @@
   chainPreNet
 }
 \description{
-  Wrapper function of \emph{chainPreNet}:
+  Wrapper function of \command{chainPreNet}:
   Remove chains that don't have a chance of being netted.
   This function doesn't work on Windows platform since Kent utilities only
   support Linux and Unix platform.
@@ -37,7 +37,7 @@
     removed after the conversion.
   }
   \item{binary}{
-    \code{character}(1): the name/filename of the binary \emph{chainPreNet}
+    \code{character}(1): the name/filename of the binary \command{chainPreNet}
     to call.
   }
 }
@@ -57,6 +57,8 @@
 }
 \examples{
   \dontrun{
+  ## This example doesn't run because it requires two bit files and external
+  ## Kent utilities.
     allChain <- file.path("/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
                           "danRer10.hg38.all.chain")
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"

@@ -5,7 +5,7 @@
   lastz wrapper
 }
 \description{
-  Wrapper function of lastz to do the pairwise whole genome alignment.
+  Wrapper function of \command{lastz} to do the pairwise whole genome alignment.
   This function doesn't work on Windows platform.
 }
 \usage{
@@ -39,14 +39,15 @@
     See `?scoringMatrix` for more details.
 }
   \item{binary}{
-    \code{character}(1): the name/filename of the binary \emph{lastz} to call.
+    \code{character}(1): the name/filename of the binary \command{lastz} to call.
 }
   \item{mc.cores}{
-    \code{integer}(1): the number of threads to use. By default, \code{getOption("mc.cores", 2L)}.
+    \code{integer}(1): the number of threads to use.
+    By default, \code{getOption("mc.cores", 2L)}.
 }
   \item{echoCommand}{
     \code{boolean}(1): When \code{TRUE}, 
-    only the command to run \emph{lastz} is returned.
+    only the command to run \command{lastz} is returned.
   }
 }
 
@@ -60,7 +61,7 @@
   Ge Tan
 }
 \note{
-  \emph{lastz} aligner must be installed on the machine to use this function.
+  \command{lastz} aligner must be installed on the machine to use this function.
 }
 
 \seealso{
@@ -69,6 +70,8 @@
 
 \examples{
   \dontrun{
+  ## This example doesn't run because it requires two bit files and external
+  ## Kent utilities.
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"
     assemblyQuery <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/hg38.2bit"
     lavs <- lastz(assemblyTarget, assemblyQuery, 

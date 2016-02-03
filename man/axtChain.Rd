@@ -5,7 +5,7 @@
   axtChain
 }
 \description{
-  Wrapper function of \emph{axtChain}: chain together psl alignments.
+  Wrapper function of \command{axtChain}: chain together psl alignments.
   This function doesn't work on Windows platform since Kent utilities only
   support Linux and Unix platform.
 }
@@ -40,7 +40,7 @@
     removed from the conversion.
   }
   \item{binary}{
-    \code{character}(1): the name/filename of the binary \emph{axtChain}
+    \code{character}(1): the name/filename of the binary \command{axtChain}
     to call.
   }
 }
@@ -60,6 +60,8 @@
 }
 \examples{
   \dontrun{
+  ## This example doesn't run because it requires two bit files and external
+  ## Kent utilities.
     psls <- tools::list_files_with_exts(
               dir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt", exts="psl")
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"

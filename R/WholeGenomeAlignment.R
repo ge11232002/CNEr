@@ -353,3 +353,37 @@ chainNetSyntenic <- function(allPreChain, assemblyTarget, assemblyQuery,
   invisible(netSyntenicFile)
 }
 
+### -----------------------------------------------------------------
+### netToAxt: Convert net (and chain) to axt, and sort axt files
+### 
+netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
+                     axtFile=paste0(sub("\\.2bit$", "",
+                                        basename(assemblyTarget),
+                                        ignore.case=TRUE),
+                                    ".",
+                                    sub("\\.2bit$", "",
+                                        basename(assemblyQuery),
+                                        ignore.case=TRUE),
+                                    ".net.axt"),
+                     removeFiles=FALSE,
+                     binaryNetToAxt="netToAxt", binaryAxtSort="axtSort"){
+  
+  ## netToAxt
+  unsortedAxt <- tempfile(fileext=".unsorted.Axt")
+  on.exit(file.remove(unsortedAxt))
+  arguments <- c(in.net, in.chain, assemblyTarget, assemblyQuery, unsortedAxt)
+  message("Run netAxt...")
+  system2(command=binaryNetToAxt, args=arguments)
+  
+  ## axtSort
+  arguments <- c(unsortedAxt, axtFile)
+  message("Run axtSort...")
+  system2(command=binaryAxtSort, args=arguments)
+  
+  ## Clean
+  if(removeFiles){
+    unlink(c(in.net, in.chain))
+  }
+  
+  invisible(axtFile)
+}
