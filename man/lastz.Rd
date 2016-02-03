@@ -6,6 +6,7 @@
 }
 \description{
   Wrapper function of lastz to do the pairwise whole genome alignment.
+  This function doesn't work on Windows platform.
 }
 \usage{
   lastz(assemblyTarget, assemblyQuery, outputDir = ".",

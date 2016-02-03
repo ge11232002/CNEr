@@ -51,6 +51,7 @@ lastz <- function(assemblyTarget, assemblyQuery,
   }
   
   matrixFile <- tempfile(fileext=".lastzMatrix")
+  on.exit(unlink(matrixFile))
   ## The options used here is taken from RunLastzChain_sh.txt 
   ## genomewiki.ucsc.edu.
   ## http://genomewiki.ucsc.edu/images/9/93/RunLastzChain_sh.txt.
@@ -161,7 +162,6 @@ lastz <- function(assemblyTarget, assemblyQuery,
                                 assemblyQuery=assemblyQuery,
                                 format=format),
                   mc.cores=mc.cores)
-  unlink(matrixFile)
   invisible(unname(ans))
 }
 
@@ -185,10 +185,10 @@ validateLastz <- function(lavs){
 ### Exported!
 lavToPsl <- function(lavs, 
                      psls=sub("\\.lav$", ".psl", lavs, ignore.case=TRUE),
-                     removeLav=TRUE){
+                     removeLav=TRUE, binary="lavToPsl"){
   .runLav2Psl <- function(lav, psl){
     arguments <- c(lav, psl)
-    system2(command="lavToPsl", args=arguments)
+    system2(command=binary, args=arguments)
     return(psl)
   }
   ans <- mapply(.runLav2Psl, lavs, psls)
@@ -205,7 +205,8 @@ axtChain <- function(psls,
                      chains=sub("\\.psl$", ".chain", psls, ignore.case=TRUE), 
                      assemblyTarget, assemblyQuery,
                      distance=c("far", "medium", "far"),
-                     removePsl=TRUE){
+                     removePsl=TRUE,
+                     binary="axtChain"){
   distance <- match.arg(distance)
   
   if(file_ext(assemblyTarget) != "2bit" || file_ext(assemblyQuery) != "2bit"){
@@ -216,6 +217,7 @@ axtChain <- function(psls,
                        medium="-minScore=3000 -linearGap=medium",
                        far="-minScore=5000 -linearGap=loose")
   matrixFile <- tempfile(fileext=".lastzMatrix")
+  on.exit(unlink(matrixFile))
   write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
               sep=" ", row.names=FALSE, col.names=TRUE)
   if(distance == "far"){
@@ -229,7 +231,7 @@ axtChain <- function(psls,
                    paste0("-scoreScheme=", matrixFile),
                    paste0("-linearGap", linearGap),
                    psl, assemblyTarget, assemblyQuery, chain)
-    system2(command="axtChain", args=arguments)
+    system2(command=binary, args=arguments)
     return(chain)
   }
   ans <- mapply(.runAxtChain, psls, chains)
@@ -238,6 +240,33 @@ axtChain <- function(psls,
     unlink(psls)
   }
   
-  unlink(matrixFile)
   invisible(unname(ans))
 }
+
+### -----------------------------------------------------------------
+### chainMergeSort: 
+### 
+chainMergeSort <- function(chains, assemblyTarget, assemblyQuery,
+                           allChain=paste0(sub("\\.2bit$", "",
+                                              basename(assemblyTarget),
+                                              ignore.case=TRUE),
+                                          ".",
+                                          sub("\\.2bit$", "",
+                                              basename(assemblyQuery),
+                                              ignore.case=TRUE),
+                                          ".all.chain"),
+                           removeChains=TRUE,
+                           binary="chainMergeSort"){
+  chainFile <- tempfile(fileext=".chainMergeSort")
+  on.exit(file.remove(chainFile))
+  writeLines(chains, chainFile)
+  
+  arguments <- c(paste0("-inputList=", chainFile), paste(">", allChain))
+  system2(command=binary, args=arguments)
+  
+  if(removeChains){
+    unlink(chains)
+  }
+  invisible(allChain)
+}
+

@@ -5,11 +5,13 @@
   lavToPsl
 }
 \description{
-  Wrapper function of lavToPsl.
+  Wrapper function of \emph{lavToPsl}: Convert blastz lav to psl format.
+  This function doesn't work on Windows platform since Kent utilities only
+  support Linux and Unix platform.
 }
 \usage{
-  lavToPsl(lavs, psls = sub("\\\.lav$", ".psl", lavs, ignore.case = TRUE),
-           removeLav = TRUE)
+  lavToPsl(lavs, psls=sub("\\\.lav$", ".psl", lavs, ignore.case = TRUE),
+           removeLav=TRUE, binary="lavToPsl")
 }
 
 \arguments{
@@ -23,6 +25,10 @@
   \item{removeLav}{
     \code{boolean}: When \code{TRUE}, the input \emph{lavs} files will be 
     removed from the conversion.
+  }
+  \item{binary}{
+    \code{character}(1): the name/filename of the binary \emph{lavToPsl}
+    to call.
   }
 }
 
@@ -44,7 +50,7 @@
   \dontrun{
     lavs <- tools::list_files_with_exts(
               dir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt", exts="lav")
-    lavToPsl(lavs, removeLav=FALSE)
+    lavToPsl(lavs, removeLav=FALSE, binary="lavToPsl")
   }
 }
 
