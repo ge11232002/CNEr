@@ -7,6 +7,8 @@
 \description{
   Wrapper function of \emph{chainMergeSort}:
   Combine sorted files into larger sorted file.
+  This function doesn't work on Windows platform since Kent utilities only
+  support Linux and Unix platform.
 }
 \usage{
   chainMergeSort(chains, assemblyTarget, assemblyQuery,
@@ -32,7 +34,7 @@
   }
   \item{removeChains}{
     \code{boolean}: When \code{TRUE}, the input \emph{chains} files will be 
-    removed from the conversion.
+    removed after the conversion.
   }
   \item{binary}{
     \code{character}(1): the name/filename of the binary \emph{chainMergeSort}

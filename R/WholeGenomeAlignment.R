@@ -244,8 +244,8 @@ axtChain <- function(psls,
 }
 
 ### -----------------------------------------------------------------
-### chainMergeSort: 
-### 
+### chainMergeSort: Combine sorted files into larger sorted file.
+### Exported!
 chainMergeSort <- function(chains, assemblyTarget, assemblyQuery,
                            allChain=paste0(sub("\\.2bit$", "",
                                               basename(assemblyTarget),
@@ -270,3 +270,40 @@ chainMergeSort <- function(chains, assemblyTarget, assemblyQuery,
   invisible(allChain)
 }
 
+
+### -----------------------------------------------------------------
+### chainPreNet: Remove chains that don't have a chance of being netted
+###
+chainPreNet <- function(allChain, assemblyTarget, assemblyQuery,
+                        allPreChain=paste0(sub("\\.2bit$", "",
+                                               basename(assemblyTarget),
+                                               ignore.case=TRUE),
+                                          ".",
+                                          sub("\\.2bit$", "",
+                                              basename(assemblyQuery),
+                                              ignore.case=TRUE),
+                                          ".all.pre.chain"),
+                        removeAllChain=TRUE, binary="chainPreNet"){
+  
+  ## prepare the genome size file
+  target.sizesFile <- tempfile(fileext=".target.sizes")
+  write.table(as.data.frame(seqinfo(
+                TwoBitFile(assemblyTarget)))[ ,c("seqlengths"), drop=FALSE],
+              file=target.sizesFile, row.names=TRUE, col.names=FALSE,
+              quote=FALSE)
+  query.sizesFile <- tempfile(fileext=".query.sizes")
+  write.table(as.data.frame(seqinfo(
+    TwoBitFile(assemblyQuery)))[ ,c("seqlengths"), drop=FALSE],
+    file=query.sizesFile, row.names=TRUE, col.names=FALSE,
+    quote=FALSE)
+  on.exit(unlink(c(target.sizesFile, query.sizesFile)))
+  
+  ## run chainPreNet
+  arguments <- c(allChain, target.sizesFile, query.sizesFile, allPreChain)
+  system2(command=binary, args=arguments)
+  
+  if(removeAllChain){
+    unlink(allChain)
+  }
+  invisible(allPreChain)
+}

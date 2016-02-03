@@ -10,7 +10,7 @@ importClassesFrom(methods, ANY, character, integer, missing)
 ### Import S4 methods defined in other packages
 ###
 importMethodsFrom(rtracklayer, import.bed)
-importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo)
+importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame)
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
                                  findOverlaps, coverage)
 importMethodsFrom(XVector, subseq)
@@ -102,6 +102,8 @@ export(
   lavToPsl,
   scoringMatrix,
   axtChain,
+  chainMergeSort,
+  chainPreNet,
 
   ## AssemblyStats.R
   N50, N90
