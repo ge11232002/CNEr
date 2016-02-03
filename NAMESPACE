@@ -104,6 +104,7 @@ export(
   axtChain,
   chainMergeSort,
   chainPreNet,
+  chainNetSyntenic,
 
   ## AssemblyStats.R
   N50, N90

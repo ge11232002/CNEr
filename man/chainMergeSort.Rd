@@ -41,7 +41,10 @@
     to call.
   }
 }
-
+\details{
+  This \emph{allChain} file is what we get from UCSC download, \emph{e.g.}, 
+  \bold{hg19.danRer7.all.chain.gz}.
+}
 \value{
   \code{character}(1): the file names of merged \emph{allChain} file.
 }

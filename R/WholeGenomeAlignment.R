@@ -191,6 +191,7 @@ lavToPsl <- function(lavs,
     system2(command=binary, args=arguments)
     return(psl)
   }
+  message("Run lavToPsl...")
   ans <- mapply(.runLav2Psl, lavs, psls)
   if(removeLav){
     unlink(lavs)
@@ -262,6 +263,7 @@ chainMergeSort <- function(chains, assemblyTarget, assemblyQuery,
   writeLines(chains, chainFile)
   
   arguments <- c(paste0("-inputList=", chainFile), paste(">", allChain))
+  message("Run chainMergeSort...")
   system2(command=binary, args=arguments)
   
   if(removeChains){
@@ -273,7 +275,7 @@ chainMergeSort <- function(chains, assemblyTarget, assemblyQuery,
 
 ### -----------------------------------------------------------------
 ### chainPreNet: Remove chains that don't have a chance of being netted
-###
+### Exported!
 chainPreNet <- function(allChain, assemblyTarget, assemblyQuery,
                         allPreChain=paste0(sub("\\.2bit$", "",
                                                basename(assemblyTarget),
@@ -300,6 +302,7 @@ chainPreNet <- function(allChain, assemblyTarget, assemblyQuery,
   
   ## run chainPreNet
   arguments <- c(allChain, target.sizesFile, query.sizesFile, allPreChain)
+  message("Run chainPreNet...")
   system2(command=binary, args=arguments)
   
   if(removeAllChain){
@@ -307,3 +310,46 @@ chainPreNet <- function(allChain, assemblyTarget, assemblyQuery,
   }
   invisible(allPreChain)
 }
+
+### -----------------------------------------------------------------
+### chainNetSyntenic: Make alignment nets out of chains and 
+### Add synteny info to net.
+### Exported!
+chainNetSyntenic <- function(allPreChain, assemblyTarget, assemblyQuery,
+                             netSyntenicFile=paste0(
+                               sub("\\.2bit$", "", basename(assemblyTarget),
+                                   ignore.case=TRUE), ".",
+                               sub("\\.2bit$", "", basename(assemblyQuery),
+                                   ignore.case=TRUE), ".noClass.net"),
+                             binaryChainNet="chainNet",
+                             binaryNetSyntenic="netSyntenic"){
+  ## prepare the genome size file
+  target.sizesFile <- tempfile(fileext=".target.sizes")
+  write.table(as.data.frame(seqinfo(
+    TwoBitFile(assemblyTarget)))[ ,c("seqlengths"), drop=FALSE],
+    file=target.sizesFile, row.names=TRUE, col.names=FALSE,
+    quote=FALSE)
+  query.sizesFile <- tempfile(fileext=".query.sizes")
+  write.table(as.data.frame(seqinfo(
+    TwoBitFile(assemblyQuery)))[ ,c("seqlengths"), drop=FALSE],
+    file=query.sizesFile, row.names=TRUE, col.names=FALSE,
+    quote=FALSE)
+  on.exit(unlink(c(target.sizesFile, query.sizesFile)))
+  
+  ## chainNet
+  message("Run chainNet...")
+  target.net <- tempfile(fileext=".target.net")
+  query.net  <- tempfile(fileext=".query.net")
+  on.exit(unlink(c(target.net, query.net)))
+  arguments <- c(allPreChain, target.sizesFile, query.sizesFile,
+                 target.net, query.net)
+  system2(command=binaryChainNet, args=arguments)
+  
+  ## netSyntenic
+  message("Run netSyntenic...")
+  arguments <- c(target.net, netSyntenicFile)
+  system2(command=binaryNetSyntenic, args=arguments)
+  
+  invisible(netSyntenicFile)
+}
+
