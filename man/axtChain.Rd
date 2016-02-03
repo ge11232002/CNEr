@@ -54,10 +54,10 @@
 }
 \examples{
   \dontrun{
-    psls <- list_files_with_exts(dir="/Users/gtan/Downloads/2bit/axt",
-                                 exts="psl")
-    assemblyTarget <- "/Users/gtan/Downloads/2bit/fr3.2bit"
-    assemblyQuery <- "/Users/gtan/Downloads/2bit/danRer10.2bit"                 
+    psls <- tools::list_files_with_exts(
+              dir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt", exts="psl")
+    assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"
+    assemblyQuery <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/hg38.2bit"
     axtChain(psls, assemblyTarget=assemblyTarget,
              assemblyQuery=assemblyQuery, distance="far",
              removePsl=FALSE)

@@ -42,8 +42,8 @@
 
 \examples{
   \dontrun{
-    lavs <- list_files_with_exts(dir="/Users/gtan/Downloads/2bit/axt",
-                                 exts="lav")
+    lavs <- tools::list_files_with_exts(
+              dir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt", exts="lav")
     lavToPsl(lavs, removeLav=FALSE)
   }
 }
