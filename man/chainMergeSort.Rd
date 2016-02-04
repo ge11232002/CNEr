@@ -5,7 +5,7 @@
   chainMergeSort
 }
 \description{
-  Wrapper function of \emph{chainMergeSort}:
+  Wrapper function of \command{chainMergeSort}:
   Combine sorted files into larger sorted file.
   This function doesn't work on Windows platform since Kent utilities only
   support Linux and Unix platform.

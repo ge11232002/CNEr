@@ -49,6 +49,9 @@ lastz <- function(assemblyTarget, assemblyQuery,
   if(file_ext(assemblyTarget) != "2bit" || file_ext(assemblyQuery) != "2bit"){
     stop("The assembly must be in .2bit format!")
   }
+  if(!dir.exits(outputDir)){
+    dir.create(outputDir, recursive=TRUE)
+  }
   
   matrixFile <- tempfile(fileext=".lastzMatrix")
   on.exit(unlink(matrixFile))
