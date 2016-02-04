@@ -60,6 +60,12 @@ psls <- lavToPsl(lavs, removeLav=FALSE, binary="lavToPsl")
 
 One essential argument here is the `distance`. It determines the scoring matrix to use in `lastz` aligner. See `?scoringMatrix` for more details.
 
+**Note:** This step may encounter difficulties if the two assemblies are too fragmented, because there can be millions of combinations of the chromosomes/scaffolds. The `lastz` is overwhelmed with reading small pieces from assembly for each combination, rather than doing actual alignment.
+In this case, another aligner [last](http://last.cbrc.jp/) is recommended. 
+`last` aligner is considered faster and memory efficient.
+It creates _maf_ file, which can converted to _psl_ files.
+Then the same following processes can be used on _psl_ files.
+
 # Chaining:
 If two matching alignments next to each other are close enough, they are joined into one fragment.
 Then these _chain_ files are sorted and combined into one big file.
