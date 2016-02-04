@@ -46,10 +46,12 @@ Then we can run `lastz` function to generate the _lav_ files.
 
 ```{r lastz, eval=FALSE, echo=TRUE}
 ## lastz aligner
-assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"
-assemblyQuery <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/hg38.2bit"
+assemblyDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit"
+axtDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/axt"
+assemblyTarget <- file.path(assemblyDir, "danRer10.2bit")
+assemblyQuery <- file.path(assemblyDir, "hg38.2bit")
 lavs <- lastz(assemblyTarget, assemblyQuery, 
-              outputDir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt/axt",
+              outputDir=axtDir,
 	            chrsTarget=c("chr1", "chr2", "chr3"),
 	            chrsQuery=c("chr1", "chr2", "chr3"),
 	            distance="far", mc.cores=4)
@@ -78,7 +80,7 @@ chains <- axtChain(psls, assemblyTarget=assemblyTarget,
 
 ## Sort and combine
 allChain <- chainMergeSort(chains, assemblyTarget, assemblyQuery,
-              allChain=file.path("/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
+              allChain=file.path(axtDir,
                          paste0(sub("\\.2bit$", "", basename(assemblyTarget),
                                     ignore.case=TRUE), ".", 
                                 sub("\\.2bit$", "", basename(assemblyQuery), 
@@ -95,8 +97,7 @@ Then we add the synteny information with `netSyntenic`.
 ```{r netting, eval=FALSE, echo=TRUE}
 ## Filtering out chains
 allPreChain <- chainPreNet(allChain, assemblyTarget, assemblyQuery,
-                           allPreChain=file.path(
-                              "/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
+                           allPreChain=file.path(axtDir,
                                       paste0(sub("\\.2bit$", "", 
                                                  basename(assemblyTarget),
                                                  ignore.case = TRUE), ".", 
@@ -108,8 +109,7 @@ allPreChain <- chainPreNet(allChain, assemblyTarget, assemblyQuery,
 
 ## Keep the best chain and add synteny information
 netSyntenicFile <- chainNetSyntenic(allPreChain, assemblyTarget, assemblyQuery,
-                     netSyntenicFile=file.path(
-                       "/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
+                     netSyntenicFile=file.path(axtDir,
                                                paste0(sub("\\.2bit$", "",
                                                       basename(assemblyTarget),
                                                       ignore.case = TRUE), ".",
@@ -124,7 +124,7 @@ netSyntenicFile <- chainNetSyntenic(allPreChain, assemblyTarget, assemblyQuery,
 As the last step, we create the _.net.axt_ file from the previous _net_ and _chain_ files.
 ```{r axtNet, eval=FALSE, echo=TRUE}
 netToAxt(netSyntenicFile, allPreChain, assemblyTarget, assemblyQuery,
-         axtFile=file.path("/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
+         axtFile=file.path(axtDir,
                            paste0(sub("\\.2bit$", "",
                                       basename(assemblyTarget),
                                       ignore.case = TRUE), ".",

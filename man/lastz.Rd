@@ -75,7 +75,7 @@
     assemblyTarget <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/danRer10.2bit"
     assemblyQuery <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit/hg38.2bit"
     lavs <- lastz(assemblyTarget, assemblyQuery, 
-                  outputDir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt/axt",
+                  outputDir="/Users/gtan/OneDrive/Project/CSC/CNEr/axt",
 			            chrsTarget=c("chr1", "chr2", "chr3"),
 			            chrsQuery=c("chr1", "chr2", "chr3"),
 			            distance="far", mc.cores=4)
