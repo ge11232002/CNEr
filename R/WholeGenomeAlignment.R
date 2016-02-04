@@ -55,6 +55,8 @@ lastz <- function(assemblyTarget, assemblyQuery,
   
   matrixFile <- tempfile(fileext=".lastzMatrix")
   on.exit(unlink(matrixFile))
+  write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
+              sep=" ", row.names=FALSE, col.names=TRUE)
   ## The options used here is taken from RunLastzChain_sh.txt 
   ## genomewiki.ucsc.edu.
   ## http://genomewiki.ucsc.edu/images/9/93/RunLastzChain_sh.txt.
@@ -113,8 +115,7 @@ lastz <- function(assemblyTarget, assemblyQuery,
                   matrixFile),
     far=paste0("C=0 E=30 H=2000 K=2200 L=6000 M=50 O=400 T=2 Y=3400 Q=", matrixFile)
   )
-  write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
-              sep=" ", row.names=FALSE, col.names=TRUE)
+  
   message("Starting lastz")
   if(is.null(chrsTarget)){
     chrsTarget <- seqnames(seqinfo(TwoBitFile(assemblyTarget)))
@@ -358,7 +359,7 @@ chainNetSyntenic <- function(allPreChain, assemblyTarget, assemblyQuery,
 
 ### -----------------------------------------------------------------
 ### netToAxt: Convert net (and chain) to axt, and sort axt files
-### 
+### Exported!
 netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
                      axtFile=paste0(sub("\\.2bit$", "",
                                         basename(assemblyTarget),
@@ -389,4 +390,36 @@ netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
   }
   
   invisible(axtFile)
+}
+
+### -----------------------------------------------------------------
+### last: wrapper function of last aligner
+### 
+last <- function(db, queryFn, outputFn,
+                  distance=c("far", "medium", "close"),
+                  format=c("MAF","tabular"),
+                  binary="lastal",
+                  mc.cores=getOption("mc.cores", 2L),
+                  echoCommand=FALSE){
+  distance <- match.arg(distance)
+  format <- match.arg(format)
+  
+  matrixFile <- tempfile(fileext=".lastzMatrix")
+  on.exit(unlink(matrixFile))
+  write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
+              sep=" ", row.names=FALSE, col.names=TRUE)
+  
+  ## -a: Gap existence cost.
+  ## -b: Gap extension cost.
+  ## -e: Minimum alignment score.
+  ## -p: Specify a match/mismatch score matrix.  Options -r and -q will be ignored.
+  ## -s: Specify which query strand should be used: 0 means reverse only, 1 means forward only, and 2 means both.
+  lastOptiosn <- list(near=paste("-a 600 -b 150 -e 3000 -p",
+                                 matrixFile, "-s 2"),
+                      medium=paste("-a 400 -b 30 -e 4500 -p",
+                                   matrixFile, "-s 2"),
+                      far=paste("-a 400 -b 30 -e 6000 -p",
+                                matrixFile, "-s 2")
+                      )
+  formatMapping <- list(MAF=1, tabular=0)
 }
