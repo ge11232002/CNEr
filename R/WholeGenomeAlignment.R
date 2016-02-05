@@ -395,14 +395,19 @@ netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
 ### -----------------------------------------------------------------
 ### last: wrapper function of last aligner
 ### 
-last <- function(db, queryFn, outputFn,
-                  distance=c("far", "medium", "close"),
-                  format=c("MAF","tabular"),
-                  binary="lastal",
-                  mc.cores=getOption("mc.cores", 2L),
-                  echoCommand=FALSE){
+last <- function(db, queryFn,
+                 outputFn=sub("\\.(fa|fasta)$", ".maf", 
+                              paste(basename(db), basename(queryFn), sep=","), 
+                              ignore.case=TRUE),
+                 distance=c("far", "medium", "close"),
+                 binary="lastal",
+                 mc.cores=getOption("mc.cores", 2L),
+                 echoCommand=FALSE){
   distance <- match.arg(distance)
-  format <- match.arg(format)
+  
+  if(file_ext(outputFn) != "maf" ){
+    stop("The outputFn must be in .maf format!")
+  }
   
   matrixFile <- tempfile(fileext=".lastzMatrix")
   on.exit(unlink(matrixFile))
@@ -421,5 +426,24 @@ last <- function(db, queryFn, outputFn,
                       far=paste("-a 400 -b 30 -e 6000 -p",
                                 matrixFile, "-s 2")
                       )
-  formatMapping <- list(MAF=1, tabular=0)
+  if(mc.cores == 1L){
+    cmd <- paste("lastal", lastOptiosn[[distance]],
+                 "-f", formatMapping[[format]],
+                 db, queryFn, ">", outputFn)
+  }else{
+    message("last require `parallel` installed on the machine to run in parallel,
+            otherwise it will fail!")
+    cmd <- paste("parallel-fasta", "-j", mc.cores, "--compress",
+                 "\"lastal", lastOptiosn[[distance]],
+                 "-f 1", db, "\"", "<", queryFn,
+                 ">", outputFn)
+  }
+  
+  message("Run last...")
+  if(echoCommand){
+    message(cmd)
+  }else{
+    my.system(cmd)
+  }
+  invisible(outputFn)
 }
