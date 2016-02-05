@@ -394,7 +394,7 @@ netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
 
 ### -----------------------------------------------------------------
 ### last: wrapper function of last aligner
-### 
+### Exported!
 last <- function(db, queryFn,
                  outputFn=sub("\\.(fa|fasta)$", ".maf", 
                               paste(basename(db), basename(queryFn), sep=","), 

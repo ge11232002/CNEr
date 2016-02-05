@@ -106,6 +106,7 @@ export(
   chainPreNet,
   chainNetSyntenic,
   netToAxt,
+  last,
 
   ## AssemblyStats.R
   N50, N90
