@@ -16,7 +16,7 @@ bibliography: CNEr.bib
 ---
 ```{r code, echo = FALSE}
 date = "`r doc_date()`"
-pkg = "`r pkg_ver('BiocStyle')`"
+pkg = "`r pkg_ver('CNEr')`"
 ```
 
 ```{r global_options, echo=FALSE}
@@ -44,7 +44,7 @@ This `r Biocpkg("CNEr")` package aims to detect CNEs and
 visualise them along the genome.
 For performance reasons, the implementation of CNEs detection 
 and corresponding I/O functions are primarily written as C extensions to R. 
-We have used CNEr to produce sets of CNEs by scanning pairwise whole-genome net alignments 
+We have used `r Biocpkg("CNEr")` to produce sets of CNEs by scanning pairwise whole-genome net alignments 
 with multiple reference species, 
 each with two different window sizes and a range of minimum identity thresholds. 
 Then, to pinpoint the boundaries of CNE arrays, 
@@ -86,13 +86,11 @@ UCSC already provides a set of precomputed axt files on
 http://hgdownload.soe.ucsc.edu/downloads.html
 for most of popular genomes.
 In case the axt files are not available from UCSC, 
-you can always generate the axt net files by following the UCSC wiki
-http://genomewiki.ucsc.edu/index.php/Whole_genome_alignment_howto.
+you can always generate the axt net files by following another vignette "Pairwise whole genome alignment" in this `r Biocpkg("CNEr")` package.
 
 ## axt file
-So far, there is no suitable class to store the axt files in Bioconductor.
-Hence we created a __S4__ class `Axt` to 
-hold the content from axt files.
+By the time I wrote this package, there was no suitable class to store the axt files in Bioconductor.
+Hence we created a __S4__ class `Axt` to hold the content from _axt_ files.
 Basically, it utilises `GRanges` from `r Biocpkg("GenomicRanges")` package
 and `DNAStringSet` from `r Biocpkg("Biostrings")` package.
 

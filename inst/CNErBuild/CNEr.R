@@ -1,13 +1,3 @@
-############################ build package  ######################################
-
-#R CMD build CNEr
-#R CMD build --no-build-vignettes --no-manual CNEr
-#R CMD INSTALL CNEr_1.5.6.tar.gz
-#R CMD check CNEr_1.5.6.tar.gz
-
-library(devtools)
-reload(inst("CNEr"))
-
 ### readAxt
 library(CNEr)
 axtFileshg19danRer7 = list.files(path="/Users/gtan/CSC/CNEr/axtNet", pattern=".*hg19\\.danRer7\\.*", full.names=TRUE)
