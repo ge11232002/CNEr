@@ -19,7 +19,7 @@ importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
 importMethodsFrom(S4Vectors, Rle, queryHits, isConstant, runmean, subjectHits,
                   elementLengths)
-importMethodsFrom(BiocGenerics, score, setdiff)
+importMethodsFrom(BiocGenerics, score, setdiff, unlist)
 importMethodsFrom(IRanges, slice, ranges)
 
 ### -----------------------------------------------------------------
