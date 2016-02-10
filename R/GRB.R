@@ -31,9 +31,10 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
   density <- runmean(cov, k=winSize,  endrule="constant")
 
   # slice the density into GRBs
-  s <- slice(density, lower=coveredAll*ratio, includeLower=FALSE)
-  clusterRanges <- GRanges(seqnames=rep(names(s), elementLengths(s)),
-                           ranges=unlist(ranges(s)),
+  slicedDensities <- slice(density, lower=coveredAll*ratio, includeLower=FALSE)
+  clusterRanges <- GRanges(seqnames=rep(names(slicedDensities), 
+                                        elementLengths(slicedDensities)),
+                           ranges=unlist(ranges(slicedDensities)),
                            strand="+",
                            seqinfo=seqinfo(x))
 
