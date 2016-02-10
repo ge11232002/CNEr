@@ -49,7 +49,7 @@ lastz <- function(assemblyTarget, assemblyQuery,
   if(file_ext(assemblyTarget) != "2bit" || file_ext(assemblyQuery) != "2bit"){
     stop("The assembly must be in .2bit format!")
   }
-  if(!dir.exits(outputDir)){
+  if(!dir.exists(outputDir)){
     dir.create(outputDir, recursive=TRUE)
   }
   
@@ -428,7 +428,7 @@ last <- function(db, queryFn,
                       )
   if(mc.cores == 1L){
     cmd <- paste("lastal", lastOptiosn[[distance]],
-                 "-f", formatMapping[[format]],
+                 "-f 1",
                  db, queryFn, ">", outputFn)
   }else{
     message("last require `parallel` installed on the machine to run in parallel,

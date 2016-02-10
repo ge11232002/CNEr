@@ -10,7 +10,7 @@
 }
 \usage{
   last(db, queryFn,
-       outputFn=sub("\\.(fa|fasta)$", ".maf", 
+       outputFn=sub("\\\.(fa|fasta)$", ".maf", 
                     paste(basename(db), basename(queryFn), sep = ","),
                     ignore.case = TRUE),
        distance=c("far", "medium", "close"), binary="lastal",

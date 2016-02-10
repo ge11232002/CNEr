@@ -108,6 +108,9 @@ export(
   netToAxt,
   last,
 
+  ## GRB.R
+  makeGRBs,
+  
   ## AssemblyStats.R
   N50, N90
 
