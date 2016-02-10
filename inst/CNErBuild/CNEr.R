@@ -1,10 +1,3 @@
-### readAxt
-library(CNEr)
-axtFileshg19danRer7 = list.files(path="/Users/gtan/CSC/CNEr/axtNet", pattern=".*hg19\\.danRer7\\.*", full.names=TRUE)
-axtshg19danRer7 = readAxt(axtFileshg19danRer7)
-axtFilesdanRer7hg19 = list.files(path="/Users/gtan/CSC/CNEr/axtNet", pattern=".*danRer7\\.hg19\\.*", full.names=TRUE)
-axtsdanRer7hg19 = readAxt(axtFilesdanRer7hg19)
-
 ## subAxt
   dyn.load("/Users/gtan/Repositories/Bitbucket/CNEr/src/alignment.so")
   .Call("subAlignment", c(92822L, 95115L), c(92873L, 95180L),
@@ -160,15 +153,5 @@ makeGeneDbFromUCSC(genome="danRer7", tablename="refGene", dbnameSQLite="/Users/g
 makeGeneDbFromUCSC(genome="danRer7", tablename="ensGene", dbnameSQLite="/Users/gtan/CSC/CNEr/annotationSQL/geneAnnotation.sqlite")
 
 
-#############################################   readBinary##############
-axtFiles ="/mnt/biggley/data/pairwiseAlignments/ucsc/axtNet/hg19.danRer7.net.axt" 
-fn = file(axtFiles, "rb")
-foo = readBin(fn, raw(), file.info(axtFiles)$size)
-rawToChar(foo[1:16]) 
-index = grepRaw("\n", foo, fixed=TRUE)
-
-targetRanges="GRanges", targetSeqs="DNAStringSet",queryRanges="GRanges", querySeqs="DNAStringSet", score="integer", symCount="integer"
-                        )
-                        
                         
 

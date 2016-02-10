@@ -81,11 +81,11 @@ for Human (hg19) and Zebrafish (danRer7).
 # Input
 `r Biocpkg("CNEr")` starts from 
 [axt](http://genome.ucsc.edu/goldenPath/help/axt.html)
-net files of two genomes pairwise alignments and bed files for filtering.
+net files of two genomes pairwise alignments and _bed_ files for filtering.
 UCSC already provides a set of precomputed axt files on 
 http://hgdownload.soe.ucsc.edu/downloads.html
 for most of popular genomes.
-In case the axt files are not available from UCSC, 
+In case the _axt_ net files are not available from UCSC, 
 you can always generate the axt net files by following another vignette "Pairwise whole genome alignment" in this `r Biocpkg("CNEr")` package.
 
 ## axt file
