@@ -17,8 +17,7 @@ importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
-importMethodsFrom(S4Vectors, Rle, queryHits, isConstant, runmean, subjectHits,
-                  elementLengths)
+importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementLengths)
 importMethodsFrom(BiocGenerics, score, setdiff, unlist)
 importMethodsFrom(IRanges, slice, ranges)
 
@@ -34,7 +33,7 @@ importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
 importFrom(IRanges, IRanges)
-importFrom(S4Vectors, .Call2)
+importFrom(S4Vectors, .Call2, queryHits, subjectHits)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
 
