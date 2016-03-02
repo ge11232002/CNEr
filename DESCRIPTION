@@ -1,17 +1,32 @@
 Package: CNEr 
-Version: 1.7.4
-Date: 2016-02-11
+Version: 1.7.9
+Date: 2016-03-02
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
 Author: Ge Tan <ge.tan09@imperial.ac.uk> 
 Maintainer: Ge Tan <ge.tan09@imperial.ac.uk>
-Imports: Biostrings(>= 2.33.4), RSQLite(>= 0.11.4), GenomeInfoDb(>= 1.1.3), 
-         GenomicRanges(>= 1.23.16), rtracklayer(>= 1.25.5), XVector(>= 0.5.4), 
-         DBI(>= 0.2-7), GenomicAlignments(>= 1.1.9), methods, 
-         S4Vectors(>= 0.9.25), IRanges(>= 2.5.27)
-Depends: R (>= 3.0.2)
-Suggests: Gviz(>= 1.7.4), RUnit, BiocGenerics, BiocStyle, knitr, rmarkdown
+Imports: Biostrings(>= 2.33.4),
+         RSQLite(>= 0.11.4),
+         GenomeInfoDb(>= 1.1.3),
+         GenomicRanges(>= 1.23.16),
+         rtracklayer(>= 1.25.5),
+         XVector(>= 0.5.4),
+         DBI(>= 0.2-7),
+         GenomicAlignments(>= 1.1.9),
+         methods, 
+         S4Vectors(>= 0.9.25),
+         IRanges(>= 2.5.27),
+         readr(>= 0.2.2),
+         BiocGenerics,
+         tools,
+         parallel
+Depends: R (>= 3.2.2)
+Suggests: Gviz(>= 1.7.4),
+          BiocStyle,
+          knitr,
+          rmarkdown,
+          testthat
 LinkingTo: S4Vectors, IRanges, XVector
 VignetteBuilder: knitr
 License: GPL-2 | file LICENSE
@@ -21,7 +36,22 @@ BugReports: https://github.com/ge11232002/CNEr/issues
 Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
-LazyData: no
-Collate: AllGenerics.R AllClasses.R utils.R ceScan.R plot.R 
-         makeGeneDbFromUCSC.R io.R scoringMatrix.R subAxt-methods.R
-         Axt-methods.R DB.R AssemblyStats.R GRB.R
+LazyData: yes
+Collate: 
+        AllGenerics.R
+        AllClasses.R
+        utils.R
+        ceScan.R
+        plot.R 
+        makeGeneDbFromUCSC.R
+        io.R
+        scoringMatrix.R
+        subAxt-methods.R
+        Axt-methods.R
+        DB.R
+        AssemblyStats.R
+        GRB.R
+        WholeGenomeAlignment.R
+
+
+

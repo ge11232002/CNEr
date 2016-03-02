@@ -1,0 +1,4 @@
+CHANGES IN VERSION 1.9.4
+------------------------
+BUG FIXES
+    o Fix a bug caused by "format" in the blat step

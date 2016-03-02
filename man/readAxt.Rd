@@ -1,38 +1,41 @@
 \name{readAxt}
 \alias{readAxt}
 \title{
-readAxt function.
+  readAxt
 }
 \description{
-This function reads the axt files into a \code{Axt} object.
+  This function reads the \emph{axt} files into a \code{\link{Axt}} object.
 }
 \usage{
-readAxt(axtFiles)
+  readAxt(axtFiles)
 }
 \arguments{
   \item{axtFiles}{
-  Object of \code{character}. The length can be one or more.
+    \code{character}(n): file names of the \emph{axt} files to read.
+  }
 }
-}
+
 \details{
-  This function reads the axt files. 
-  The coordinates in \code{Axt} object is 1-based.
+  This function reads the \emph{axt} files of two assemblies.
+  It can be a single big \emph{axt} file or several small \emph{axt} files.
+  Different from the start coordinate in \emph{axt} file, 
+  the start coordinate in \code{Axt} object is 1-based.
 }
+
 \value{
-  A object \code{Axt} is returned.
+  A object \code{\link{Axt}} is returned.
 }
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 \seealso{
   \code{\link{Axt}}
 }
+
 \examples{
-  \donttest{
-  axtFilesHg19DanRer7 = file.path(system.file("extdata", package="CNEr"), 
-                                  "hg19.danRer7.net.axt")
-  axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
-  }
+  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
+                                   "hg19.danRer7.net.axt")
+  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
 }

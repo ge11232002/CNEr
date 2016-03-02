@@ -219,15 +219,15 @@ cneMerge <- function(cne1, cne2){
   cneT_overlap <- findOverlaps(cneT, type="within", 
                                drop.self=TRUE, drop.redundant=TRUE)
   #cneT_overlap1 = findOverlaps(cneT, type="equal", 
-                               #drop.self=TRUE, drop.redundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   #cneT_overlap2 = findOverlaps(cneT, type="any", 
-                               #drop.self=TRUE, drop.redundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   cneQ_overlap <- findOverlaps(cneQ, type="within", 
                                drop.self=TRUE, drop.redundant=TRUE)
   #cneQ_overlap1 = findOverlaps(cneQ, type="equal", 
-                               #drop.self=TRUE, drop.redundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   #cneQ_overlap2 = findOverlaps(cneQ, type="any", 
-                               #drop.self=TRUE, drop.redundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   redundance <- IRanges::intersect(cneT_overlap, cneQ_overlap)
   #any_overlap = intersect(cneT_overlap2, cneQ_overlap2)
   #foo = setdiff(any_overlap, redundance)

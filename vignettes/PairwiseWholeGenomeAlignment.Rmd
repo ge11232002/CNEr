@@ -1,0 +1,179 @@
+---
+title: "Pairwise whole genome alignment"
+author: "Ge Tan"
+date: "`r doc_date()`"
+package: "`r pkg_ver('CNEr')`"
+abstract: >
+  Pipeline of generating pairwise whole genome alignment.
+vignette: >
+  %\VignetteIndexEntry{Pairwise whole genome alignment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output: 
+  BiocStyle::html_document
+---
+
+```{r code, echo = FALSE}
+code <- function(...) {
+    cat(paste(..., sep = "\n"))
+}
+
+date = "`r doc_date()`"
+pkg = "`r pkg_ver('BiocStyle')`"
+```
+
+# Introduction
+
+`r Biocpkg("CNEr")` identifies conserved noncoding elments (CNEs) from pairwise whole genome alignment (_net.axt_ files) of two species.
+UCSC has provided alignments between many species on the [downloads](http://hgdownload.cse.ucsc.edu/downloads.html),
+hence it is highly recommended to use their alignments when available.
+When the alignments of some new assemblies/species are not availble from UCSC yet, this vignette describes the pipeline of generating the alignments merely from soft-masked _2bit_ files or _fasta_ files.
+This vignette is based on the [genomewiki](http://genomewiki.ucsc.edu/index.php/Whole_genome_alignment_howto) from UCSC.
+
+__Note:__ 
+ 
+ * The whole pipeline relies on  [Kent's utilities](http://hgdownload.cse.ucsc.edu/admin/exe/).
+Since Kent's utilities don't support Windows platform, this pipeline also only works on Linux and Unix platform.
+ * Many of the functions in this pipeline are just wrapper functions, in order to simplfy the settings and work consistently with the rest of CNEs pipeline within _R_ environment.
+ * Due to large file size of the genome assemblies, the commands in this vignette don't run during the vignette compilation. Users have to set the correct paths on their machine in order to make these commands work.
+
+# Prerequisite
+
+List of external softwares have to be installed on the machine:
+ * The sequence alignment program [LASTZ](http://www.bx.psu.edu/miller_lab/dist/README.lastz-1.02.00/README.lastz-1.02.00a.html)
+ * [Kent Utilities](http://hgdownload.cse.ucsc.edu/admin/jksrc.zip). In this pipeline, _lavToPsl_, _axtChain_, _chainMergeSort_, _chainPreNet_, _chainNet_, _netSyntenic_, _netToAxt_, _axtSort_ are essential. netClass is optional.
+
+# Aligning
+Here, as an example, we will get the pairwise alignment only on "chr1", "chr2" and "chr3" between zebrafish(_danRer10_) and human(_hg38_).
+
+## LASTZ aligner
+First we need to download the _2bit_ files from UCSC, and set the appropriate paths of `assemblyTarget`, `assemblyQuery` and intermediate files.
+Then we can run `lastz` function to generate the _lav_ files.
+
+```{r lastz, eval=FALSE, echo=TRUE}
+## lastz aligner
+assemblyDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit"
+axtDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/axt"
+assemblyTarget <- file.path(assemblyDir, "danRer10.2bit")
+assemblyQuery <- file.path(assemblyDir, "hg38.2bit")
+lavs <- lastz(assemblyTarget, assemblyQuery, 
+              outputDir=axtDir,
+	            chrsTarget=c("chr1", "chr2", "chr3"),
+	            chrsQuery=c("chr1", "chr2", "chr3"),
+	            distance="far", mc.cores=4)
+
+## lav files to psl files conversion
+psls <- lavToPsl(lavs, removeLav=FALSE, binary="lavToPsl")
+```
+
+One essential argument here is the `distance`. It determines the scoring matrix to use in `lastz` aligner. See `?scoringMatrix` for more details.
+
+__Note:__
+This step may encounter difficulties if the two assemblies are too fragmented, because there can be millions of combinations of the chromosomes/scaffolds. The `lastz` is overwhelmed with reading small pieces from assembly for each combination, rather than doing actual alignment.
+In this case, another aligner [last](http://last.cbrc.jp/) is recommended and introduced in nex section.
+
+## last aligner
+
+`last` aligner is considered faster and memory efficient.
+It creates _maf_ file, which can converted to _psl_ files.
+Then the same following processes can be used on _psl_ files.
+
+Different from `lastz`, `last` aligner starts with _fasta_ files.
+The target genome sequence has to build the _index_ file first, and then align with the query genome sequence.
+
+```{r last, eval=FALSE, echo=TRUE}
+## Build the lastdb index
+system2(command="lastdb", args=c("-c", file.path(assemblyDir, "danRer10"),
+                                 file.path(assemblyDir, "danRer10.fa")))
+
+## Run last aligner
+last(db=file.path(assemblyDir, "danRer10"),
+     queryFn=file.path(assemblyDir, "hg38.fa"),
+     outputFn=file.path(axtDir, "danRer10.hg38.maf"),
+     distance="far", binary="lastal", mc.cores=4L)
+
+## maf to psl 
+psls <- file.path(axtDir, "danRer10.hg38.psl")
+system2(command="maf-convert", args=c("psl", 
+                                      file.path(axtDir, "danRer10.hg38.maf"),
+                                      ">", psls))
+```
+
+# Chaining:
+If two matching alignments next to each other are close enough, they are joined into one fragment.
+Then these _chain_ files are sorted and combined into one big file.
+
+```{r chain, eval=FALSE, echo=TRUE}
+## Join close alignments
+chains <- axtChain(psls, assemblyTarget=assemblyTarget,
+                   assemblyQuery=assemblyQuery, distance="far",
+                   removePsl=FALSE, binary="axtChain")
+
+## Sort and combine
+allChain <- chainMergeSort(chains, assemblyTarget, assemblyQuery,
+              allChain=file.path(axtDir,
+                         paste0(sub("\\.2bit$", "", basename(assemblyTarget),
+                                    ignore.case=TRUE), ".", 
+                                sub("\\.2bit$", "", basename(assemblyQuery), 
+                                    ignore.case=TRUE), ".all.chain")),
+                           removeChains=FALSE, binary="chainMergeSort")
+```
+
+# Netting:
+In this step, first we filter out chains that are unlikely to be netted by `chainPreNet`.
+During the alignment, every genomic fragment can match with several others, and certainly we want to keep the best one.
+This is done by `chainNet`.
+Then we add the synteny information with `netSyntenic`.
+
+```{r netting, eval=FALSE, echo=TRUE}
+## Filtering out chains
+allPreChain <- chainPreNet(allChain, assemblyTarget, assemblyQuery,
+                           allPreChain=file.path(axtDir,
+                                      paste0(sub("\\.2bit$", "", 
+                                                 basename(assemblyTarget),
+                                                 ignore.case = TRUE), ".", 
+                                             sub("\\.2bit$", "",
+                                                 basename(assemblyQuery),
+                                                 ignore.case = TRUE),
+                                                 ".all.pre.chain")),
+                           removeAllChain=FALSE, binary="chainPreNet")
+
+## Keep the best chain and add synteny information
+netSyntenicFile <- chainNetSyntenic(allPreChain, assemblyTarget, assemblyQuery,
+                     netSyntenicFile=file.path(axtDir,
+                                               paste0(sub("\\.2bit$", "",
+                                                      basename(assemblyTarget),
+                                                      ignore.case = TRUE), ".",
+                                                      sub("\\.2bit$", "",
+                                                      basename(assemblyQuery),
+                                                      ignore.case = TRUE),
+                                              ".noClass.net")),
+                     binaryChainNet="chainNet", binaryNetSyntenic="netSyntenic")
+```
+
+# axtNet
+As the last step, we create the _.net.axt_ file from the previous _net_ and _chain_ files.
+```{r axtNet, eval=FALSE, echo=TRUE}
+netToAxt(netSyntenicFile, allPreChain, assemblyTarget, assemblyQuery,
+         axtFile=file.path(axtDir,
+                           paste0(sub("\\.2bit$", "",
+                                      basename(assemblyTarget),
+                                      ignore.case = TRUE), ".",
+                                  sub("\\.2bit$", "",
+                                      basename(assemblyQuery),
+                                      ignore.case = TRUE),
+                                  ".net.axt")),
+             removeFiles=FALSE,
+             binaryNetToAxt="netToAxt", binaryAxtSort="axtSort")
+
+```
+
+# Session info
+
+Here is the output of `sessionInfo()` on the system on which this
+document was compiled:
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+

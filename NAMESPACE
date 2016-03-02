@@ -1,28 +1,26 @@
 useDynLib(CNEr, .registration = TRUE)
 
 ### -----------------------------------------------------------------
-### Import
-### -----------------------------------------------------------------
-import(S4Vectors)
-import(IRanges)
-
-### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
-#import(Biostrings)
-#import(GenomicRanges)
 importClassesFrom(methods, ANY, character, integer, missing)
+
 
 ### -----------------------------------------------------------------
 ### Import S4 methods defined in other packages
 ###
 importMethodsFrom(rtracklayer, import.bed)
-importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo)
-importMethodsFrom(GenomicRanges, reduce, "strand<-", strand)
+importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame)
+importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
+                                 findOverlaps, coverage)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
+importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS)
+importMethodsFrom(BiocGenerics, score, setdiff, unlist)
+importMethodsFrom(IRanges, slice, ranges)
+
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
 ###
@@ -30,10 +28,14 @@ importFrom(GenomeInfoDb, Seqinfo)
 importFrom(GenomicRanges, GRanges)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
 importFrom(Biostrings, DNAStringSet, DNA_BASES, fasta.info)
-#importFrom(RMySQL, MySQL)
 importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
+importFrom(readr, read_tsv)
+importFrom(IRanges, IRanges)
+importFrom(S4Vectors, .Call2, queryHits, subjectHits)
+importFrom(tools, file_ext)
+importFrom(parallel, mcmapply)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -93,12 +95,24 @@ export(
 
   ## DB.R
   queryCNEData,
+  
+  ## WholeGenomeAlignment.R
+  lastz,
+  lavToPsl,
+  scoringMatrix,
+  axtChain,
+  chainMergeSort,
+  chainPreNet,
+  chainNetSyntenic,
+  netToAxt,
+  last,
 
+  ## GRB.R
+  makeGRBs,
+  
   ## AssemblyStats.R
-  N50, N90,
+  N50, N90
 
-  ## plot.r
-  CNEDensity
 )
 
 ### -----------------------------------------------------------------
@@ -118,6 +132,7 @@ exportMethods(
   
   ## utils.r
   saveCNEToSQLite,
+
   ## plot.r
   CNEDensity
 )
