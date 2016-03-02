@@ -82,7 +82,7 @@ for Human (hg19) and Zebrafish (danRer7).
 `r Biocpkg("CNEr")` starts from 
 [axt](http://genome.ucsc.edu/goldenPath/help/axt.html)
 net files of two genomes pairwise alignments and _bed_ files for filtering.
-UCSC already provides a set of precomputed axt files on 
+UCSC already provides many precomputed axt files on 
 http://hgdownload.soe.ucsc.edu/downloads.html
 for most of popular genomes.
 In case the _axt_ net files are not available from UCSC, 
@@ -100,7 +100,7 @@ for highly efficient reading,
 which heavily depends on Kent's utilities source code [@Kent:2002bw].
 The axt file can be gzippped or in plain text file.
 The alignments between two genomes can also be in one file or in several files, 
-such as chr1.hg19.mm10.net.axt.gz, chr2.hg19.mm10.net.axt.gz, etc.
+such as __chr1.hg19.mm10.net.axt.gz__, __chr2.hg19.mm10.net.axt.gz__, etc.
 
 ```{r Axt, eval=TRUE, echo=TRUE}
 library(CNEr)
