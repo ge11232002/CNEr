@@ -217,17 +217,17 @@ cneMerge <- function(cne1, cne2){
   # In very rare cases(1 in 100000), some cnes may just connect 
   # and need to merge them. Needs to be done in the future (perhaps not easy to be done in R).
   cneT_overlap <- findOverlaps(cneT, type="within", 
-                              ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                               drop.self=TRUE, drop.redundant=TRUE)
   #cneT_overlap1 = findOverlaps(cneT, type="equal", 
-                              #ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   #cneT_overlap2 = findOverlaps(cneT, type="any", 
-                              #ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   cneQ_overlap <- findOverlaps(cneQ, type="within", 
-                              ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                               drop.self=TRUE, drop.redundant=TRUE)
   #cneQ_overlap1 = findOverlaps(cneQ, type="equal", 
-                              #ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   #cneQ_overlap2 = findOverlaps(cneQ, type="any", 
-                              #ignoreSelf=TRUE, ignoreRedundant=TRUE)
+                              #drop.self=TRUE, drop.redundant=TRUE)
   redundance <- IRanges::intersect(cneT_overlap, cneQ_overlap)
   #any_overlap = intersect(cneT_overlap2, cneQ_overlap2)
   #foo = setdiff(any_overlap, redundance)

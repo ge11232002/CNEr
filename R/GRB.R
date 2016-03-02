@@ -33,7 +33,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
   # slice the density into GRBs
   slicedDensities <- slice(density, lower=coveredAll*ratio, includeLower=FALSE)
   clusterRanges <- GRanges(seqnames=rep(names(slicedDensities), 
-                                        elementLengths(slicedDensities)),
+                                        elementNROWS(slicedDensities)),
                            ranges=unlist(ranges(slicedDensities)),
                            strand="+",
                            seqinfo=seqinfo(x))
