@@ -31,7 +31,7 @@ setValidity("Axt",
 
 ### -----------------------------------------------------------------
 ### CNE class
-### 
+### Exported!
 setClass(Class="CNE",
          slots=c(assembly1="character",
                  assembly2="character",
@@ -72,7 +72,7 @@ setValidity("CNE",
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Axt Slot getters and setters.
-###
+### Exported!
 setMethod("targetRanges", "Axt", function(x) x@targetRanges)
 setMethod("targetSeqs", "Axt", function(x) x@targetSeqs)
 setMethod("queryRanges", "Axt", function(x) x@queryRanges)
@@ -84,7 +84,7 @@ setMethod("length", "Axt", function(x) length(targetRanges(x)))
 
 ### -----------------------------------------------------------------
 ### CNE Slot getters and setters.
-###
+### Exported!
 setMethod("assembly1", "CNE", function(x) x@assembly1)
 setMethod("assembly2", "CNE", function(x) x@assembly2)
 setMethod("CNE1", "CNE", function(x) x@CNE1)
@@ -106,7 +106,7 @@ Axt <- function(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
 
 ### -----------------------------------------------------------------
 ### CNE constructor.
-###
+### Exported!
 CNE <- function(assembly1=character(), assembly2=character(),
                 thresholds=character(),
                 CNE1=list(), CNE2=list(),
