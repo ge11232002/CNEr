@@ -1,25 +1,25 @@
-\name{last}
-\alias{last}
+\name{lastal}
+\alias{lastal}
 
 \title{
-  last wrapper
+  lastal wrapper
 }
 \description{
-  Wrapper function of \command{last} to do the pairwise whole genome alignment.
+  Wrapper function of \command{lastal} to do the pairwise whole genome alignment.
   This function doesn't work on Windows platform.
 }
 \usage{
-  last(db, queryFn,
-       outputFn=sub("\\\.(fa|fasta)$", ".maf", 
-                    paste(basename(db), basename(queryFn), sep = ","),
-                    ignore.case = TRUE),
-       distance=c("far", "medium", "close"), binary="lastal",
-       mc.cores=getOption("mc.cores", 2L), echoCommand=FALSE)
+  lastal(db, queryFn,
+         outputFn=sub("\\\.(fa|fasta)$", ".maf", 
+                      paste(basename(db), basename(queryFn), sep = ","),
+                      ignore.case = TRUE),
+         distance=c("far", "medium", "close"), binary="lastal",
+         mc.cores=getOption("mc.cores", 2L), echoCommand=FALSE)
 }
 
 \arguments{
   \item{db}{
-    \code{character}(1): the file name of target assembly's last index. 
+    \code{character}(1): the file name of target assembly's lastal index. 
   }
   \item{queryFn}{
     \code{character}(1): the file name of query assembly \emph{fasta} file.
@@ -54,7 +54,7 @@
   Ge Tan
 }
 \note{
-  \command{last} aligner must be installed on the machine to use this function.
+  \command{lastal} aligner must be installed on the machine to use this function.
 }
 
 \seealso{
@@ -67,8 +67,8 @@
     system2(command="lastdb", args=c("-c", file.path(assemblyDir, "danRer10"),
                                      file.path(assemblyDir, "danRer10.fa")))
 
-    ## Run last aligner
-    last(db=file.path(assemblyDir, "danRer10"),
+    ## Run lastal aligner
+    lastal(db=file.path(assemblyDir, "danRer10"),
          queryFn=file.path(assemblyDir, "hg38.fa"),
          outputFn=file.path(axtDir, "danRer10.hg38.maf"),
          distance="far", binary="lastal", mc.cores=4L)
