@@ -1,6 +1,6 @@
 
 ### -----------------------------------------------------------------
-### Axt object related
+### Axt class related
 ###
 setGeneric("targetRanges", function(x) standardGeneric("targetRanges"))
 setGeneric("targetSeqs", function(x) standardGeneric("targetSeqs"))
@@ -13,6 +13,10 @@ setGeneric("subAxt", function(x, chr, start, end, #strand=c("+", "-", "*"),
                       standardGeneric("subAxt")
                       )
 setGeneric("matchDistr", function(x) standardGeneric("matchDistr"))
+
+### -----------------------------------------------------------------
+### GRangePairs class related
+### 
 
 ### -----------------------------------------------------------------
 ### CNE class related

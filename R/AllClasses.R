@@ -9,7 +9,13 @@ setClass(Class="Axt",
                  querySeqs="DNAStringSet",
                  score="integer",
                  symCount="integer"
-                 )
+                 ),
+         prototype=list(targetRanges=GRanges(),
+                        targetSeqs=DNAStringSet(),
+                        queryRanges=GRanges(),
+                        querySeqs=DNAStringSet(),
+                        score=integer(0),
+                        symCount=integer(0))
          )
 
 setValidity("Axt",
@@ -23,11 +29,58 @@ setValidity("Axt",
                 return("The lengths of targetRanges, targetSeqs,
                        queryRanges, querySeqs, score and symCount
                        must have be same!")
-              if(any(object@symCount <= 0L))
-                return("Then symCount must be larger than 0!")
+              if(any(object@symCount < 0L))
+                return("Then symCount must be equal or larger than 0!")
+              ## Test the class
+              if(class(object@targetRanges) != "GRanges")
+                return("'x@targetRanges' must be a GRanges instance")
+              if(class(object@queryRanges) != "GRanges")
+                return("'x@queryRanges' must be a GRanges instance")
+              if(class(object@targetSeqs) != "DNAStringSet")
+                return("'x@targetSeqs' must be a DNAStringSet instance")
+              if(class(object@querySeqs) != "DNAStringSet")
+                return("'x@querySeqs' must be a DNAStringSet instance")
               return(TRUE)
             }
             )
+
+### -----------------------------------------------------------------
+### GRangePairs
+### Exported!
+setClass(Class="GRangePairs",
+         contains="List",
+         slots=c(NAMES="characterORNULL",      # R doesn't like @names !!
+                 first="GRanges",
+                 last="GRanges",
+                 elementMetadata="DataFrame"),
+         prototype=list(elementType="GRanges"))
+
+setValidity("GRangePairs",
+            function(object){
+              x_first <- object@first
+              x_last <- object@last
+              ## Test NAMES
+              x_names <- object@NAMES
+              if (is.null(x_names))
+                return(NULL)
+              if (!is.character(x_names) || !is.null(attributes(x_names))) {
+                msg <- c("'names(x)' must be NULL or a character vector ",
+                         "with no attributes")
+                return(paste(msg, collapse=""))
+              }
+              if (length(x_names) != length(object))
+                return("'names(x)' and 'x' must have the same length")
+              ## Test first's class
+              if(class(x_first) != "GRanges")
+                return("'x@first' must be a GRanges instance")
+              ## test last's class
+              if(class(x_last) != "GRanges")
+                return("'x@last' must be a GRanges instance")
+              ## test the size of first and last
+              if (length(x_last) != length(x_first))
+                return("'x@last' and 'x@first' must have the same length")
+              return(TRUE)
+            })
 
 ### -----------------------------------------------------------------
 ### CNE class
@@ -83,6 +136,50 @@ setMethod("nchar", "Axt", function(x) x@symCount)
 setMethod("length", "Axt", function(x) length(targetRanges(x)))
 
 ### -----------------------------------------------------------------
+### GRangePairs getters and setters
+### Exported!
+setMethod("names", "GRangePairs", function(x) x@NAMES)
+setMethod("length", "GRangePairs", function(x) length(x@first))
+setMethod("first", "GRangePairs",
+          function(x, real.strand=FALSE, invert.strand=FALSE)
+          {
+            ans <- setNames(x@first, names(x))
+            ans
+          }
+          )
+setMethod("last", "GRangePairs",
+          function(x, real.strand=FALSE, invert.strand=FALSE)
+          {
+            ans <- setNames(x@last, names(x))
+            ans
+          }
+          )
+setMethod("seqnames", "GRangePairs",
+          function(x){
+            ans <- DataFrame(first=seqnames(x@first),
+                             last=seqnames(x@last))
+            ans
+          }
+          )
+setMethod("strand", "GRangePairs",
+           function(x){
+             ans <- DataFrame(first=strand(x@first),
+                              last=strand(x@last))
+             ans
+           }
+           )
+setReplaceMethod("names", "GRangePairs",
+                 function(x, value)
+                 {
+                   if (!is.null(value))
+                     value <- as.character(value)
+                   x@NAMES <- value
+                   validObject(x)
+                   x
+                 }
+)
+
+### -----------------------------------------------------------------
 ### CNE Slot getters and setters.
 ### Exported!
 setMethod("assembly1", "CNE", function(x) x@assembly1)
@@ -93,15 +190,27 @@ setMethod("thresholds", "CNE", function(x) x@thresholds)
 setMethod("CNEMerged", "CNE", function(x) x@CNEMerged)
 setMethod("CNERepeatsFiltered", "CNE", function(x) x@CNERepeatsFiltered)
 
-### -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### -----------------------------------------------------------------
 ### Axt Constructor.
 ### Exported!
 Axt <- function(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
                queryRanges=GRanges(), querySeqs=DNAStringSet(),
-               score=integer(), symCount=integer()){
+               score=integer(0), symCount=integer(0)){
   new("Axt", targetRanges=targetRanges, targetSeqs=targetSeqs,
       queryRanges=queryRanges, querySeqs=querySeqs,
       score=score, symCount=symCount)
+}
+
+### -----------------------------------------------------------------
+### GRangePairs Constructor.
+### Exported!
+GRangePairs <- function(first=GRanges(), last=GRanges(), names=NULL){
+  if (!(is(first, "GRanges") && is(last, "GRanges")))
+    stop("'first' and 'last' must be GRanges objects")
+  if (length(first) != length(last))
+    stop("'first' and 'last' must have the same length")
+  new("GRangePairs", NAMES=names, first=first, last=last,
+       elementMetadata=S4Vectors:::make_zero_col_DataFrame(length(first)))
 }
 
 ### -----------------------------------------------------------------
