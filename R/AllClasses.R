@@ -45,7 +45,7 @@ setValidity("Axt",
             )
 
 ### -----------------------------------------------------------------
-### GRangePairs
+### GRangePairs: this copies the implementation of GAlignmentPairs
 ### Exported!
 setClass(Class="GRangePairs",
          contains="List",
@@ -317,6 +317,26 @@ setMethod("c", "Axt",
           }
           )
 
+### -----------------------------------------------------------------
+### Vector methods.
+###
+setMethod("extractROWS", "GRangePairs",
+          function(x, i)
+          {
+            i <- normalizeSingleBracketSubscript(i, x, as.NSBS=TRUE)
+            ans_NAMES <- extractROWS(x@NAMES, i)
+            ans_first <- extractROWS(x@first, i)
+            ans_last <- extractROWS(x@last, i)
+            ans_elementMetadata <- extractROWS(x@elementMetadata, i)
+            BiocGenerics:::replaceSlots(x,
+                                        NAMES=ans_NAMES,
+                                        first=ans_first,
+                                        last=ans_last,
+                                        elementMetadata=ans_elementMetadata)
+          }
+)
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### "show" method.
 ###
@@ -437,3 +457,47 @@ setMethod("show", "Axt",
           }
 )
 
+### -----------------------------------------------------------------
+### show methods for GRangePairs
+###
+
+.makeNakedMatFromGRangePairs <- function(x)
+{
+  lx <- length(x)
+  nc <- ncol(mcols(x))
+  pair_cols <- cbind(seqnames=as.character(seqnames(x)),
+                     strand=as.character(strand(x)))
+  x_first <- x@first
+  first_cols <- cbind(ranges=extractROWS(ranges(x_first)))
+  x_last <- x@last
+  last_cols <- cbind(ranges=showAsCell(ranges(x_last)))
+  ans <- cbind(pair_cols,
+               `:`=rep.int(":", lx),
+               first_cols,
+               `--`=rep.int("--", lx),
+               last_cols)
+  if (nc > 0L) {
+    tmp <- do.call(data.frame, lapply(mcols(x), showAsCell))
+    ans <- cbind(ans, `|`=rep.int("|", lx), as.matrix(tmp))
+  }
+  ans
+}
+
+showGRangePairs <- function(x, margin="",
+                            print.classinfo=FALSE,
+                            print.seqinfo=FALSE){
+  lx <- length(x)
+  nc <- ncol(mcols(x))
+  cat(class(x), " object with ",
+      lx, " ", ifelse(lx == 1L, "pair", "pairs"),
+      ", and ",
+      nc, " metadata ", ifelse(nc == 1L, "column", "columns"),
+      ":\n", sep="")
+  
+}
+
+setMethod("show", "GRangePairs",
+          function(object)
+            showGRangePairs(object, margin="  ",
+                                print.classinfo=TRUE, print.seqinfo=TRUE)
+)
