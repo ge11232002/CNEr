@@ -395,14 +395,14 @@ netToAxt <- function(in.net, in.chain, assemblyTarget, assemblyQuery,
 ### -----------------------------------------------------------------
 ### last: wrapper function of last aligner
 ### Exported!
-last <- function(db, queryFn,
-                 outputFn=sub("\\.(fa|fasta)$", ".maf", 
-                              paste(basename(db), basename(queryFn), sep=","), 
-                              ignore.case=TRUE),
-                 distance=c("far", "medium", "close"),
-                 binary="lastal",
-                 mc.cores=getOption("mc.cores", 2L),
-                 echoCommand=FALSE){
+lastal <- function(db, queryFn,
+                   outputFn=sub("\\.(fa|fasta)$", ".maf", 
+                                paste(basename(db), basename(queryFn), sep=","),
+                                ignore.case=TRUE),
+                   distance=c("far", "medium", "close"),
+                   binary="lastal",
+                   mc.cores=getOption("mc.cores", 2L),
+                   echoCommand=FALSE){
   distance <- match.arg(distance)
   
   if(file_ext(outputFn) != "maf" ){
@@ -431,7 +431,7 @@ last <- function(db, queryFn,
                  "-f 1",
                  db, queryFn, ">", outputFn)
   }else{
-    message("last require `parallel` installed on the machine to run in parallel,
+    message("lastal require `parallel` installed on the machine to run in parallel,
             otherwise it will fail!")
     cmd <- paste("parallel-fasta", "-j", mc.cores, "--compress",
                  "\"lastal", lastOptiosn[[distance]],
@@ -439,7 +439,7 @@ last <- function(db, queryFn,
                  ">", outputFn)
   }
   
-  message("Run last...")
+  message("Run lastal..")
   if(echoCommand){
     message(cmd)
   }else{
@@ -447,3 +447,5 @@ last <- function(db, queryFn,
   }
   invisible(outputFn)
 }
+
+
