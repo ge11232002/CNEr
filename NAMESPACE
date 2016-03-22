@@ -38,7 +38,7 @@ importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
 importFrom(IRanges, IRanges)
 importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
-           normalizeSingleBracketSubscript)
+           normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
 importFrom(utils, download.file, read.table, write.table)

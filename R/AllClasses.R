@@ -238,27 +238,27 @@ CNE <- function(assembly1=character(), assembly2=character(),
 ### initialize. Reference classes will want to override 'update'. Other
 ### external representations need further customization.
 
-setMethod("update", "Axt",
-          function(object, ..., check=TRUE){
-            initialize(object, ...)
-          }
-          )
-
-setMethod("update", "CNE",
-          function(object, ..., check=TRUE){
-            initialize(object, ...)
-          }
-          )
-
-setMethod("clone", "ANY",  # not exported
-    function(x, ...)
-    {
-        if (nargs() > 1L)
-            initialize(x, ...)
-        else
-            x
-    }
-)
+# setMethod("update", "Axt",
+#           function(object, ..., check=TRUE){
+#             initialize(object, ...)
+#           }
+#           )
+# 
+# setMethod("update", "CNE",
+#           function(object, ..., check=TRUE){
+#             initialize(object, ...)
+#           }
+#           )
+# 
+# setMethod("clone", "ANY",  # not exported
+#     function(x, ...)
+#     {
+#         if (nargs() > 1L)
+#             initialize(x, ...)
+#         else
+#             x
+#     }
+# )
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,7 +271,7 @@ setMethod("[", "Axt",
               stop("invalid subsetting")
             if(missing(i))
               return(x)
-            #i <- normalizeSingleBracketSubscript(i, x)
+            i <- normalizeSingleBracketSubscript(i, x)
             ans_targetRanges <- targetRanges(x)[i]
             ans_targetSeqs <- targetSeqs(x)[i]
             ans_queryRanges <- queryRanges(x)[i]
@@ -336,6 +336,23 @@ setMethod("extractROWS", "GRangePairs",
           }
 )
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### List methods.
+###
+.GRangePairs.getElement <- function(x, i)
+{
+  c(x@first[i], x@last[i])
+}
+
+setMethod("[[", "GRangePairs",
+          function(x, i, j, ... , drop=TRUE)
+          {
+            if (missing(i) || !missing(j) || length(list(...)) > 0L)
+              stop("invalid subsetting")
+            i <- normalizeDoubleBracketSubscript(i, x)
+            .GRangePairs.getElement(x, i)
+          }
+)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### "show" method.
