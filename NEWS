@@ -1,4 +1,8 @@
-CHANGES IN VERSION 1.9.4
+CHANGES IN Bioc 3.3
 ------------------------
 BUG FIXES
     o Fix a bug caused by "format" in the blat step
+
+NEW FEATURES
+    o Add the pairwise whole genome alignment pipeline
+

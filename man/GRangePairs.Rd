@@ -17,6 +17,9 @@
 \alias{seqnames,GRangePairs-method}
 \alias{strand,GRangePairs-method}
 
+% List methods:
+\alias{[[,GRangePairs,ANY,ANY-method}
+
 \title{
 GRangePairs objects
 }

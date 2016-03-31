@@ -1,5 +1,5 @@
 useDynLib(CNEr, .registration = TRUE)
-
+import(BiocGenerics)
 ### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
@@ -20,8 +20,7 @@ importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
-                  showAsCell, extractROWS)
-importMethodsFrom(BiocGenerics, score, setdiff, unlist)
+                  showAsCell, extractROWS, mcols)
 importMethodsFrom(IRanges, slice, ranges)
 importMethodsFrom(GenomicAlignments, last)
 

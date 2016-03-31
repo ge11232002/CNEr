@@ -278,7 +278,7 @@ setMethod("[", "Axt",
             ans_querySeqs <- querySeqs(x)[i]
             ans_score <- score(x)[i]
             ans_symCount <- symCount(x)[i]
-            clone(x, targetRanges=ans_targetRanges, targetSeqs=ans_targetSeqs,
+            initialize(x, targetRanges=ans_targetRanges, targetSeqs=ans_targetSeqs,
                   queryRanges=ans_queryRanges, querySeqs=ans_querySeqs,
                   score=ans_score, symCount=ans_symCount)
           }
