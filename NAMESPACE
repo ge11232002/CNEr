@@ -1,10 +1,12 @@
 useDynLib(CNEr, .registration = TRUE)
-
+import(BiocGenerics)
 ### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
 importClassesFrom(methods, ANY, character, integer, missing)
-
+importClassesFrom(S4Vectors, List, characterORNULL, DataFrame)
+importClassesFrom(GenomicRanges, GRanges)
+importClassesFrom(Biostrings, DNAStringSet)
 
 ### -----------------------------------------------------------------
 ### Import S4 methods defined in other packages
@@ -17,9 +19,10 @@ importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
-importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS)
-importMethodsFrom(BiocGenerics, score, setdiff, unlist)
+importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
+                  showAsCell, extractROWS, mcols)
 importMethodsFrom(IRanges, slice, ranges)
+importMethodsFrom(GenomicAlignments, last)
 
 ### -----------------------------------------------------------------
 ### Import ordinary functions, variables in other packages
@@ -33,15 +36,19 @@ importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
 importFrom(IRanges, IRanges)
-importFrom(S4Vectors, .Call2, queryHits, subjectHits)
+importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
+           normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
+importFrom(utils, download.file, read.table, write.table)
+importFrom("stats", "setNames")
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
 ###
 exportClasses(Axt,
-              CNE)
+              CNE,
+              GRangePairs)
 
 ### -----------------------------------------------------------------
 ### Export S4 methods for generics not defined in CNEr
@@ -53,6 +60,7 @@ exportMethods(
   length,
   score,
   nchar,
+  first, last, names, seqnames, "names<-", strand,
 
   ## Axt-methods.R
   mismatchSummary
@@ -75,6 +83,7 @@ export(
   ## AllClasses.r
   Axt,
   CNE,
+  GRangePairs,
 
   # io.r
   readBed,
@@ -105,7 +114,7 @@ export(
   chainPreNet,
   chainNetSyntenic,
   netToAxt,
-  last,
+  lastal,
 
   ## GRB.R
   makeGRBs,

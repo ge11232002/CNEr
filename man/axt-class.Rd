@@ -28,7 +28,7 @@
 ## Constructors:
 Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
     queryRanges=GRanges(), querySeqs=DNAStringSet(),
-    score=integer(), symCount=integer())
+    score=integer(0), symCount=integer(0))
 
 ## Accessor-like methods:
 \S4method{targetRanges}{Axt}(x)

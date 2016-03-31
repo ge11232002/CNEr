@@ -175,7 +175,7 @@ hg19.rmskGRanges <- GRanges(seqnames=hg19.rmsk$genoName,
                             strand=hg19.rmsk$strand)
 ## To fetch ensembl gene exons from BioMart
 library(biomaRt)
-ensembl <- useMart("ensembl")
+ensembl <- useMart("ensembl", host="feb2014.archive.ensembl.org")
 ensembl <-  useDataset("hsapiens_gene_ensembl",mart=ensembl)
 attributes <- listAttributes(ensembl)
 exons <- getBM(attributes=c("chromosome_name", "exon_chrom_start", "exon_chrom_end", "strand"), 
