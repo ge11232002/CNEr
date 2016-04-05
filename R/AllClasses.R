@@ -482,16 +482,21 @@ setMethod("show", "Axt",
 {
   lx <- length(x)
   nc <- ncol(mcols(x))
-  pair_cols <- cbind(seqnames=as.character(seqnames(x)),
-                     strand=as.character(strand(x)))
+  pair_cols_First <- cbind(seqnamesFirst=as.character(seqnames(x@first)),
+                           strandFirst=as.character(strand(x@first))
+                           )
+  pair_cols_Last <- cbind(seqnamesLast=as.character(seqnames(x@last)),
+                          strandLast=as.character(strand(x@last))
+                          )
   x_first <- x@first
-  first_cols <- cbind(ranges=extractROWS(ranges(x_first)))
+  first_cols <- cbind(ranges=showAsCell(ranges(x_first)))
   x_last <- x@last
   last_cols <- cbind(ranges=showAsCell(ranges(x_last)))
-  ans <- cbind(pair_cols,
-               `:`=rep.int(":", lx),
+  ans <- cbind(pair_cols_First,
+               #`:`=rep.int(":", lx),
                first_cols,
                `--`=rep.int("--", lx),
+               pair_cols_Last,
                last_cols)
   if (nc > 0L) {
     tmp <- do.call(data.frame, lapply(mcols(x), showAsCell))
@@ -510,7 +515,27 @@ showGRangePairs <- function(x, margin="",
       ", and ",
       nc, " metadata ", ifelse(nc == 1L, "column", "columns"),
       ":\n", sep="")
-  
+  out <- S4Vectors:::makePrettyMatrixForCompactPrinting(x,
+           .makeNakedMatFromGRangePairs)
+  # if (print.classinfo) {
+  #   .PAIR_COL2CLASS <- c(
+  #     seqnames="Rle",
+  #     strand="Rle"
+  #   )
+  #   .HALVES_COL2CLASS <- c(
+  #     ranges="IRanges"
+  #   )
+  #   .COL2CLASS <- c(.PAIR_COL2CLASS,
+  #                   ":",
+  #                   .HALVES_COL2CLASS,
+  #                   "--",
+  #                   .HALVES_COL2CLASS)
+  #   classinfo <-
+  #     S4Vectors:::makeClassinfoRowForCompactPrinting(x, .COL2CLASS)
+  #   ## A sanity check, but this should never happen!
+  #   stopifnot(identical(colnames(classinfo), colnames(out)))
+  #   out <- rbind(classinfo, out)
+  # }
 }
 
 setMethod("show", "GRangePairs",
