@@ -330,10 +330,6 @@ showAxt <- function(x, margin="", half_nrow=5L){
     }
   }
 }
-    #out = makePrettyMatrixForCompactPrintingAxt(x, .makeNakedMatFromAxt)
-    #if(nrow(out) != 0L)
-    #      rownames(out) = paste0(margin, rownames(out))
-    #  print(out, quote=FALSE, right=TRUE)
 
 setMethod("show", "Axt",
           function(object){

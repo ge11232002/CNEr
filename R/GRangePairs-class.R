@@ -61,6 +61,7 @@ setMethod("first", "GRangePairs",
             ans
           }
 )
+
 setMethod("last", "GRangePairs",
           function(x, real.strand=FALSE, invert.strand=FALSE)
           {
@@ -68,6 +69,7 @@ setMethod("last", "GRangePairs",
             ans
           }
 )
+
 setMethod("seqnames", "GRangePairs",
           function(x){
             ans <- DataFrame(first=seqnames(x@first),
@@ -75,6 +77,7 @@ setMethod("seqnames", "GRangePairs",
             ans
           }
 )
+
 setMethod("strand", "GRangePairs",
           function(x){
             ans <- DataFrame(first=strand(x@first),
@@ -82,6 +85,12 @@ setMethod("strand", "GRangePairs",
             ans
           }
 )
+
+setMethod("seqinfo", "GRangePairs",
+          function(x) list(seqinfoFirst=seqinfo(x@first),
+                           seqinfoLast=seqinfo(x@last))
+)
+
 setReplaceMethod("names", "GRangePairs",
                  function(x, value)
                  {
@@ -108,6 +117,24 @@ setMethod("[[", "GRangePairs",
               stop("invalid subsetting")
             i <- normalizeDoubleBracketSubscript(i, x)
             .GRangePairs.getElement(x, i)
+          }
+)
+
+### TODO: Remove this method after the definition of the GAlignmentPairs
+### class is changed to derive from CompressedList.
+setMethod("unlist", "GRangePairs",
+          function(x, recursive=TRUE, use.names=TRUE)
+          {
+            if (!isTRUEorFALSE(use.names))
+              stop("'use.names' must be TRUE or FALSE")
+            x_first <- x@first
+            x_last <- x@last
+            collate_subscript <-
+              S4Vectors:::make_XYZxyz_to_XxYyZz_subscript(length(x))
+            ans <- c(x_first, x_last)[collate_subscript]
+            if (use.names)
+              names(ans) <- rep(names(x), each=2L)
+            ans
           }
 )
 
@@ -191,7 +218,8 @@ showGRangePairs <- function(x, margin="",
   print(out, quote=FALSE, right=TRUE, max=length(out))
   if (print.seqinfo) {
     cat(margin, "-------\n", sep="")
-    cat(margin, "seqinfo: ", summary(seqinfo(x)), "\n", sep="")
+    cat(margin, "seqinfo First: ", summary(seqinfo(x@first)), "\n", sep="")
+    cat(margin, "seqinfo Last: ", summary(seqinfo(x@last)), "\n", sep="")
   }
 }
 
