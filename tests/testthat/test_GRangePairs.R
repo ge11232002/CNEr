@@ -48,6 +48,19 @@ test_that("test_GRangePairs", {
   expect_equivalent(strand(grangesPairs1),
                     DataFrame(first=Rle(rep("+", 4)),
                               last=Rle(rep("+", 4))))
+  ## test seqinfo
+  expect_identical(length(seqinfo(grangesPairs1)), 2L)
+  
+  # test Vector methods
+  expect_identical(length(grangesPairs1[1:2]), 2L)
+  
+  # test List methods
+  expect_equivalent(grangesPairs1[[1]],
+                    GRanges(seqnames=c("chr1", "chr1"),
+                            ranges=IRanges(start=c(1,1),
+                                           end=c(10,8)),
+                            strand="+"))
+  expect_identical(length(unlist(grangesPairs1)), 8L)
   }
           )
 

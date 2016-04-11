@@ -36,6 +36,22 @@ setValidity("GRangePairs",
               return(TRUE)
             })
 
+### Formal API:
+###   GRangePairs(x) - constructor.
+###   names(x)    - NULL or character vector.
+###   length(x)   - single integer N. Nb of pairs in 'x'.
+###   first(x)    - returns "first" slot.
+###   last(x)     - returns "last" slot.
+###   seqnames(x) - returns DataFrame of seqnames of first, last GRanges.
+###   strand(x)   - returns DataFrame of strands of first, last GRanges.
+###   seqinfo(x)  - returns list of seqinfo of first, last GRanges.
+###   x[i]        - GRangePairs object of the same class as 'x'
+###   x[[i]]      - GRanges object of concatenating the i-th GRangesPairs's
+###                   first, last GRanges.
+###   unlist(x)   - unlist the x into a GRanges object by concatenating
+###                   each pair first.
+###   show(x)     - compact display in a data.frame-like fashion.
+
 ### -----------------------------------------------------------------
 ### GRangePairs Constructor.
 ### Exported!
@@ -102,6 +118,27 @@ setReplaceMethod("names", "GRangePairs",
                  }
 )
 
+
+### -----------------------------------------------------------------
+### Vector methods.
+###
+setMethod("extractROWS", "GRangePairs",
+          function(x, i)
+          {
+            i <- normalizeSingleBracketSubscript(i, x, as.NSBS=TRUE)
+            ans_NAMES <- extractROWS(x@NAMES, i)
+            ans_first <- extractROWS(x@first, i)
+            ans_last <- extractROWS(x@last, i)
+            ans_elementMetadata <- extractROWS(x@elementMetadata, i)
+            BiocGenerics:::replaceSlots(x,
+                                        NAMES=ans_NAMES,
+                                        first=ans_first,
+                                        last=ans_last,
+                                        elementMetadata=ans_elementMetadata)
+          }
+)
+
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### List methods.
 ###
@@ -138,30 +175,16 @@ setMethod("unlist", "GRangePairs",
           }
 )
 
-### -----------------------------------------------------------------
-### Vector methods.
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Coercion.
 ###
-setMethod("extractROWS", "GRangePairs",
-          function(x, i)
-          {
-            i <- normalizeSingleBracketSubscript(i, x, as.NSBS=TRUE)
-            ans_NAMES <- extractROWS(x@NAMES, i)
-            ans_first <- extractROWS(x@first, i)
-            ans_last <- extractROWS(x@last, i)
-            ans_elementMetadata <- extractROWS(x@elementMetadata, i)
-            BiocGenerics:::replaceSlots(x,
-                                        NAMES=ans_NAMES,
-                                        first=ans_first,
-                                        last=ans_last,
-                                        elementMetadata=ans_elementMetadata)
-          }
-)
+
+
 
 
 ### -----------------------------------------------------------------
 ### show methods for GRangePairs
 ###
-
 .makeNakedMatFromGRangePairs <- function(x)
 {
   lx <- length(x)

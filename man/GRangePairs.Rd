@@ -105,8 +105,16 @@ GRangePairs objects
   last(grangesPairs1)
   seqnames(grangesPairs1)
   strand(grangesPairs1)
+  seqinfo(grangesPairs1)
   
   ## setters
   names(grangesPairs2) <- namesGRangePairs
+  
+  ## Vector methods
+  grangesPairs1[1]
+  
+  ## List methods
+  grangesPairs1[[1]]
+  unlist(grangesPairs1)
   
 }
