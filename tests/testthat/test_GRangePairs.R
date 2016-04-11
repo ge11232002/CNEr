@@ -55,19 +55,20 @@ test_that("test_GRangePairs", {
   expect_identical(length(grangesPairs1[1:2]), 2L)
   
   # test List methods
-  expect_equivalent(grangesPairs1[[1]],
+  expect_equivalent(suppressWarnings(grangesPairs1[[1]]),
                     GRanges(seqnames=c("chr1", "chr1"),
                             ranges=IRanges(start=c(1,1),
                                            end=c(10,8)),
                             strand="+"))
-  expect_identical(length(unlist(grangesPairs1)), 8L)
+  expect_identical(length(suppressWarnings(unlist(grangesPairs1))), 8L)
   
   # test coersion
-  expect_identical(length(grglist(grangesPairs1)), 4L)
-  expect_identical(length(as(grangesPairs1, "GRangesList")), 4L)
-  expect_identical(length(as(grangesPairs1, "GRanges")), 8L)
+  expect_identical(length(suppressWarnings(grglist(grangesPairs1))), 4L)
+  expect_identical(length(suppressWarnings(as(grangesPairs1, "GRangesList"))),
+                   4L)
+  expect_identical(length(suppressWarnings(as(grangesPairs1, "GRanges"))), 8L)
   expect_identical(dim(as(grangesPairs1, "DataFrame")), c(4L, 2L))
-  expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 2L))
+  expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 10L))
   
   }
           )
