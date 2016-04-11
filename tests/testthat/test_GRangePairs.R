@@ -61,6 +61,14 @@ test_that("test_GRangePairs", {
                                            end=c(10,8)),
                             strand="+"))
   expect_identical(length(unlist(grangesPairs1)), 8L)
+  
+  # test coersion
+  expect_identical(length(grglist(grangesPairs1)), 4L)
+  expect_identical(length(as(grangesPairs1, "GRangesList")), 4L)
+  expect_identical(length(as(grangesPairs1, "GRanges")), 8L)
+  expect_identical(dim(as(grangesPairs1, "DataFrame")), c(4L, 2L))
+  expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 2L))
+  
   }
           )
 

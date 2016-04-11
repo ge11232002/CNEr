@@ -50,6 +50,7 @@ setValidity("GRangePairs",
 ###                   first, last GRanges.
 ###   unlist(x)   - unlist the x into a GRanges object by concatenating
 ###                   each pair first.
+###   grglist(x)  - GRangesList object of the same length as 'x'.
 ###   show(x)     - compact display in a data.frame-like fashion.
 
 ### -----------------------------------------------------------------
@@ -160,7 +161,7 @@ setMethod("[[", "GRangePairs",
 ### TODO: Remove this method after the definition of the GAlignmentPairs
 ### class is changed to derive from CompressedList.
 setMethod("unlist", "GRangePairs",
-          function(x, recursive=TRUE, use.names=TRUE)
+          function(x, use.names=TRUE)
           {
             if (!isTRUEorFALSE(use.names))
               stop("'use.names' must be TRUE or FALSE")
@@ -178,9 +179,50 @@ setMethod("unlist", "GRangePairs",
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Coercion.
 ###
+setMethod("grglist", "GRangePairs",
+          function(x, use.mcols=FALSE)
+          {
+            if (!isTRUEorFALSE(use.mcols))
+              stop("'use.mcols' must be TRUE or FALSE")
+            x_mcols <- mcols(x)
+            if (use.mcols && "query.break" %in% colnames(x_mcols))
+              stop("'mcols(x)' cannot have reserved column \"query.break\"")
+            x_first <- x@first
+            x_last <- x@last
+            collate_subscript <-
+              S4Vectors:::make_XYZxyz_to_XxYyZz_subscript(length(x))
+            x_unlisted <- c(x_first, x_last)
+            x_unlisted <- x_unlisted[collate_subscript]
+            grl <- as(x_unlisted, "GRangesList")
+            ans <- GenomicAlignments:::shrinkByHalf(grl)
+            names(ans) <- names(x)
+            ans_mcols <- DataFrame(query.break=mcols(ans)$nelt1)
+            if (use.mcols)
+              ans_mcols <- cbind(ans_mcols, x_mcols)
+            mcols(ans) <- ans_mcols
+            ans
+          }
+)
 
+setAs("GRangePairs", "GRangesList",
+      function(from) grglist(from, use.mcols=TRUE)
+)
+setAs("GRangePairs", "GRanges",
+      function(from) unlist(from, use.names=TRUE)
+)
+setAs("GRangePairs", "DataFrame", function(from) {
+  firstDF <- as(first(from), "DataFrame")
+  colnames(firstDF) <- paste0(colnames(firstDF), ".first")
+  lastDF <- as(last(from), "DataFrame")
+  colnames(lastDF) <- paste0(colnames(lastDF), ".last")
+  DataFrame(firstDF, lastDF, mcols(from))
+})
 
-
+setMethod("as.data.frame", "GRangePairs",
+          function(x, row.names = NULL, optional = FALSE) {
+            as.data.frame(as(x, "DataFrame"), row.names=row.names,
+                          optional=optional)
+          })
 
 ### -----------------------------------------------------------------
 ### show methods for GRangePairs

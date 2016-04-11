@@ -14,13 +14,13 @@ importClassesFrom(Biostrings, DNAStringSet)
 importMethodsFrom(rtracklayer, import.bed)
 importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame)
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
-                                 findOverlaps, coverage)
+                                 findOverlaps, coverage, grglist)
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
-                  showAsCell, extractROWS, mcols)
+                  showAsCell, extractROWS, mcols, "mcols<-")
 importMethodsFrom(IRanges, slice, ranges)
 importMethodsFrom(GenomicAlignments, last)
 
@@ -57,11 +57,15 @@ exportClasses(Axt,
 exportMethods(
   "[", 
   c,
+  
   ## AllClasses.r
   length,
   score,
   nchar,
-  first, last, names, seqnames, "names<-", strand,
+  names, seqnames, "names<-", strand,
+  
+  ## GRangePairs-class.R
+  first, last, grglist, seqinfo,
 
   ## Axt-methods.R
   mismatchSummary
