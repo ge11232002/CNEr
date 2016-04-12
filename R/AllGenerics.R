@@ -14,9 +14,6 @@ setGeneric("subAxt", function(x, chr, start, end, #strand=c("+", "-", "*"),
                       )
 setGeneric("matchDistr", function(x) standardGeneric("matchDistr"))
 
-### -----------------------------------------------------------------
-### GRangePairs class related
-### 
 
 ### -----------------------------------------------------------------
 ### CNE class related

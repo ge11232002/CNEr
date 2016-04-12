@@ -5,4 +5,6 @@ BUG FIXES
 
 NEW FEATURES
     o Add the pairwise whole genome alignment pipeline
+    o Add a new class "GRangePairs"
+
 
