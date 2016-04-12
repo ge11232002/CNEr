@@ -70,6 +70,8 @@ test_that("test_GRangePairs", {
   expect_identical(dim(as(grangesPairs1, "DataFrame")), c(4L, 2L))
   expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 10L))
   
+  # test combing
+  expect_identical(length(c(grangesPairs1, grangesPairs2)), 8L)
   }
           )
 

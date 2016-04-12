@@ -27,6 +27,9 @@
 \alias{coerce,GRangePairs,GRangesList-method}
 \alias{coerce,GRangePairs,GRanges-method}
 
+% Combining:
+\alias{c,GRangePairs-method}
+
 % "show" method:
 \alias{show,GRangePairs-method}
 
@@ -214,4 +217,7 @@ GRangePairs objects
   as(grangesPairs1, "GRanges")
   as(grangesPairs1, "DataFrame")
   as.data.frame(grangesPairs1)
+  
+  ## Combining
+  c(grangesPairs1, grangesPairs2)
 }

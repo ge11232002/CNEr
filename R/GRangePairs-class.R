@@ -1,5 +1,6 @@
+# This GRangePairs is purely based on the implementation of GAlignmentPairs
 ### -----------------------------------------------------------------
-### GRangePairs: this copies the implementation of GAlignmentPairs
+### GRangePairs: class
 ### Exported!
 setClass(Class="GRangePairs",
          contains="List",
@@ -7,7 +8,8 @@ setClass(Class="GRangePairs",
                  first="GRanges",
                  last="GRanges",
                  elementMetadata="DataFrame"),
-         prototype=list(elementType="GRanges"))
+         prototype=list(elementType="GRanges",
+                        elementMetadata=DataFrame()))
 
 setValidity("GRangePairs",
             function(object){
@@ -223,6 +225,111 @@ setMethod("as.data.frame", "GRangePairs",
             as.data.frame(as(x, "DataFrame"), row.names=row.names,
                           optional=optional)
           })
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Combining.
+###
+### 'Class' must be "GRangePairs" or the name of a concrete subclass of
+### GRangePairs
+### 'objects' must be a list of GRangePairs objects.
+### Returns an instance of class 'Class'.
+combine_GRangePairs_objects <- function(Class, objects,
+                                        use.names=TRUE, ignore.mcols=FALSE)
+{
+  if (!isSingleString(Class))
+    stop("'Class' must be a single character string")
+  if (!extends(Class, "GRangePairs"))
+    stop("'Class' must be the name of a class that extends GRangePairs")
+  if (!is.list(objects))
+    stop("'objects' must be a list")
+  if (!isTRUEorFALSE(use.names))
+    stop("'use.names' must be TRUE or FALSE")
+  ### TODO: Support 'use.names=TRUE'.
+  if (use.names)
+    stop("'use.names=TRUE' is not supported yet")
+  if (!isTRUEorFALSE(ignore.mcols))
+    stop("'ignore.mcols' must be TRUE or FALSE")
+
+  if (length(objects) != 0L) {
+    ## TODO: Implement (in C) fast 'elementIsNull(objects)' in IRanges,
+    ## that does 'sapply(objects, is.null, USE.NAMES=FALSE)', and use it
+    ## here.
+    null_idx <- which(sapply(objects, is.null, USE.NAMES=FALSE))
+    if (length(null_idx) != 0L)
+      objects <- objects[-null_idx]
+  }
+  if (length(objects) == 0L)
+    return(new(Class))
+  ## TODO: Implement (in C) fast 'elementIs(objects, class)' in IRanges, that
+  ## does 'sapply(objects, is, class, USE.NAMES=FALSE)', and use it here.
+  ## 'elementIs(objects, "NULL")' should work and be equivalent to
+  ## 'elementIsNull(objects)'.
+  if (!all(sapply(objects, is, Class, USE.NAMES=FALSE)))
+    stop("the objects to combine must be ", Class, " objects (or NULLs)")
+  objects_names <- names(objects)
+  names(objects) <- NULL  # so lapply(objects, ...) below returns an
+  # unnamed list
+
+  ## Combine "NAMES" slots.
+  NAMES_slots <- lapply(objects, function(x) x@NAMES)
+  ## TODO: Use elementIsNull() here when it becomes available.
+  has_no_names <- sapply(NAMES_slots, is.null, USE.NAMES=FALSE)
+  if (all(has_no_names)) {
+    ans_NAMES <- NULL
+  } else {
+    noname_idx <- which(has_no_names)
+    if (length(noname_idx) != 0L)
+      NAMES_slots[noname_idx] <-
+        lapply(elementNROWS(objects[noname_idx]), character)
+    ans_NAMES <- unlist(NAMES_slots, use.names=FALSE)
+  }
+
+  ## Combine "first" slots.
+  first_slots <- lapply(objects, function(x) x@first)
+  ans_first <- do.call(c, c(first_slots, ignore.mcols=ignore.mcols))
+  
+  ## Combine "last" slots.
+  last_slots <- lapply(objects, function(x) x@last)
+  ans_last <- do.call(c, c(last_slots, ignore.mcols=ignore.mcols))
+  
+  ## Combine "mcols" slots. We don't need to use fancy
+  ## IRanges:::rbind.mcols() for this because the "mcols" slot of a
+  ## GAlignmentPairs object is guaranteed to be a DataFrame.
+  if (ignore.mcols) {
+    ans_mcols <- S4Vectors:::make_zero_col_DataFrame(length(ans_first))
+  } else  {
+    mcols_slots <- lapply(objects, function(x) x@elementMetadata)
+    ## Will fail if not all the GAlignmentPairs objects in 'objects' have
+    ## exactly the same metadata cols.
+    ans_mcols <- do.call(rbind, mcols_slots)
+  }
+
+  ## Make 'ans' and return it.
+  new(Class, NAMES=ans_NAMES,
+      first=ans_first,
+      last=ans_last,
+      elementMetadata=ans_mcols)
+}
+
+setMethod("c", "GRangePairs",
+          function(x, ..., ignore.mcols=FALSE, recursive=FALSE)
+          {
+            if (!identical(recursive, FALSE))
+              stop("\"c\" method for GRangePairs objects ",
+                   "does not support the 'recursive' argument")
+            if (missing(x)) {
+              objects <- list(...)
+              x <- objects[[1L]]
+            } else {
+              objects <- list(x, ...)
+            }
+            combine_GRangePairs_objects(class(x), objects,
+                                        use.names=FALSE,
+                                        ignore.mcols=ignore.mcols)
+          }
+)
+
+
 
 ### -----------------------------------------------------------------
 ### show methods for GRangePairs
