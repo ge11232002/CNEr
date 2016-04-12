@@ -42,11 +42,11 @@ test_that("test_readAxt", {
                                                    31086035,
                                                    31087145, 31090882)),
                               strand="+")
-  expect_identical(seqnames(axtHg19DanRer7@targetRanges[1:5]),
+  expect_identical(seqnames(targetRanges(axtHg19DanRer7)[1:5]),
                    seqnames(ansTargetsRanges))
-  expect_identical(ranges(axtHg19DanRer7@targetRanges[1:5]),
+  expect_identical(ranges(targetRanges(axtHg19DanRer7)[1:5]),
                    ranges(ansTargetsRanges))
-  expect_identical(strand(axtHg19DanRer7@targetRanges[1:5]),
+  expect_identical(strand(targetRanges(axtHg19DanRer7)[1:5]),
                    strand(ansTargetsRanges))
   ## Check the query ranges
   ansQueryRanges <- GRanges(seqnames=c("chr25", "chr25", "chr7", 
@@ -57,25 +57,27 @@ test_that("test_readAxt", {
                                            end=c(15031009, 15036688, 60364442,
                                                  15037110, 60364769)),
                             strand=c("+", "+", "-", "+", "-")) 
-  expect_identical(as.character(seqnames(axtHg19DanRer7@queryRanges[1:5])),
+  expect_identical(as.character(seqnames(queryRanges(axtHg19DanRer7)[1:5])),
                    as.character(seqnames(ansQueryRanges)))
-  expect_identical(ranges(axtHg19DanRer7@queryRanges[1:5]),
+  expect_identical(ranges(queryRanges(axtHg19DanRer7)[1:5]),
                    ranges(ansQueryRanges))
-  expect_identical(strand(axtHg19DanRer7@queryRanges[1:5]), 
+  expect_identical(strand(queryRanges(axtHg19DanRer7)[1:5]), 
                    strand(ansQueryRanges))
   
   ## Check the score
-  expect_identical(axtHg19DanRer7@score[1:5],
+  expect_identical(score(axtHg19DanRer7)[1:5],
                    c(246L, 4422L, 5679L, 1743L, 1556L))
   
   library(Biostrings)
   ## Check the target seqs
-  expect_equivalent(subseq(axtHg19DanRer7@targetSeqs[1:5], start=1, end=5),
-                    DNAStringSet(c("ATTTT", "GGGAA", "GGGCT", "TTGTG", "TATTC"))
+  expect_equivalent(subseq(targetSeqs(axtHg19DanRer7)[1:5], start=1, end=5),
+                    DNAStringSet(c("ATTTT", "GGGAA", "GGGCT", "TTGTG", 
+                                   "TATTC"))
                     )
   ## Check the query seqs
-  expect_equivalent(subseq(axtHg19DanRer7@querySeqs[1:5], start=1, end=5),
-                    DNAStringSet(c("ATTTA", "GGAAA", "GGGCT", "TTAAA", "TATTT"))
+  expect_equivalent(subseq(querySeqs(axtHg19DanRer7)[1:5], start=1, end=5),
+                    DNAStringSet(c("ATTTA", "GGAAA", "GGGCT", "TTAAA", 
+                                   "TATTT"))
                     )
   }
 )

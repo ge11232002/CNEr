@@ -67,7 +67,7 @@
 }
 
 \examples{
-  \donttest{  
+  \dontrun{
   axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                   "hg19.danRer7.net.axt")
   axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
@@ -77,6 +77,3 @@
          end=c(31082862,32461581), select="target")
   }
 }
-
-\keyword{methods}
-\keyword{ ~~ other possible keyword(s) ~~ }

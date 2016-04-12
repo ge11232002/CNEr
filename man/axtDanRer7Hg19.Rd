@@ -14,7 +14,6 @@ The dataset axtDanRer7Hg19, axtHg19DanRer7
 
 
 \examples{
-data(axtDanRer7Hg19)
-
+  data(axtDanRer7Hg19)
 }
 \keyword{datasets}

@@ -19,4 +19,15 @@ axt2 = subAxt(axtDanRer7Hg19, chr="chr11", start=31000000L, end=32500000L, selec
 danRer7.hg19.net.axt = axt2
 writeAxt(danRer7.hg19.net.axt, "~/danRer7.hg19.net.axt")
 
+## Prepare the files under data/
+axtFn <- file.path(system.file("extdata", package="CNEr"), 
+                 "hg19.danRer7.net.axt")
+axtHg19DanRer7 <- readAxt(axtFn)
+save(axtHg19DanRer7,
+     file="/Users/gtan/Repos/github/CNEr/data/axtHg19DanRer7.rda")
 
+axtFn <- file.path(system.file("extdata", package="CNEr"), 
+                   "danRer7.hg19.net.axt")
+axtDanRer7Hg19 <- readAxt(axtFn)
+save(axtDanRer7Hg19, 
+     file="/Users/gtan/Repos/github/CNEr/data/axtDanRer7Hg19.rda")

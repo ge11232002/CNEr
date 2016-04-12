@@ -1,20 +1,3 @@
-
-### -----------------------------------------------------------------
-### Axt class related
-###
-setGeneric("targetRanges", function(x) standardGeneric("targetRanges"))
-setGeneric("targetSeqs", function(x) standardGeneric("targetSeqs"))
-setGeneric("queryRanges", function(x) standardGeneric("queryRanges"))
-setGeneric("querySeqs", function(x) standardGeneric("querySeqs"))
-setGeneric("symCount", function(x) standardGeneric("symCount"))
-setGeneric("subAxt", function(x, chr, start, end, #strand=c("+", "-", "*"),
-                              select=c("target", "query"),
-                              qSize=NULL) 
-                      standardGeneric("subAxt")
-                      )
-setGeneric("matchDistr", function(x) standardGeneric("matchDistr"))
-
-
 ### -----------------------------------------------------------------
 ### CNE class related
 ###

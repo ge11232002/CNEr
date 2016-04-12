@@ -28,7 +28,7 @@
 ## Constructors:
 Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
     queryRanges=GRanges(), querySeqs=DNAStringSet(),
-    score=integer(0), symCount=integer(0))
+    score=integer(0), symCount=integer(0), names=NULL)
 
 ## Accessor-like methods:
 \S4method{targetRanges}{Axt}(x)
@@ -55,6 +55,7 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
       The alignment score.}
   \item{symCount}{Object of class \code{"integer"}: 
     The alignment length.}
+    \item{names}{\code{character}(): the names of axt alignments.}
   \item{x}{Object of class \code{"Axt"}:
     A Axt object.}
 }

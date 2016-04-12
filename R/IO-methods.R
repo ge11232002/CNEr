@@ -31,15 +31,15 @@ readAxt <- function(axtFiles){
     stop("No such file ", paste(axtFiles[index_noexists], sep=" "))
   }
   myAxt <- .Call2("myReadAxt", axtFiles, PACKAGE="CNEr")
-  axts <- Axt(targetRanges=GRanges(seqnames=Rle(myAxt[[1]]),
+  axts <- Axt(targetRanges=GRanges(seqnames=myAxt[[1]],
                                    ranges=IRanges(start=myAxt[[2]],
                                                   end=myAxt[[3]]),
-                                   strand=Rle(myAxt[[4]])),
+                                   strand=myAxt[[4]]),
               targetSeqs=DNAStringSet(myAxt[[5]]),
-              queryRanges=GRanges(seqnames=Rle(myAxt[[6]]),
+              queryRanges=GRanges(seqnames=myAxt[[6]],
                                   ranges=IRanges(start=myAxt[[7]],
                                                  end=myAxt[[8]]),
-                                  strand=Rle(myAxt[[9]])),
+                                  strand=myAxt[[9]]),
               querySeqs=DNAStringSet(myAxt[[10]]),
               score=myAxt[[11]],
               symCount=myAxt[[12]]
@@ -76,6 +76,3 @@ writeAxt <- function(axt, con){
                       "", sep="\n")
   writeLines(wholeLines, con)
 }
-
-
-

@@ -110,14 +110,9 @@ axtFilesDanRer7Hg19 <- file.path(system.file("extdata", package="CNEr"),
                                 "danRer7.hg19.net.axt")
 ```
 
-```{r readAxt, eval=FALSE, echo=TRUE}
+```{r readAxt, eval=TRUE, echo=TRUE}
 axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
 axtDanRer7Hg19 <- readAxt(axtFilesDanRer7Hg19)
-```
-
-```{r loadAxt, eval=TRUE, echo=FALSE}
-data(axtHg19DanRer7)
-data(axtDanRer7Hg19)
 ```
 
 ```{r showAxt, eval=TRUE, echo=TRUE}

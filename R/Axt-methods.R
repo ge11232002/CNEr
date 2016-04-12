@@ -25,9 +25,10 @@ setMethod("matchDistr", signature(x="Axt"),
 ### Exported!
 setMethod("mismatchSummary", signature(x="Axt"),
           function(x, ...){
-            compResults <- compDNAStringSet(x@targetSeqs, x@querySeqs)
-            count <- sum(as.numeric(x@symCount)) - sum(sapply(compResults, sum))
-            probability <- count / sum(as.numeric(x@symCount))
+            compResults <- compDNAStringSet(targetSeqs(x), querySeqs(x))
+            count <- sum(as.numeric(symCount(x))) - 
+                       sum(sapply(compResults, sum))
+            probability <- count / sum(as.numeric(symCount(x)))
             return(c("Count"=count, "Probability"=probability))
           }
           )
