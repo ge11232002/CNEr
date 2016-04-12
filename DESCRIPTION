@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.7.12
-Date: 2016-04-11
+Version: 1.7.13
+Date: 2016-04-12
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -36,7 +36,7 @@ BugReports: https://github.com/ge11232002/CNEr/issues
 Type: Package
 biocViews: GeneRegulation, Visualization, DataImport
 NeedsCompilation: yes
-LazyData: yes
+LazyData: no
 Collate: 
         GRangePairs-class.R
         AllGenerics.R
