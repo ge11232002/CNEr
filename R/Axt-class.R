@@ -1,7 +1,6 @@
 ## -----------------------------------------------------------------
 ## Axt class
 ## Exported!
-
 setClass(Class="Axt",
          contains="GRangePairs")
 
@@ -15,9 +14,13 @@ setValidity("Axt",
                                length(symCount(object)))))
                 return("The lengths of targetRanges, targetSeqs,
                        queryRanges, querySeqs, score and symCount
-                       must have be same!")
-              if(any(symCount(object) < 0L))
-                return("Then symCount must be equal or larger than 0!")
+                       must be same!")
+              if(!all(c(all(width(targetRanges(object))==symCount(object)),
+                        all(width(targetSeqs(object))==symCount(object)),
+                        all(width(queryRanges(object))==symCount(object)),
+                        all(width(querySeqs(object))==symCount(object)))))
+                return("The widths of targetRanges, targetSeqs,
+                       queryRanges, querySeqs and symCount must be same!")
               ## Test the class
               if(class(targetRanges(object)) != "GRanges")
                 return("'x@targetRanges' must be a GRanges instance")
@@ -43,7 +46,8 @@ Axt <- function(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   last <- queryRanges
   last$seqs <- querySeqs
   new("Axt", NAMES=names, first=first, last=last,
-      elementMetadata=DataFrame(score=score, symCount=symCount))
+      elementMetadata=DataFrame(score=as.integer(score), 
+                                symCount=as.integer(symCount)))
 }
 
 ### -----------------------------------------------------------------
@@ -76,59 +80,7 @@ setMethod("length", "Axt", function(x) length(targetRanges(x)))
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Subsetting and combining.
-###
-
-setMethod("[", "Axt",
-          function(x, i, ..., drop){
-            if(length(list(...)) > 0L)
-              stop("invalid subsetting")
-            if(missing(i))
-              return(x)
-            i <- normalizeSingleBracketSubscript(i, x)
-            ans_targetRanges <- targetRanges(x)[i]
-            ans_targetSeqs <- targetSeqs(x)[i]
-            ans_queryRanges <- queryRanges(x)[i]
-            ans_querySeqs <- querySeqs(x)[i]
-            ans_score <- score(x)[i]
-            ans_symCount <- symCount(x)[i]
-            initialize(x, targetRanges=ans_targetRanges, targetSeqs=ans_targetSeqs,
-                       queryRanges=ans_queryRanges, querySeqs=ans_querySeqs,
-                       score=ans_score, symCount=ans_symCount)
-          }
-)
-
-setMethod("c", "Axt",
-          function(x, ...){
-            if(missing(x)){
-              args <- unname(list(...))
-              x <- args[[1L]]
-            }else{
-              args <- unname(list(x, ...))
-            }
-            if(length(args) == 1L)
-              return(x)
-            arg_is_null <- sapply(args, is.null)
-            if(any(arg_is_null))
-              args[arg_is_null] <- NULL
-            if(!all(sapply(args, is, class(x))))
-              stop("all arguments in '...' must be ", 
-                   class(x), " objects (or NULLs)")
-            new_targetRanges <- do.call(c, lapply(args, targetRanges))
-            new_targetSeqs <- do.call(c, lapply(args, targetSeqs))
-            new_queryRanges <- do.call(c, lapply(args, queryRanges))
-            new_querySeqs <- do.call(c, lapply(args, querySeqs))
-            new_score <- do.call(c, lapply(args, score))
-            new_symCount <- do.call(c, lapply(args, symCount))
-            
-            initialize(x,
-                       targetRanges=new_targetRanges,
-                       targetSeqs=new_targetSeqs,
-                       queryRanges=new_queryRanges,
-                       querySeqs=new_querySeqs,
-                       score=new_score,
-                       symCount=new_symCount)
-          }
-)
+### Now it uses the implementation of parent class: GRangePairs
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### "show" method.
@@ -198,17 +150,17 @@ showAxt <- function(x, margin="", half_nrow=5L){
                            qNameW, qStartW, qEndW, scoreW)
   }else{
     tNameW <- max(nchar(as.character(seqnames(targetRanges(x)
-                                              [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     tStartW <- max(nchar(as.character(start(targetRanges(x)
-                                            [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+                 [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     tEndW <- max(nchar(as.character(end(targetRanges(x)
-                                        [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     qNameW <- max(nchar(as.character(seqnames(queryRanges(x)
-                                              [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     qStartW <- max(nchar(as.character(start(queryRanges(x)
-                                            [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+                [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     qEndW <- max(nchar(as.character(end(queryRanges(x)
-                                        [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
     scoreW <- max(nchar(as.character(score(x)
                                      [c(1:head_nrow, (lx-tail_nrow+1L):lx)])))
     if(head_nrow > 0){
@@ -245,5 +197,3 @@ setMethod("show", "Axt",
             }
           }
 )
-
-

@@ -1,8 +1,3 @@
-##############   IO functions ###############
-
-
-
-
 ############## Read CNE from SQLite ########
 dbName = "/mnt/biggley/home/gtan/work/projects/CNEr/CNErData/cne.sqlite"
 tableName = "cne2wBf_danRer7_hg19_40_50"

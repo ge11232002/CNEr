@@ -179,6 +179,7 @@ GRangePairs objects
   \code{\link{Axt}}
 }
 \examples{
+  ## Constructor
   library(GenomicRanges)
   first <- GRanges(seqnames=c("chr1", "chr1", "chr2", "chr3"),
                    ranges=IRanges(start=c(1, 20, 2, 3),

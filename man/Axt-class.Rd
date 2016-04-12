@@ -89,7 +89,42 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
 }
 
 \examples{
-showClass("Axt")
+  ## Constructor
+  targetRanges <- GRanges(seqnames=c("chr1", "chr1", "chr2", "chr3"),
+                          ranges=IRanges(start=c(1, 20, 2, 3),
+                                         end=c(10, 25, 10, 10)),
+                          strand="+")
+  targetSeqs <- DNAStringSet(c("ATTTTATGTG", "GGGAAG", "GGGCTTTTG",
+                               "TTGTGTAG"))
+  queryRanges <- GRanges(seqnames=c("chr1", "chr10", "chr10", "chr20"),
+                         ranges=IRanges(start=c(1, 25, 50, 5),
+                                        end=c(10, 30, 58, 12)),
+                         strand="+")
+  querySeqs <- DNAStringSet(c("ATTTAAAG", "GGAAAA", "GGGCTCTGG", "TTAAATAA"))
+  score <- c(246L, 4422L, 5679L, 1743L)
+  symCount <- c(10L, 6L, 9L, 8L)
+  axt <- Axt(targetRanges=targetRanges, targetSeqs=targetSeqs, 
+             queryRanges=queryRanges, querySeqs=querySeqs, 
+             score=score, symCount=symCount)
+  
+  ## getters
+  names(axt)
+  length(axt)
+  first(axt)
+  last(axt)
+  seqnames(axt)
+  strand(axt)
+  seqinfo(axt)
+  
+  ## Vector methods
+  axt[1]
+  
+  ## List methods
+  axt[[1]]
+  unlist(axt)
+  
+  ## Combining
+  c(axt, axt)
 }
 
 \keyword{classes}
