@@ -89,6 +89,8 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
 }
 
 \examples{
+  library(GenomicRanges)
+  library(Biostrings)
   ## Constructor
   targetRanges <- GRanges(seqnames=c("chr1", "chr1", "chr2", "chr3"),
                           ranges=IRanges(start=c(1, 20, 2, 3),
@@ -100,7 +102,8 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
                          ranges=IRanges(start=c(1, 25, 50, 5),
                                         end=c(10, 30, 58, 12)),
                          strand="+")
-  querySeqs <- DNAStringSet(c("ATTTAAAG", "GGAAAA", "GGGCTCTGG", "TTAAATAA"))
+  querySeqs <- DNAStringSet(c("ATTTAAAGTG", "GGAAAA", "GGGCTCTGG",
+                              "TTAAATAA"))
   score <- c(246L, 4422L, 5679L, 1743L)
   symCount <- c(10L, 6L, 9L, 8L)
   axt <- Axt(targetRanges=targetRanges, targetSeqs=targetSeqs, 

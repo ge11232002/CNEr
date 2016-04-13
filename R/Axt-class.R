@@ -15,12 +15,14 @@ setValidity("Axt",
                 return("The lengths of targetRanges, targetSeqs,
                        queryRanges, querySeqs, score and symCount
                        must be same!")
-              if(!all(c(all(width(targetRanges(object))==symCount(object)),
-                        all(width(targetSeqs(object))==symCount(object)),
-                        all(width(queryRanges(object))==symCount(object)),
-                        all(width(querySeqs(object))==symCount(object)))))
-                return("The widths of targetRanges, targetSeqs,
-                       queryRanges, querySeqs and symCount must be same!")
+              if(!(identical(width(targetSeqs(object)), symCount(object)) &&
+                   identical(width(querySeqs(object)), symCount(object))))
+                return("The widths of targetSeqs, querySeqs and 
+                       symCount must be same!")
+              if(!(all(width(targetRanges(object)) <= symCount(object)) &&
+                   all(width(queryRanges(object)) <= symCount(object))))
+                return("The widths of targetRanges and queryRanges
+                       must be equal or smaller than symCount.")
               ## Test the class
               if(class(targetRanges(object)) != "GRanges")
                 return("'x@targetRanges' must be a GRanges instance")
