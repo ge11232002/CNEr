@@ -40,8 +40,7 @@ LazyData: no
 Collate: 
         GRangePairs-class.R
         Axt-class.R
-        AllGenerics.R
-        AllClasses.R
+        CNE-class.R
         utils.R
         ceScan.R
         plot.R 
