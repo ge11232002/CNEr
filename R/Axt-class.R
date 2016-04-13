@@ -60,7 +60,7 @@ setGeneric("targetSeqs", function(x) standardGeneric("targetSeqs"))
 setGeneric("queryRanges", function(x) standardGeneric("queryRanges"))
 setGeneric("querySeqs", function(x) standardGeneric("querySeqs"))
 setGeneric("symCount", function(x) standardGeneric("symCount"))
-setGeneric("subAxt", function(x, chr, start, end, #strand=c("+", "-", "*"),
+setGeneric("subAxt", function(x, chr, start, end,
                               select=c("target", "query"),
                               qSize=NULL) 
   standardGeneric("subAxt")

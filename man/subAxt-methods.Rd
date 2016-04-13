@@ -5,10 +5,12 @@
 \alias{subAxt,Axt,character,missing,missing-method}
 \alias{subAxt,Axt,character,numeric,numeric-method}
 \alias{subAxt,Axt,character,integer,integer-method}
+\alias{subAxt,Axt,GRanges,missing,missing-method}
 
-\title{ \code{subAxt} method}
+\title{Subset an \code{Axt} object}
 \description{
-  Get subset of Axt alignments based on chromosome and ranges.
+  A 'subAxt' method for extracting a set of alignments from
+  an \code{Axt} object.
 }
 
 \usage{
@@ -20,10 +22,12 @@
     A object of \code{Axt}.
   }
   \item{chr}{
-    A object of \code{character}. The chromosome name to extract.
+    A object of \code{character} containing the names of the sequences 
+    in 'x' where to get the alignments from, or a \code{GRanges} object
+    when 'start' and 'end' are missing.
   }
   \item{start, end}{
-    A object of \code{integer}. 
+    A object of \code{integer}() or missing.
     These ranges should be based on the positive strand.
     When select is "query",
     the reverse complement alignments which lay inside this range will also be 
@@ -31,13 +35,13 @@
   }
   \item{select}{
     When select is "target", 
-    the subset criteria is for target alignments in axts.
+    the subset criteria is for target alignments in \code{Axt}.
     When select is "query", 
-    the subset criteria is for query alignments in axts.
+    the subset criteria is for query alignments in \code{Axt}.
   }
   \item{qSize}{
-    When select is "query", 
-    qSize must be provided and is the length of chromosome chr.
+    When select is "query", qSize must be provided as the same length of 'chr'.
+    It holds the chromosome length of 'chr'.
   }
 }
 
@@ -51,15 +55,12 @@
   Hence, the size of chromosome is necessary to 
   convert the search range to a range on negative strand coordinate.
 
-  When one axt is partially overlapped with the range, 
-  subset of the axt will be extract.
-  If the extracted axt alignment has gaps at the beginning or the end,
-  the gap columns will be chopped. 
-  Therefore, the coordinate of alignments will be changed accordingly.
+  When one Axt alignment is partially overlapped with the range, 
+  the full length of the Axt alignment will be extracted.
 }
 
 \value{
-  A subset of \code{Axt} object is returned.
+  An extracted \code{Axt} object is returned.
 }
 
 \author{
@@ -67,13 +68,35 @@
 }
 
 \examples{
-  \dontrun{
+  library(GenomicRanges)
+  ## Prepare the axt object
   axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
                                   "hg19.danRer7.net.axt")
   axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
-  subAxt(axtHg19DanRer7, chr="chr11", start=31500000, end=32500000,
+  
+  ## "character", "integer", "integer" on "target" sequence
+  subAxt(axtHg19DanRer7, chr="chr11", start=31500000L, end=32500000L,
          select="target")
-  subAxt(axtHg19DanRer7, chr="chr11", start=c(31082021, 32461267), 
-         end=c(31082862,32461581), select="target")
-  }
+  
+  ## "GRanges"" on "target" sequence
+  searchGRanges <- GRanges(seqnames="chr11",
+                           ranges=IRanges(start=31500000,
+                                          end=32500000),
+                           strand="+")
+  subAxt(axtHg19DanRer7, searchGRanges, select="target")
+  
+  ## multiple "character", "integer", "integer" on "target" sequence
+  subAxt(axtHg19DanRer7, chr="chr11", start=c(31082021L, 32461267L),
+         end=c(31082862L, 32461581L), select="target")
+  
+  ## "character" only on "target" sequence
+  subAxt(axtHg19DanRer7, chr="chr11", select="target")
+  
+  ## GRanges on "query" sequence
+  searchGRanges <- GRanges(seqnames="chr25",
+                           ranges=IRanges(start=15559655,
+                                          end=15575192),
+                           strand="+")
+  subAxt(axtHg19DanRer7, searchGRanges, select="query", 
+         qSize=c("chr25"=38499472L))
 }

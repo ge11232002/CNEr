@@ -66,3 +66,23 @@ test_that("test_Axt", {
   expect_identical(length(c(axt, axt)), 8L)
 }
 )
+
+test_that("test_subAxt", {
+  library(GenomicRanges)
+  data(axtHg19DanRer7)
+  
+  ## Test selection on target sequence
+  axt <- subAxt(axtHg19DanRer7, chr="chr11", start=31500000L, end=32500000L,
+                select="target")
+  expect_identical(length(axt), 94L)
+  
+  ## Test selection on query sequence
+  searchGRanges <- GRanges(seqnames="chr25",
+                           ranges=IRanges(start=15559655,
+                                          end=15575192),
+                           strand="+")
+  axt <- subAxt(axtHg19DanRer7, searchGRanges, select="query", 
+                qSize=c("chr25"=38499472L))
+  expect_identical(length(axt), 5L)
+})
+

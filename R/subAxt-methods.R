@@ -1,38 +1,109 @@
 ### -----------------------------------------------------------------
-### get the subset of axt based on chr, start, end and from which sequence
+### subAxt: get the subset of axt based on chr, start, end 
+###         and from which sequence
 ### Exported!!
-
+### -----------------------------------------------------------------
+### subAxt method for character, integer, integer
 setMethod("subAxt", signature(x="Axt", chr="character",
                               start="integer", end="integer"),
-          function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
-            .subAxtMultiple(x, chr=chr, start=start, end=end,
-                            select=select, qSize=qSize)
+          function(x, chr, start, end, select=c("target", "query"),
+                   qSize=NULL){
+            searchGRanges <- GRanges(seqnames=chr,
+                                     ranges=IRanges(start=start, end=end),
+                                     strand="+")
+            subAxt(x, searchGRanges, select=select, qSize=qSize)
           }
           )
 
+### -----------------------------------------------------------------
+### subAxt method for GRanges
+setMethod("subAxt", signature(x="Axt", chr="GRanges",
+                              start="missing", end="missing"),
+          function(x, chr, start, end, select=c("target", "query"),
+                   qSize=NULL){
+            select <- match.arg(select)
+            if(select == "query"){
+              if(is.null(qSize) | length(qSize) != length(chr)){
+                stop("When selecting on query alignments,
+                     qSize must be provided and has the same length 
+                     as start.")
+              }
+              if(!is(qSize, "integer")){
+                stop("qSize must be an integer object.")
+              }
+            }
+            searchGRanges <- reduce(chr)
+            strand(searchGRanges) <- "+"
+            .subAxtWhole(x, searchGRanges, select=select, qSize=qSize)
+          }
+          )
+
+### -----------------------------------------------------------------
+### subAxt method for character, numeric, numeric
 setMethod("subAxt", signature(x="Axt", chr="character",
                               start="numeric", end="numeric"),
-          function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
+          function(x, chr, start, end, select=c("target", "query"),
+                   qSize=NULL){
             subAxt(x, chr, as.integer(start), as.integer(end), 
                    select=select, qSize=qSize)
           }
           )
 
+### -----------------------------------------------------------------
+### subAxt method for chr only
 setMethod("subAxt", signature(x="Axt", chr="character",
                               start="missing", end="missing"),
-          function(x, chr, start, end, select=c("target", "query"), qSize=NULL){
+          function(x, chr, start, end, select=c("target", "query"),
+                   qSize=NULL){
             select <- match.arg(select)
             if(select == "target"){
-              ans <- x[seqnames(targetRanges(x)) %in% chr]
+              ans <- x[as.character(seqnames(targetRanges(x))) %in% chr]
             }else{
-              ans <- x[seqnames(queryRanges(x)) %in% chr]
+              ans <- x[as.character(seqnames(queryRanges(x))) %in% chr]
             }
             return(ans)
           }
           )
 
+### -----------------------------------------------------------------
+### .subAxtWhole: get the full axt alignment with searchGRanges
+### Not exported!
+.subAxtWhole <- function(x, searchGRanges, select=c("target", "query"),
+                         qSize=NULL){
+  if(select == "target"){
+    hitsAny <- findOverlaps(targetRanges(x),
+                            searchGRanges, type="any",
+                            select="all", ignore.strand=TRUE)
+    indexAny <- queryHits(hitsAny)
+    ans <- x[indexAny]
+  }else if(select == "query"){
+    start <- start(searchGRanges)
+    end <- end(searchGRanges)
+    ## first search Axts on positive strand
+    hitsPositiveAny <- findOverlaps(queryRanges(x),
+                                    searchGRanges, type="any",
+                                    select="all", ignore.strand=FALSE)
+    indexPositiveAny <- queryHits(hitsPositiveAny)
+    # then search Axts on negative strand.
+    # we need to prepare the searchGRanges on negative strand.
+    searchGRangesNegative <- GRanges(seqnames=seqnames(searchGRanges),
+                                     ranges=IRanges(start=qSize-end+1,
+                                                    end=qSize-start+1),
+                                     strand="-")
+    searchGRangesNegative <- reduce(searchGRangesNegative)
+    hitsNegativeAny <- findOverlaps(queryRanges(x),
+                                    searchGRangesNegative, type="any",
+                                    select="all")
+    indexNegativeAny <- queryHits(hitsNegativeAny)
+    ans <- x[c(indexPositiveAny, indexNegativeAny)]
+  }
+  return(ans)
+}
+
+### -----------------------------------------------------------------
 ## This is to fetch the Axts within the specific chrs, starts, ends
 ## based on target sequences.
+### Not used.
 .subAxtFull <- function(x, chr, start, end,
                         select=c("target", "query"),
                         #type=c("any", "within"),
@@ -125,39 +196,29 @@ setMethod("subAxt", signature(x="Axt", chr="character",
   }
 }
 
-.subAxtMultiple <- function(x, chr, start, end,
+### -----------------------------------------------------------------
+### .subAxtMultiple: get the partial axt with the searchGRanges
+### Not used!
+.subAxtMultiple <- function(x, searchGRanges,
                             select=c("target", "query"),
                             qSize=NULL){
   ## We will allow multiple chr, start, end
-  select <- match.arg(select)
-  if(select == "query"){
-    if(is.null(qSize)){
-      stop("When selecting on query alignments,
-           qSize must be provided.")
-    }
-    if(!is(qSize, "integer")){
-      stop("qSize must be an integer object.")
-    }
-  }
-  searchGRanges <- GRanges(seqnames=chr,
-                           ranges=IRanges(start=start, end=end),
-                           strand="+")
-  searchGRanges <- reduce(searchGRanges)
+  chr <- seqnames(searchGRanges)
   start <- start(searchGRanges)
   end <- end(searchGRanges)
   if(select == "target"){
     ## First we find the axts totally within the coordinates
     hitsWithin <- findOverlaps(targetRanges(x),
                                searchGRanges, type="within",
-                               select="all")
+                               select="all", ignore.strand=TRUE)
     indexWithin <- queryHits(hitsWithin)
     hitsAny <- findOverlaps(targetRanges(x),
                             searchGRanges, type="any",
-                            select="all")
+                            select="all", ignore.strand=TRUE)
     indexAny <- queryHits(hitsAny)
     ## Specially take care of the axt just partially overlapped with the range
     hitsPartial <- setdiff(hitsAny, hitsWithin)
-    newAxts = list()
+    newAxts <- list()
     if(length(hitsPartial) > 0L){
       newStarts <- pmax(start(targetRanges(x)[queryHits(hitsPartial)]), 
                         start(searchGRanges)[subjectHits(hitsPartial)])
@@ -228,8 +289,9 @@ setMethod("subAxt", signature(x="Axt", chr="character",
   }
 }
 
-
-
+### -----------------------------------------------------------------
+### subAln: subset the alignment, deal with the new start, end
+### Not used.
 subAln <- function(x, start, end, select=c("target", "query")){
   if(length(x) != 1L){
     stop("subAln only operates on Axt of length 1")
@@ -276,5 +338,3 @@ subAln <- function(x, start, end, select=c("target", "query")){
              score=score(x), symCount=alnEnd-alnStart+1L)
   return(ans)
 }
-
-

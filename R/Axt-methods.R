@@ -32,6 +32,3 @@ setMethod("mismatchSummary", signature(x="Axt"),
             return(c("Count"=count, "Probability"=probability))
           }
           )
-
-
-
