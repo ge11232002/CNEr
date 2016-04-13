@@ -40,13 +40,6 @@ seqToAlignment <- function(DNAStringSet){
 ### rever the cigar string. i.e. 20M15I10D will be reversed to 10D15I20M.
 ### EXPORTED!
 reverseCigar <- function(cigar, ops=CIGAR_OPS){
-  #cigar = sapply(splitCigar(cigar), function(x){
-  #               paste0(rev(x[[2]]), rev(rawToChar(x[[1]], multiple=TRUE)), 
-  #                      collapse="")
-  #                       }
-  # splitCigar is deprecated...Before I am in the Bioconductor..
-  # some new cigar utilities functions.
-  #)
   cigarOps <- lapply(explodeCigarOps(cigar, ops=ops), rev)
   cigarOpsLengths <- lapply(explodeCigarOpLengths(cigar, ops=ops), rev)
   cigar <- mapply(paste0, cigarOpsLengths, cigarOps, collapse="")
@@ -293,25 +286,6 @@ fetchChromSizes <- function(assembly){
   }
   # other sources? Add later
   return(NULL)
-  ## MySQL way
-  ## UCSC
-  #message("Trying UCSC...")
-  #con <- try(dbConnect(MySQL(), user="genome", password="", 
-  #                     dbname=assembly, host="genome-mysql.cse.ucsc.edu"), 
-  #           silent=TRUE)
-  #if(class(con) != "try-error"){
-  #  on.exit(dbDisconnect(con))
-  #  sqlCmd <- "SELECT chrom,size FROM chromInfo ORDER BY size DESC"
-  #  ans <- try(dbGetQuery(con, sqlCmd))
-  #  if(class(ans) == "try-error"){
-  #    return(NULL)
-  #  }else{
-  #    ans <- Seqinfo(seqnames=ans$chrom, seqlengths=ans$size, genome=assembly)
-  #    return(ans)
-  #  }
-  #}
-  ## other sources? Add later
-  #return(NULL)
 }
 
 
