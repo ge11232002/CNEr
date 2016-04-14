@@ -4,22 +4,37 @@
 setClass(Class="CNE",
          slots=c(assembly1="character",
                  assembly2="character",
-                 thresholds="character",
-                 CNE1="list",
-                 CNE2="list",
-                 CNEMerged="list",
-                 CNERepeatsFiltered="list",
-                 alignMethod="character"
-         )
+                 window="integer",
+                 identity="integer",
+                 CNE12="GRangePairs",
+                 CNE21="GRangePairs",
+                 CNEMerged="GRangePairs",
+                 CNEFinal="GRangePairs",
+                 aligner="character",
+                 smoothingWindow1="integer",
+                 smoothingWindow2="integer"
+         ),
+         prototype=list(assembly1=character(1),
+                        assembly2=character(1),
+                        window=50L,
+                        identity=50L,
+                        CNE12=GRangePairs(),
+                        CNE21=GRangePairs(),
+                        CNEMerged=GRangePairs(),
+                        CNEFinal=GRangePairs(),
+                        aligner="BLAT",
+                        smoothingWindow1=300L,
+                        smoothingWindow2=300L
+                        )
 )
 
 setValidity("CNE",
             function(object){
-              if(length(object@assembly1) != 1L)
+              if(length(assembly1(object)) != 1L)
                 return("The name of assembly1 must be length 1!")
-              if(length(object@alignMethod) != 1L)
+              if(length(object@aligner) != 1L)
                 return("The align method must be length 1!")
-              if(length(object@assembly2) != 1L)
+              if(length(assembly1(object)) != 1L)
                 return("The name of assembly2 must be length 1!")
               if(!all(grepl("^\\d+_\\d+$", object@thresholds)))
                 return("The thresholds must be in format of 49_50!")
@@ -39,17 +54,15 @@ setValidity("CNE",
 )
 
 ### -----------------------------------------------------------------
-### CNE class related
+### CNE class Generics
 ###
 setGeneric("assembly1", function(x) standardGeneric("assembly1"))
 setGeneric("assembly2", function(x) standardGeneric("assembly2"))
-setGeneric("CNE1", function(x) standardGeneric("CNE1"))
-setGeneric("CNE2", function(x) standardGeneric("CNE2"))
+setGeneric("CNE12", function(x) standardGeneric("CNE12"))
+setGeneric("CNE21", function(x) standardGeneric("CNE21"))
 setGeneric("thresholds", function(x) standardGeneric("thresholds"))
 setGeneric("CNEMerged", function(x) standardGeneric("CNEMerged"))
-setGeneric("CNERepeatsFiltered", function(x) 
-  standardGeneric("CNERepeatsFiltered"))
-
+setGeneric("CNEFinal", function(x) standardGeneric("CNEFinal"))
 setGeneric("saveCNEToSQLite", 
            function(CNE, dbName, tableName, overwrite=FALSE) 
              standardGeneric("saveCNEToSQLite"))
@@ -57,10 +70,6 @@ setGeneric("CNEDensity",
            function(dbName, tableName, assembly1, assembly2, threshold,
                     chr, start, end, windowSize, minLength=NULL)
              standardGeneric("CNEDensity"))
-
-### -----------------------------------------------------------------
-### ceScan
-### Exported!
 setGeneric("ceScan", 
            function(axts, tFilter, qFilter, qSizes, thresholds="49_50")
              standardGeneric("ceScan"))
@@ -70,11 +79,12 @@ setGeneric("ceScan",
 ### Exported!
 setMethod("assembly1", "CNE", function(x) x@assembly1)
 setMethod("assembly2", "CNE", function(x) x@assembly2)
-setMethod("CNE1", "CNE", function(x) x@CNE1)
-setMethod("CNE2", "CNE", function(x) x@CNE2)
-setMethod("thresholds", "CNE", function(x) x@thresholds)
+setMethod("CNE12", "CNE", function(x) x@CNE12)
+setMethod("CNE21", "CNE", function(x) x@CNE21)
+setMethod("thresholds", "CNE", function(x)
+  paste(x@identity, x@window, sep="_"))
 setMethod("CNEMerged", "CNE", function(x) x@CNEMerged)
-setMethod("CNERepeatsFiltered", "CNE", function(x) x@CNERepeatsFiltered)
+setMethod("CNEFinal", "CNE", function(x) x@CNEFinal)
 
 ### -----------------------------------------------------------------
 ### CNE constructor.
