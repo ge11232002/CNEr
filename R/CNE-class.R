@@ -32,30 +32,22 @@ setValidity("CNE",
             function(object){
               if(length(assembly1(object)) != 1L)
                 return("The name of assembly1 must be length 1!")
+              if(length(assembly2(object)) != 1L)
+                return("The name of assembly2 must be length 1!")
               if(length(object@aligner) != 1L)
                 return("The align method must be length 1!")
-              if(length(assembly1(object)) != 1L)
-                return("The name of assembly2 must be length 1!")
-              if(!all(grepl("^\\d+_\\d+$", object@thresholds)))
-                return("The thresholds must be in format of 49_50!")
-              if(any(as.integer(
-                sapply(strsplit(object@thresholds, "_"), "[", 2))
-                < as.integer(
-                  sapply(strsplit(object@thresholds, "_"), "[", 1))))
-                return("The window size cannot be smaller than identity score!")
-              if(length(object@CNE1) != length(object@thresholds) ||
-                 length(object@CNE2) != length(object@thresholds) ||
-                 length(object@CNEMerged) != length(object@thresholds) ||
-                 length(object@CNERepeatsFiltered) != length(object@thresholds))
-                return("The number of cne tables must be same with
-                       number of thresholds!")
+              if(object@identity > object@window)
+                return("The identity must be equal to smaller than window")
+              if(smoothingWindow1 > 1000 || smoothingWindow1 < 10)
+                return("The smoothingWindow1 must be between 10 and 1000")
+              if(smoothingWindow2 > 1000 || smoothingWindow2 < 10)
+                return("The smoothingWindow2 must be between 10 and 1000")
               return(TRUE)
             }
 )
 
 ### -----------------------------------------------------------------
 ### CNE class Generics
-###
 setGeneric("assembly1", function(x) standardGeneric("assembly1"))
 setGeneric("assembly2", function(x) standardGeneric("assembly2"))
 setGeneric("CNE12", function(x) standardGeneric("CNE12"))
@@ -89,14 +81,17 @@ setMethod("CNEFinal", "CNE", function(x) x@CNEFinal)
 ### -----------------------------------------------------------------
 ### CNE constructor.
 ### Exported!
-CNE <- function(assembly1=character(), assembly2=character(),
-                thresholds=character(),
-                CNE1=list(), CNE2=list(),
-                CNEMerged=list(), CNERepeatsFiltered=list(),
-                alignMethod=character()
+CNE <- function(assembly1=character(1), assembly2=character(1),
+                window=50L, identity=50L,
+                CNE12=GRangePairs(), CNE21=GRangePairs(),
+                CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
+                aligner="BLAT",
+                smoothingWindow1=300L,
+                smoothingWindow2=300L
 ){
   new("CNE", assembly1=assembly1, assembly2=assembly2,
-      thresholds=thresholds, CNE1=CNE1, CNE2=CNE2,
-      CNEMerged=CNEMerged, CNERepeatsFiltered=CNERepeatsFiltered,
-      alignMethod=alignMethod)
+      window=window, identity=identity, CNE12=CNE12, CNE21=CNE21,
+      CNEMerged=CNEMerged, CNEFinal=CNEFinal,
+      aligner=aligner, smoothingWindow1=smoothingWindow1, 
+      smoothingWindow2=smoothingWindow2)
 }

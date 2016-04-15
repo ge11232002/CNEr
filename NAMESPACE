@@ -85,12 +85,14 @@ export(
   #queryAnnotationSQLite,
   fetchChromSizes,
 
-  ## AllClasses.r
+  ## Axt-class.R
   Axt,
+  ## CNE-class.R
   CNE,
+  ## GRangePairs-class.R
   GRangePairs,
 
-  # io.r
+  # IO-methods.R
   readBed,
   readAxt,
   axtInfo,
@@ -134,15 +136,17 @@ export(
 ###
 
 exportMethods(
-  ## AllClasses.r
+  ## Axt-class.R
   targetRanges, queryRanges,
   targetSeqs, querySeqs,
   symCount,
   subAxt,
+  
+  # CNE-class.R
   assembly1, assembly2,
-  CNE1, CNE2,
+  CNE12, CNE21,
   thresholds,
-  CNEMerged, CNERepeatsFiltered,
+  CNEMerged, CNEFinal,
   
   ## utils.r
   saveCNEToSQLite,
