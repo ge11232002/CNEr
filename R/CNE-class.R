@@ -63,7 +63,7 @@ setGeneric("CNEDensity",
                     chr, start, end, windowSize, minLength=NULL)
              standardGeneric("CNEDensity"))
 setGeneric("ceScan", 
-           function(axts, tFilter, qFilter, qSizes, thresholds="49_50")
+           function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L)
              standardGeneric("ceScan"))
 
 ### -----------------------------------------------------------------
