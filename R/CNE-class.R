@@ -38,9 +38,9 @@ setValidity("CNE",
                 return("The align method must be length 1!")
               if(object@identity > object@window)
                 return("The identity must be equal to smaller than window")
-              if(smoothingWindow1 > 1000 || smoothingWindow1 < 10)
+              if(object@smoothingWindow1 > 1000 || object@smoothingWindow1 < 10)
                 return("The smoothingWindow1 must be between 10 and 1000")
-              if(smoothingWindow2 > 1000 || smoothingWindow2 < 10)
+              if(object@smoothingWindow2 > 1000 || object@smoothingWindow2 < 10)
                 return("The smoothingWindow2 must be between 10 and 1000")
               return(TRUE)
             }

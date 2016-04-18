@@ -383,6 +383,3 @@ ceScanOneStep <- function(axt1, filter1=NULL, sizes1, assembly1, twoBit1,
              alignMethod=blatBinary)
   return(ans)
 }
-
-
-
