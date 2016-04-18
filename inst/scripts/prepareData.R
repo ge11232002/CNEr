@@ -1,25 +1,7 @@
 library(CNEr)
 library(rtracklayer)
-axtFilesHg19DanRer7 = list.files(path="/Users/gtan/CSC/CNEr/axtNet",
-                                                                  pattern=".*hg19\\.danRer7\\.*", full.names=TRUE)
-axtHg19DanRer7 = readAxt(axtFilesHg19DanRer7)
-axtFilesDanRer7Hg19 = list.files(path="/Users/gtan/CSC/CNEr/axtNet",
-                                                                  pattern=".*danRer7\\.hg19\\.*", full.names=TRUE)
-axtDanRer7Hg19 = readAxt(axtFilesDanRer7Hg19)
 
-qSize = fetchChromSizes("hg19")
-qSize = seqlengths(qSize["chr11"])
-type="any"
-select="target"
-
-axt1 = subAxt(axtHg19DanRer7, chr="chr11", start=31000000L, end=32500000L, select="target", type="any")
-hg19.danRer7.net.axt = axt1
-writeAxt(hg19.danRer7.net.axt, "~/hg19.danRer7.net.axt")
-axt2 = subAxt(axtDanRer7Hg19, chr="chr11", start=31000000L, end=32500000L, select="query", type="any", qSize)
-danRer7.hg19.net.axt = axt2
-writeAxt(danRer7.hg19.net.axt, "~/danRer7.hg19.net.axt")
-
-## Prepare the files under data/
+# Prepare the files under data/
 axtFn <- file.path(system.file("extdata", package="CNEr"), 
                  "hg19.danRer7.net.axt")
 axtHg19DanRer7 <- readAxt(axtFn)
@@ -31,3 +13,17 @@ axtFn <- file.path(system.file("extdata", package="CNEr"),
 axtDanRer7Hg19 <- readAxt(axtFn)
 save(axtDanRer7Hg19, 
      file="/Users/gtan/Repos/github/CNEr/data/axtDanRer7Hg19.rda")
+
+# Prepare the Axt alignments for the regions of barhl2 and sox14
+## hg38 vs danRer10
+axtFnHg38DanRer10 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/hg38.danRer10.net.axt.gz"
+axtFnDanRer10Hg38 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/danRer10.hg38.net.axt.gz"
+axtHg38DanRer10 <- readAxt(axtFnHg38DanRer10)
+axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38)
+qSize <- fetchChromSizes("hg38")
+qSize <- seqlengths(qSize["chr6"])
+## subAxt
+danRer10.hg38.net.axt <- subAxt(axtDanRer10Hg38, chr="chr6", start=24000000, end=27000000L, select="target")
+writeAxt(danRer10.hg38.net.axt, "~/danRer10.hg38.net.axt")
+hg38.danRer10.net.axt <- subAxt(axtHg38DanRer10, chr="chr6", start=24000000, end=27000000L, select="query", qSize)
+writeAxt(hg38.danRer10.net.axt, "~/hg38.danRer10.net.axt")
