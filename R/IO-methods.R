@@ -9,7 +9,7 @@ readBed <- function(bedFile){
   bed <- read_tsv(bedFile, col_names=FALSE, comment="track")
   ## We only need the first three columns of the bed file, 
   ## but keep the strand information when available
-  if(is.null(bed[[4]])){
+  if(ncol(bed) == 3L){
     strands <- factor("+")
   }else{
     strands <- bed[[6]]

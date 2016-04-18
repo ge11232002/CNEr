@@ -122,64 +122,39 @@ ceScanFile <- function(axtFiles, tFilterFile=NULL, qFilterFile=NULL,
 }
 
 ### -----------------------------------------------------------------
-### The S4 methods for ceScan
+### The function for ceScan one way
 ### Exported!
-setMethod("ceScan", signature(axts="Axt", tFilter="GRanges", qFilter="GRanges",
-                              qSizes="Seqinfo"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 
-                    qSizes=qSizes, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="Axt", tFilter="missing", qFilter="GRanges",
-                              qSizes="Seqinfo"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanR(axts, tFilter=NULL, qFilter=qFilter,
-                    qSizes=qSizes, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="Axt", tFilter="missing", qFilter="missing",
-                              qSizes="missing"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanR(axts, tFilter=NULL, qFilter=NULL,
-                    qSizes=NULL, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="Axt", tFilter="GRanges", qFilter="missing",
-                              qSizes="missing"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanR(axts, tFilter=tFilter, qFilter=NULL,
-                    qSizes=NULL, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="character", tFilter="character", 
-                              qFilter="character", qSizes="Seqinfo"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanFile(axtFiles=axts, tFilterFile=tFilter, qFilterFile=qFilter,
-                       qSizes=qSizes, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="character", tFilter="missing",
-                              qFilter="character", qSizes="Seqinfo"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanFile(axtFiles=axts, tFilterFile=NULL, qFilterFile=qFilter,
-                       qSizes=qSizes, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="character", tFilter="missing",
-                              qFilter="missing", qSizes="missing"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanFile(axtFiles=axts, tFilterFile=NULL, qFilterFile=NULL,
-                       qSizes=NULL, thresholds=thresholds)
-          }
-          )
-setMethod("ceScan", signature(axts="character", tFilter="character",
-                              qFilter="missing", qSizes="missing"),
-          function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L){
-            ceScanFile(axtFiles=axts, tFilterFile=tFilter, qFilterFile=NULL,
-                       qSizes=NULL, thresholds=thresholds)
-          }
-          )
+ceScan <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+                   window=50L, identity=50L){
+  if(!is.null(tFilter) && !is(tFilter, "GRanges")){
+    stop("tFilter must be NULL or a GRanges object!")
+  }
+  if(!is.null(qFilter) && !is(qFilter, "GRanges")){
+    stop("qFilter must be NULL or a GRanges object!")
+  }
+  if(!is.null(qSizes) && !is(qSizes, "Seqinfo")){
+    stop("qSizes must be NULL or a Seqinfo object!")
+  }
+  if(!is.null(qFilter) && is.null(qSizes)){
+    stop("qSizes must not be NULL when qFilter is not NULL!")
+  }
+  if(any(window < identity)){
+    stop("The scanning window size must be equal or larger than identity!")
+  }
+  if(length(identity) != length(window)){
+    warning("The length of identity and window are different.
+            The short one will be recycled.")
+  }
+  thresholds <- paste(identity, window, sep="_")
+  if(is(axts, "Axt")){
+    ans <- ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 
+                   qSizes=qSizes, thresholds=thresholds)
+  }else if(is.character(axts)){
+    axtsAll <- readAxt(axts)
+    ans <- ceScanR(axtsAll, tFilter=tFilter, qFilter=qFilter, 
+                   qSizes=qSizes, thresholds=thresholds)
+  }
+}
 
 ### -----------------------------------------------------------------
 ### Merge two side cnes

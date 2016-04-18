@@ -71,7 +71,7 @@ CNE(assembly1=character(1), assembly2=character(1),
       The smoothing window for calculating the CNE density on assembly1.
       It is in kb and ranging from 10 to 1000.}
     \item{smoothingWindow2}{Object of class \code{"integer"}:
-      The smoothing window for calculating the CNE density on assembly1.
+      The smoothing window for calculating the CNE density on assembly2.
       It is in kb and ranging from 10 to 1000.}
 }
 

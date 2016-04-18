@@ -254,18 +254,18 @@ several similarity criterias (__I/C__) range from 70% to 100%.
 ## axt, GRanges objects as input
 CNEHg19DanRer7 <- ceScan(axts=axtHg19DanRer7, tFilter=bedHg19,
                          qFilter=bedDanRer7, qSizes=qSizesDanRer7,
-                         thresholds=c("45_50", "48_50", "49_50"))
+                         window=50, identity=c(45, 48, 49))
 CNEDanRer7Hg19 <- ceScan(axts=axtDanRer7Hg19, tFilter=bedDanRer7,
                          qFilter=bedHg19, qSizes=qSizesHg19,
-                         thresholds=c("45_50", "48_50", "49_50"))
+                         window=50, identity=c(45, 48, 49))
 
 ## axt and bed files as input
-CNEHg19DanRer7 <- ceScan(axts=axtFilesHg19DanRer7, tFilter=bedHg19Fn,
-                         qFilter=bedDanRer7Fn, qSizes=qSizesDanRer7,
-                         thresholds=c("45_50", "48_50", "49_50"))
-CNEDanRer7Hg19 <- ceScan(axts=axtFilesDanRer7Hg19, tFilter=bedDanRer7Fn,
-                         qFilter=bedHg19Fn, qSizes=qSizesHg19,
-                         thresholds=c("45_50", "48_50", "49_50"))
+#CNEHg19DanRer7 <- ceScan(axts=axtFilesHg19DanRer7, tFilter=bedHg19Fn,
+#                         qFilter=bedDanRer7Fn, qSizes=qSizesDanRer7,
+#                         window=50, identity=c(45, 48, 49))
+#CNEDanRer7Hg19 <- ceScan(axts=axtFilesDanRer7Hg19, tFilter=bedDanRer7Fn,
+#                         qFilter=bedHg19Fn, qSizes=qSizesHg19,
+#                         window=50, identity=c(45, 48, 49))
 ```
 
 At this stage, a list of `data.frame` is returned 
