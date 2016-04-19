@@ -35,7 +35,7 @@ importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
-importFrom(IRanges, IRanges)
+importFrom(IRanges, IRanges, IntegerList)
 importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
            normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript,
            isTRUEorFALSE, isSingleString)
@@ -61,11 +61,10 @@ exportMethods(
   ## AllClasses.r
   length,
   score,
-  nchar,
   names, seqnames, "names<-", strand,
   
   ## GRangePairs-class.R
-  first, last, grglist, seqinfo,
+  first, last, grglist, seqinfo, swap,
 
   ## Axt-methods.R
   mismatchSummary

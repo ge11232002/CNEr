@@ -12,7 +12,6 @@
 \alias{querySeqs,Axt-method}
 \alias{score,Axt-method}
 \alias{symCount}
-\alias{nchar,Axt-method}
 \alias{symCount,Axt-method}
 \alias{targetRanges}
 \alias{targetRanges,Axt-method}
@@ -37,7 +36,6 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
 \S4method{querySeqs}{Axt}(x)
 \S4method{score}{Axt}(x)
 \S4method{symCount}{Axt}(x)
-\S4method{nchar}{Axt}(x)
 ## ... and more (see Methods)
 }
 
@@ -70,7 +68,7 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
     \item{querySeqs}{\code{signature(x = "Axt")}: 
       Get the alignment sequences of query genome.}
     \item{score}{\code{signature(x = "Axt")}: Get the alignment score.}
-    \item{symCount,nchar}{\code{signature(x = "Axt")}: Get the alignment lengths.}
+    \item{symCount}{\code{signature(x = "Axt")}: Get the alignment lengths.}
     \item{targetRanges}{\code{signature(x = "Axt")}: 
       Get the ranges of reference genome.}
     \item{targetSeqs}{\code{signature(x = "Axt")}: 

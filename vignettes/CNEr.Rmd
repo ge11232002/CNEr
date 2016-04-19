@@ -104,20 +104,20 @@ such as chr1.hg19.mm10.net.axt.gz, chr2.hg19.mm10.net.axt.gz, etc.
 
 ```{r Axt, eval=TRUE, echo=TRUE}
 library(CNEr)
-axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
-                                "hg19.danRer7.net.axt")
-axtFilesDanRer7Hg19 <- file.path(system.file("extdata", package="CNEr"), 
-                                "danRer7.hg19.net.axt")
+axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"), 
+                                  "hg38.danRer10.net.axt")
+axtFilesDanRer10Hg38 <- file.path(system.file("extdata", package="CNEr"), 
+                                  "danRer10.hg38.net.axt")
 ```
 
 ```{r readAxt, eval=TRUE, echo=TRUE}
-axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
-axtDanRer7Hg19 <- readAxt(axtFilesDanRer7Hg19)
+axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
+axtDanRer10Hg38 <- readAxt(axtFilesDanRer10Hg38)
 ```
 
 ```{r showAxt, eval=TRUE, echo=TRUE}
-axtHg19DanRer7
-axtDanRer7Hg19
+axtHg38DanRer10
+axtDanRer10Hg38
 ```
 
 ## filtering information
@@ -160,26 +160,29 @@ A few examples are given here:
 ## To fetch rmak table from UCSC
 library(rtracklayer)
 mySession <- browserSession("UCSC")
-genome(mySession) <- "hg19"
-hg19.rmsk <- getTable(ucscTableQuery(mySession, track="RepeatMasker",
-               table="rmsk"))
-hg19.rmskGRanges <- GRanges(seqnames=hg19.rmsk$genoName,
+genome(mySession) <- "hg38"
+hg38.rmsk <- getTable(ucscTableQuery(mySession, track="RepeatMasker",
+                                     table="rmsk"))
+hg38.rmskGRanges <- GRanges(seqnames=hg19.rmsk$genoName,
                             ## The UCSC coordinate is 0-based.
-                            ranges=IRanges(start=hg19.rmsk$genoStart+1,
-                                           end=hg19.rmsk$genoEnd),
-                            strand=hg19.rmsk$strand)
+                            ranges=IRanges(start=hg38.rmsk$genoStart+1,
+                                           end=hg38.rmsk$genoEnd),
+                            strand=hg38.rmsk$strand)
 ## To fetch ensembl gene exons from BioMart
 library(biomaRt)
-ensembl <- useMart("ensembl", host="feb2014.archive.ensembl.org")
+ensembl <- useMart(biomart="ENSEMBL_MART_ENSEMBL",
+                   host="dec2015.archive.ensembl.org")
 ensembl <-  useDataset("hsapiens_gene_ensembl",mart=ensembl)
 attributes <- listAttributes(ensembl)
-exons <- getBM(attributes=c("chromosome_name", "exon_chrom_start", "exon_chrom_end", "strand"), 
-               mart = ensembl)
+exons <- getBM(attributes=c("chromosome_name", "exon_chrom_start",
+                            "exon_chrom_end", "strand"), 
+               mart=ensembl)
 exonsRanges <- GRanges(seqnames=exons$chromosome_name,
                        ranges=IRanges(start=exons$exon_chrom_start,
                                       end=exons$exon_chrom_end),
                        strand=ifelse(exons$strand==1L, "+", "-")
                        )
+seqlevelsStyle(exonsRanges) <- "UCSC"
 ## Use the existing Bioconductor annotation package
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg19.knownGene)
@@ -194,14 +197,14 @@ that are the information needed by `r Biocpkg("CNEr")`,
 then it is better to use the `readBed` function that is much faster with C implementation.
 
 ```{r Bed, eval=TRUE, echo=TRUE}
-bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
-                      "filter_regions.hg19.bed")
-bedHg19 <- readBed(bedHg19Fn)
-bedHg19
-bedDanRer7Fn <- file.path(system.file("extdata", package="CNEr"), 
-                         "filter_regions.danRer7.bed")
-bedDanRer7 <- readBed(bedDanRer7Fn)
-bedDanRer7
+bedHg38Fn <- file.path(system.file("extdata", package="CNEr"), 
+                      "filter_regions.hg38.bed")
+bedHg38 <- readBed(bedHg38Fn)
+bedHg38
+bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"), 
+                           "filter_regions.danRer10.bed")
+bedDanRer10 <- readBed(bedDanRer10Fn)
+bedDanRer10
 ```
 
 ## Chromosome size of query assembly
@@ -215,19 +218,14 @@ and more assemblies from other sources will be implemented in the future.
 A object of `Seqinfo` is returned 
 which suits the input to downstream analysis.
 
-```{r chromSizes, eval=FALSE, echo=TRUE}
-qSizesHg19 <- fetchChromSizes("hg19")
-qSizesDanRer7 <- fetchChromSizes("danRer7")
-```
-
-```{r chromSizesData, eval=TRUE, echo=FALSE}
-data(qSizesHg19)
-data(qSizesDanRer7)
+```{r chromSizes, eval=TRUE, echo=TRUE}
+qSizesHg38 <- fetchChromSizes("hg38")
+qSizesDanRer10 <- fetchChromSizes("danRer10")
 ```
 
 ```{r showchromSizesData, eval=TRUE, echo=TRUE}
-qSizesHg19
-qSizesDanRer7
+qSizesHg38
+qSizesDanRer10
 ```
 
 `Seqinfo` can also be generated from local two bit file 
@@ -252,20 +250,12 @@ several similarity criterias (__I/C__) range from 70% to 100%.
 
 ```{r CNEScan, eval=TRUE, echo=TRUE}
 ## axt, GRanges objects as input
-CNEHg19DanRer7 <- ceScan(axts=axtHg19DanRer7, tFilter=bedHg19,
-                         qFilter=bedDanRer7, qSizes=qSizesDanRer7,
-                         window=50, identity=c(45, 48, 49))
-CNEDanRer7Hg19 <- ceScan(axts=axtDanRer7Hg19, tFilter=bedDanRer7,
-                         qFilter=bedHg19, qSizes=qSizesHg19,
-                         window=50, identity=c(45, 48, 49))
-
-## axt and bed files as input
-#CNEHg19DanRer7 <- ceScan(axts=axtFilesHg19DanRer7, tFilter=bedHg19Fn,
-#                         qFilter=bedDanRer7Fn, qSizes=qSizesDanRer7,
-#                         window=50, identity=c(45, 48, 49))
-#CNEDanRer7Hg19 <- ceScan(axts=axtFilesDanRer7Hg19, tFilter=bedDanRer7Fn,
-#                         qFilter=bedHg19Fn, qSizes=qSizesHg19,
-#                         window=50, identity=c(45, 48, 49))
+CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
+                          qFilter=bedDanRer10, qSizes=qSizesDanRer10,
+                          window=50, identity=c(45, 48, 49))
+CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
+                          qFilter=bedHg38, qSizes=qSizesHg38,
+                          window=50, identity=c(45, 48, 49))
 ```
 
 At this stage, a list of `data.frame` is returned 
@@ -274,7 +264,7 @@ which contains the preliminary CNEs.
 Here is some exemple output:
 
 ```{r CNEScanHead, eval=TRUE, echo=TRUE}
-lapply(CNEHg19DanRer7, head)
+lapply(CNEHg38DanRer10, head)
 ```
 
 In the result table, even though the strand for query element can be negative,
@@ -287,9 +277,9 @@ But elements that only overlap on one of the genomes are kept,
 so that duplicated elements remain distinct.
 
 ```{r CNEMerge, eval=TRUE, echo=TRUE}
-cneMergedDanRer7Hg19 <- mapply(cneMerge, CNEDanRer7Hg19, CNEHg19DanRer7, 
-                               SIMPLIFY=FALSE)
-lapply(cneMergedDanRer7Hg19, head)
+cneMergedDanRer10Hg38 <- mapply(cneMerge, CNEDanRer10Hg38, CNEHg38DanRer10,
+                                SIMPLIFY=FALSE)
+lapply(cneMergedDanRer10Hg38, head)
 ```
 
 ## Realignment of CNEs

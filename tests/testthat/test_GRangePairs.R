@@ -72,6 +72,21 @@ test_that("test_GRangePairs", {
   
   # test combing
   expect_identical(length(c(grangesPairs1, grangesPairs2)), 8L)
+  
+  # test swapping
+  expect_identical(first(swap(grangesPairs1)), last(grangesPairs1))
+  
+  # test reduce
+  # firstGRange <- GRanges(seqnames=c("chr1", "chr1", "chr2", "chr2", "chr5"),
+  #                  ranges=IRanges(start=c(1, 20, 2, 3, 1),
+  #                                 end=c(10, 25, 10, 10, 10)),
+  #                  strand="+")
+  # lastGRange <- GRanges(seqnames=c("chr15", "chr10", "chr10", "chr10", "chr15"),
+  #                 ranges=IRanges(start=c(1, 25, 50, 51, 5),
+  #                                end=c(8, 40, 55, 60, 10)),
+  #                 strand="+")
+  # grangesPairs3 <- GRangePairs(firstGRange, lastGRange)
+  
   }
           )
 

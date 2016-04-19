@@ -30,6 +30,10 @@
 % Combining:
 \alias{c,GRangePairs-method}
 
+% Swaping:
+\alias{swap}
+\alias{swap,GRangePairs-method}
+
 % "show" method:
 \alias{show,GRangePairs-method}
 
@@ -160,6 +164,10 @@ GRangePairs objects
   In the code snippets below, \code{x} is a GRangesList object.
 
   \describe{
+    \item{}{
+      \code{swap(x)}:
+        Swap the first, last GRanges.
+    }
     \item{}{
       \code{show(x)}:
       By default the \code{show} method displays 5 head and 5 tail

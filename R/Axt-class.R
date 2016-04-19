@@ -77,7 +77,6 @@ setMethod("queryRanges", "Axt", function(x) last(x))
 setMethod("querySeqs", "Axt", function(x) last(x)$seqs)
 setMethod("score", "Axt", function(x) mcols(x)$score)
 setMethod("symCount", "Axt", function(x) mcols(x)$symCount)
-setMethod("nchar", "Axt", function(x) symCount(x))
 setMethod("length", "Axt", function(x) length(targetRanges(x)))
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -121,7 +121,6 @@ setReplaceMethod("names", "GRangePairs",
                  }
 )
 
-
 ### -----------------------------------------------------------------
 ### Vector methods.
 ###
@@ -140,7 +139,6 @@ setMethod("extractROWS", "GRangePairs",
                                         elementMetadata=ans_elementMetadata)
           }
 )
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### List methods.
@@ -329,7 +327,13 @@ setMethod("c", "GRangePairs",
           }
 )
 
-
+### -----------------------------------------------------------------
+### swap method for GRangePairs: first becomes last and last becomes first
+### Exported!
+setGeneric("swap", function(x) standardGeneric("swap"))
+setMethod("swap", "GRangePairs", function(x){
+  BiocGenerics:::replaceSlots(x, first=last(x), last=first(x))
+})
 
 ### -----------------------------------------------------------------
 ### show methods for GRangePairs

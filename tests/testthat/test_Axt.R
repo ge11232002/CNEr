@@ -54,7 +54,6 @@ test_that("test_Axt", {
   ## test score, symCount
   expect_identical(score(axt), score)
   expect_identical(symCount(axt), symCount)
-  expect_identical(nchar(axt), symCount)
   
   # TODO: Test matchDistr
   ## matchDistr

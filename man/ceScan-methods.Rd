@@ -1,5 +1,4 @@
 \name{ceScan}
-\docType{methods}
 \alias{ceScan}
 \title{ceScan function}
 \description{

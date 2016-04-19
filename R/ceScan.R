@@ -1,4 +1,3 @@
-
 ### -----------------------------------------------------------------
 ### The main function for scanning the axts and get the CNEs
 ### Not exported!
@@ -79,11 +78,25 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
               PACKAGE="CNEr")
   }
   CNE <- lapply(resFiles, 
-               function(x){
-                 res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
-               colnames(res) <- c("tName", "tStart", "tEnd", "qName", "qStart", 
-                                 "qEnd", "strand", "score", "cigar")
-               return(res)})
+                function(x){
+                  res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
+                  colnames(res) <- c("tName", "tStart", "tEnd", 
+                                     "qName", "qStart", "qEnd",
+                                     "strand", "score", "cigar")
+                  ans <- GRangePairs(first=GRanges(seqnames=res$tName,
+                                             ranges=IRanges(start=res$tStart,
+                                                            end=res$tEnd),
+                                             strand="+"),
+                                     last=GRanges(seqnames=res$qName,
+                                            ranges=IRanges(start=res$qStart,
+                                                           end=res$qEnd),
+                                            strand=res$strand)
+                                     )
+                  ans@elementMetadata <- DataFrame(score=res$score,
+                                                   cigar=res$score)
+                  return(ans)
+                  }
+                )
   names(CNE) <-  paste(minScore, winSize, sep="_")
   unlink(resFiles)
   return(CNE)
@@ -94,32 +107,32 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
 ### Another main function for CNEs identification, 
 ### but it takes the axt files and bed files as input
 ### Not exported!
-ceScanFile <- function(axtFiles, tFilterFile=NULL, qFilterFile=NULL, 
-                       qSizes=NULL,
-                       thresholds=c("49_50")){
-  ## Here the returned tStart and qStart are 1-based coordinates. 
-  ## Of course ends are also 1-based.
-  if(!is.null(qFilterFile))
-    if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
-      stop("qSizes must exist and be a Seqinfo object when qFilter exists")
-  winSize <- as.integer(sapply(strsplit(thresholds, "_"), "[", 2))
-  minScore <- as.integer(sapply(strsplit(thresholds, "_"), "[", 1))
-  resFiles <- tempfile(pattern=paste(minScore, winSize, "ceScan", sep="-"), 
-                      tmpdir=tempdir(), fileext="")
-  .Call2("myCeScanFile", axtFiles, tFilterFile, qFilterFile, 
-        as.character(seqnames(qSizes)), as.character(seqlengths(qSizes)),
-        winSize, minScore,
-        resFiles, PACKAGE="CNEr")
-  CNE <- lapply(resFiles,
-               function(x){
-                 res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
-                 colnames(res) <- c("tName", "tStart", "tEnd", "qName", 
-                                   "qStart", "qEnd", "strand", "score", "cigar")
-                 return(res)})
-  names(CNE) <-  paste(minScore, winSize, sep="_")
-  unlink(resFiles)
-  return(CNE)
-}
+# ceScanFile <- function(axtFiles, tFilterFile=NULL, qFilterFile=NULL, 
+#                        qSizes=NULL,
+#                        thresholds=c("49_50")){
+#   ## Here the returned tStart and qStart are 1-based coordinates. 
+#   ## Of course ends are also 1-based.
+#   if(!is.null(qFilterFile))
+#     if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
+#       stop("qSizes must exist and be a Seqinfo object when qFilter exists")
+#   winSize <- as.integer(sapply(strsplit(thresholds, "_"), "[", 2))
+#   minScore <- as.integer(sapply(strsplit(thresholds, "_"), "[", 1))
+#   resFiles <- tempfile(pattern=paste(minScore, winSize, "ceScan", sep="-"), 
+#                       tmpdir=tempdir(), fileext="")
+#   .Call2("myCeScanFile", axtFiles, tFilterFile, qFilterFile, 
+#         as.character(seqnames(qSizes)), as.character(seqlengths(qSizes)),
+#         winSize, minScore,
+#         resFiles, PACKAGE="CNEr")
+#   CNE <- lapply(resFiles,
+#                function(x){
+#                  res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
+#                  colnames(res) <- c("tName", "tStart", "tEnd", "qName", 
+#                                    "qStart", "qEnd", "strand", "score", "cigar")
+#                  return(res)})
+#   names(CNE) <-  paste(minScore, winSize, sep="_")
+#   unlink(resFiles)
+#   return(CNE)
+# }
 
 ### -----------------------------------------------------------------
 ### The function for ceScan one way
@@ -157,63 +170,36 @@ ceScan <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
 }
 
 ### -----------------------------------------------------------------
-### Merge two side cnes
+### Merge two side cnes (GRangePairs object), mcols will be discarded.
+### strand information is no longer important.
 ### Exported!
-cneMerge <- function(cne1, cne2){
-  # In this function, cne's start is 1-based coordinates. ends are 1-based too. 
-  # Although in cne1 and cne2, query strand can be negative, 
-  # but the coordinate is already on positive strand.
-  ## first reverse the cne2's cigar
-  ## cne2 = transform(cne2, cigar=chartr("DI", "ID", cigar))
-  cne2$cigar <- chartr("DI", "ID", cne2$cigar)
-  if(any(cne2$strand == "-")){
-    #cne2[cne2$strand=="-", ] = transform(subset(cne2, strand=="-"), 
-    #                                      cigar=reverseCigar(cigar))
-    cne2[cne2$strand == "-", "cigar"] <- 
-      reverseCigar(cne2[cne2$strand == "-", "cigar"])
+cneMerge <- function(cne12, cne21){
+  if(!is(cne12, "GRangePairs") || !is(cne21, "GRangePairs")){
+    stop("cne12 and cne21 must be a GRangePairs object!")
   }
-  colnames(cne2) <- c("qName", "qStart", "qEnd", "tName", 
-                     "tStart", "tEnd", "strand", "score", "cigar")
-  cne1T <- GRanges(seqnames=cne1$tName, 
-                   ranges=IRanges(start=cne1$tStart, end=cne1$tEnd), 
-                   strand="+")
-  cne1Q <- GRanges(seqnames=cne1$qName, 
-                   ranges=IRanges(start=cne1$qStart, end=cne1$qEnd), 
-                   strand="+")
-  cne2T <- GRanges(seqnames=cne2$tName, 
-                   ranges=IRanges(start=cne2$tStart, end=cne2$tEnd), 
-                   strand="+")
-  cne2Q <- GRanges(seqnames=cne2$qName, 
-                   ranges=IRanges(start=cne2$qStart, end=cne2$qEnd), 
-                   strand="+")
-  cneT <- c(cne1T, cne2T)
-  cneQ <- c(cne1Q, cne2Q)
-  # Here, I just removed the CNEs which are within another big CNEs. 
-  # In very rare cases(1 in 100000), some cnes may just connect 
-  # and need to merge them. Needs to be done in the future (perhaps not easy to be done in R).
-  cneT_overlap <- findOverlaps(cneT, type="within", 
-                               drop.self=TRUE, drop.redundant=TRUE)
-  #cneT_overlap1 = findOverlaps(cneT, type="equal", 
-                              #drop.self=TRUE, drop.redundant=TRUE)
-  #cneT_overlap2 = findOverlaps(cneT, type="any", 
-                              #drop.self=TRUE, drop.redundant=TRUE)
-  cneQ_overlap <- findOverlaps(cneQ, type="within", 
-                               drop.self=TRUE, drop.redundant=TRUE)
-  #cneQ_overlap1 = findOverlaps(cneQ, type="equal", 
-                              #drop.self=TRUE, drop.redundant=TRUE)
-  #cneQ_overlap2 = findOverlaps(cneQ, type="any", 
-                              #drop.self=TRUE, drop.redundant=TRUE)
-  redundance <- IRanges::intersect(cneT_overlap, cneQ_overlap)
-  #any_overlap = intersect(cneT_overlap2, cneQ_overlap2)
-  #foo = setdiff(any_overlap, redundance)
-  #paste(subjectHits(foo), queryHits(foo), sep=",") 
-  # %in% paste(queryHits(redundance), subjectHits(redundance), sep=",")
-  res <- rbind(cne1, cne2)[-queryHits(redundance), ] 
-  # After the merge, we'd better name them as 1 and 2 
-  # rather than the tName and qName. Use the names in mysql cne db.
-  colnames(res) <- c("chr1", "start1", "end1", "chr2", "start2", "end2", 
-                    "strand", "similarity", "cigar")
-  return(res)
+  strand(cne12@first) <- strand(cne12@last) <- strand(cne21@first) <- 
+    strand(cne21@last) <- "+"
+  cne <- c(cne12, swap(cne21), ignore.mcols=TRUE)
+  firstReduce <- reduce(first(cne), with.revmap=TRUE)
+  lastReduce <- reduce(last(cne), with.revmap=TRUE)
+  overlapFirstLast <- IntegerList(intersect(firstReduce$revmap,
+                                            lastReduce$revmap))
+  
+  ## First deal with the merged ranges
+  overlapFirstLast <- overlapFirstLast[elementNROWS(overlapFirstLast) > 1L]
+  firstIndex <- match(paste(overlapFirstLast, collapse="-"),
+                      paste(firstReduce$revmap, collapse="-"))
+  lastIndex <- match(paste(overlapFirstLast, collapse="-"),
+                     paste(lastReduce$revmap, collapse="-"))
+  ansFirst <- firstReduce[firstIndex]
+  mcols(ansFirst) <- NULL
+  ansLast <- lastReduce[lastIndex]
+  mcols(ansLast) <- NULL
+  
+  ## Then deal with the unmerged ranges
+  ansFirst <- c(ansFirst, first(cne)[-sort(unlist(overlapFirstLast))])
+  ansLast <- c(ansLast, last(cne)[-sort(unlist(overlapFirstLast))])
+  return(GRangePairs(first=ansFirst, last=ansLast))
 }
 
 #cutoffs1 = 4
