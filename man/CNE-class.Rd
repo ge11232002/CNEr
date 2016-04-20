@@ -3,10 +3,6 @@
 \docType{class}
 \alias{CNE}
 \alias{CNE-class}
-\alias{assembly1}
-\alias{assembly1,CNE-method}
-\alias{assembly2}
-\alias{assembly2,CNE-method}
 \alias{CNE12}
 \alias{CNE12,CNE-method}
 \alias{CNE21}
@@ -26,7 +22,8 @@
 
 \usage{
 ### Constructors:
-CNE(assembly1=character(1), assembly2=character(1),
+CNE(assembly1Fn=character(1), assembly2Fn=character(1),
+    axt12Fn=character(1), axt21Fn=character(1),
     window=50L, identity=50L,
     CNE12=GRangePairs(), CNE21=GRangePairs(),
     CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
@@ -34,8 +31,6 @@ CNE(assembly1=character(1), assembly2=character(1),
     smoothingWindow1=300L, smoothingWindow2=300L)
 
 ### Accessor-like methods:
-\S4method{assembly1}{CNE}(x)
-\S4method{assembly2}{CNE}(x)
 \S4method{thresholds}{CNE}(x)
 \S4method{CNE12}{CNE}(x)
 \S4method{CNE21}{CNE}(x)
@@ -46,10 +41,10 @@ CNE(assembly1=character(1), assembly2=character(1),
 }
 
 \arguments{
-    \item{assembly1}{Object of class \code{"character"}: 
-      The name of assembly1.}
-    \item{assembly2}{Object of class \code{"character"}:
-      The name of assembly2.}
+    \item{assembly1Fn,assembly2Fn}{Object of class \code{"character"}: 
+      The twoBit filenames of assembly1, assembly2}
+    \item{axt12Fn,axt21Fn}{Object of class \code{"character"}: 
+      The Axt filenames of assembly1 to assembly2, assembly2 to assembly1}
     \item{window}{Object of class \code{"integer"}:
       The window size of scanning CNEs. By default, it is 50.}
     \item{identity}{Object of class \code{"integer"}:
@@ -81,10 +76,6 @@ CNE(assembly1=character(1), assembly2=character(1),
 
 \section{Methods}{
   \describe{
-    \item{assembly1}{\code{signature(x = "CNE")}: 
-      Get the assembly1 name.}
-    \item{assembly2}{\code{signature(x = "CNE")}:
-      Get the assembly2 name.}
     \item{CNE12}{\code{signature(x = "CNE")}:
       Get the CNE1 results.}
     \item{CNE21}{\code{signature(x = "CNE")}:
@@ -131,14 +122,13 @@ CNE(assembly1=character(1), assembly2=character(1),
                                                           146653221)),
                                      strand="+")
                        )
-  cne <- CNE(assembly1="hg38", assembly2="danRer10", window=50L, identity=50L,
+  cne <- CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
+             window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
              aligner="blat", cutoffs1=4L, cutoffs2=4L,
              smoothingWindow1=300L, smoothingWindow2=300L)
              
   ## Accessor
-  assembly1(cne)
-  assembly2(cne)
   CNE12(cne)
   CNE21(cne)
   thresholds(cne)

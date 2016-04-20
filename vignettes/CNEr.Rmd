@@ -251,10 +251,10 @@ several similarity criterias (__I/C__) range from 70% to 100%.
 ```{r CNEScan, eval=TRUE, echo=TRUE}
 identities <- c(45L, 48L, 49L)
 ## axt, GRanges objects as input
-CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
+CNEHg38DanRer10 <- ceScan(x=axtHg38DanRer10, tFilter=bedHg38,
                           qFilter=bedDanRer10, qSizes=qSizesDanRer10,
                           window=50L, identity=identities)
-CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
+CNEDanRer10Hg38 <- ceScan(x=axtDanRer10Hg38, tFilter=bedDanRer10,
                           qFilter=bedHg38, qSizes=qSizesHg38,
                           window=50L, identity=identities)
 ```

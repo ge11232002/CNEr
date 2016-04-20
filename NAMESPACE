@@ -97,9 +97,8 @@ export(
   axtInfo,
   writeAxt,
 
-  ## ceScan.r
-  ceScan, 
-  cneMerge,
+  ## ceScan.R
+  
   blatCNE,
   #ceScanOneStep,
 
@@ -142,10 +141,13 @@ exportMethods(
   subAxt,
   
   # CNE-class.R
-  assembly1, assembly2,
   CNE12, CNE21,
   thresholds,
   CNEMerged, CNEFinal,
+  
+  ## ceScan.R
+  ceScan, 
+  cneMerge,
   
   ## utils.r
   saveCNEToSQLite,

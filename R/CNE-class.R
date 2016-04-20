@@ -2,8 +2,10 @@
 ### CNE class
 ### Exported!
 setClass(Class="CNE",
-         slots=c(assembly1="character",
-                 assembly2="character",
+         slots=c(assembly1Fn="character",
+                 assembly2Fn="character",
+                 axt12Fn="character",
+                 axt21Fn="character",
                  window="integer",
                  identity="integer",
                  CNE12="GRangePairs",
@@ -16,8 +18,10 @@ setClass(Class="CNE",
                  smoothingWindow1="integer",
                  smoothingWindow2="integer"
          ),
-         prototype=list(assembly1=character(1),
-                        assembly2=character(1),
+         prototype=list(assembly1Fn=character(1),
+                        assembly2Fn=character(1),
+                        axt12Fn=character(1),
+                        axt21Fn=character(1),
                         window=50L,
                         identity=50L,
                         CNE12=GRangePairs(),
@@ -34,10 +38,10 @@ setClass(Class="CNE",
 
 setValidity("CNE",
             function(object){
-              if(length(assembly1(object)) != 1L)
-                return("The filename of assembly1 must be length 1!")
-              if(length(assembly2(object)) != 1L)
-                return("The filename of assembly2 must be length 1!")
+              if(length(object@assembly1Fn) != 1L)
+                return("The filename of assembly1Fn must be length 1!")
+              if(length(object@assembly2Fn) != 1L)
+                return("The filename of assembly2Fn must be length 1!")
               if(length(object@aligner) != 1L)
                 return("The aligner must be length 1!")
               if(object@identity > object@window)
@@ -52,8 +56,8 @@ setValidity("CNE",
 
 ### -----------------------------------------------------------------
 ### CNE class Generics
-setGeneric("assembly1", function(x) standardGeneric("assembly1"))
-setGeneric("assembly2", function(x) standardGeneric("assembly2"))
+#setGeneric("assembly1", function(x) standardGeneric("assembly1"))
+#setGeneric("assembly2", function(x) standardGeneric("assembly2"))
 setGeneric("CNE12", function(x) standardGeneric("CNE12"))
 setGeneric("CNE21", function(x) standardGeneric("CNE21"))
 setGeneric("thresholds", function(x) standardGeneric("thresholds"))
@@ -73,8 +77,8 @@ setGeneric("ceScan",
 ### -----------------------------------------------------------------
 ### CNE Slot getters and setters.
 ### Exported!
-setMethod("assembly1", "CNE", function(x) x@assembly1)
-setMethod("assembly2", "CNE", function(x) x@assembly2)
+#setMethod("assembly1", "CNE", function(x) x@assembly1)
+#setMethod("assembly2", "CNE", function(x) x@assembly2)
 setMethod("CNE12", "CNE", function(x) x@CNE12)
 setMethod("CNE21", "CNE", function(x) x@CNE21)
 setMethod("thresholds", "CNE", function(x)
@@ -85,7 +89,8 @@ setMethod("CNEFinal", "CNE", function(x) x@CNEFinal)
 ### -----------------------------------------------------------------
 ### CNE constructor.
 ### Exported!
-CNE <- function(assembly1=character(1), assembly2=character(1),
+CNE <- function(assembly1Fn=character(1), assembly2Fn=character(1),
+                axt12Fn=character(1), axt21Fn=character(1),
                 window=50L, identity=50L,
                 CNE12=GRangePairs(), CNE21=GRangePairs(),
                 CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
@@ -94,7 +99,8 @@ CNE <- function(assembly1=character(1), assembly2=character(1),
                 smoothingWindow1=300L,
                 smoothingWindow2=300L
 ){
-  new("CNE", assembly1=assembly1, assembly2=assembly2,
+  new("CNE", assembly1Fn=assembly1Fn, assembly2Fn=assembly2Fn,
+      axt12Fn=axt12Fn, axt21Fn=axt21Fn,
       window=window, identity=identity, CNE12=CNE12, CNE21=CNE21,
       CNEMerged=CNEMerged, CNEFinal=CNEFinal,
       aligner=aligner, cutoffs1=cutoffs1, cutoffs2=cutoffs2,

@@ -103,9 +103,38 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
 }
 
 ### -----------------------------------------------------------------
-### The function for ceScan one way
+### The function for ceScan: one way for axt object, two way for CNE
 ### Exported!
-ceScan <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+setGeneric("ceScan", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+                              window=50L, identity=50L)
+  standardGeneric("ceScan"))
+
+setMethod("ceScan", "Axt", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+                                    window=50L, identity=50L){
+  ceScanAxt(x, tFilter=tFilter, qFilter=qFilter, qSizes=qSizes, 
+            window=window, identity=identity)
+})
+
+setMethod("ceScan", "character", function(x, tFilter=NULL, qFilter=NULL, 
+                                          qSizes=NULL,
+                                    window=50L, identity=50L){
+  axtsAll <- readAxt(x)
+  ceScan(axtsAll, tFilter=tFilter, qFilter=qFilter, qSizes=qSizes, 
+            window=window, identity=identity)
+})
+
+setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+                                    window=50L, identity=50L){
+  axt12 <- readAxt(x@axt12Fn)
+  axt21 <- readAxt(x@axt21Fn)
+  cne12 <- ceScan(axt12, tFilter, qFilter,
+                  qSizes=seqinfo(TwoBitFile(x@assembly2Fn)))
+  cne21 <- ceScan(axt21, qFilter, tFilter,
+                  qSizes=seqinfo(TwoBitFile(x@assembly1Fn)))
+  BiocGenerics:::replaceSlots(x, CNE12=cne12, CNE21=cne21)
+})
+
+ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
                    window=50L, identity=50L){
   if(!is.null(tFilter) && !is(tFilter, "GRanges")){
     stop("tFilter must be NULL or a GRanges object!")
@@ -127,14 +156,8 @@ ceScan <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
             The short one will be recycled.")
   }
   thresholds <- paste(identity, window, sep="_")
-  if(is(axts, "Axt")){
-    ans <- ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 
-                   qSizes=qSizes, thresholds=thresholds)
-  }else if(is.character(axts)){
-    axtsAll <- readAxt(axts)
-    ans <- ceScanR(axtsAll, tFilter=tFilter, qFilter=qFilter, 
-                   qSizes=qSizes, thresholds=thresholds)
-  }
+  ans <- ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 
+                 qSizes=qSizes, thresholds=thresholds)
 }
 
 ### -----------------------------------------------------------------
@@ -190,10 +213,10 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
   if(!is(cne, "CNE")){
     stop("CNE must be a CNE class object!")
   }
-  if(!file.exists(assembly1(cne))){
+  if(!file.exists(cne@assembly1Fn)){
     stop("The assembly1 twoBit file must exit!")
   }
-  if(!file.exists(assembly2(cne))){
+  if(!file.exists(cne@assembly2Fn)){
     stop("The assembly2 twoBit file must exit!")
   }
   blatOptionsALL <- list("DEF_BLAT_OPT_WSLO"=
@@ -224,7 +247,7 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
     # For Blat, the start is 0-based and end is 1-based. 
     # So make cne's coordinates to comply with it.
     if(whichAssembly == "first"){
-      assemblyTwobit <- assembly1(cne)
+      assemblyTwobit <- cne@assembly1Fn
       cneDataFrame <- paste0(assemblyTwobit, ":", 
                     as.character(seqnames(first(cne@CNEMerged))),
                     ":", format(start(first(cne@CNEMerged))-1,
@@ -232,7 +255,7 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
                     "-", format(end(first(cne@CNEMerged)),
                                 trim=TRUE, scientific=FALSE))
     }else{
-      assemblyTwobit <- assembly2(cne)
+      assemblyTwobit <- cne@assembly2Fn
       cneDataFrame <- paste0(assemblyTwobit, ":", 
                     as.character(seqnames(last(cne@CNEMerged))), 
                     ":", format(start(last(cne@CNEMerged))-1,
