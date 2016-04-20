@@ -61,9 +61,7 @@ even for novel genes that are not annotated yet.
 # Pipeline of the package
 This section will briefly demonstrate the pipeline of CNE identification 
 and visualisation.
-More detailed usage of each step will be described in following sections 
-with a concreate example of CNE identification and visualisation 
-for Human (hg19) and Zebrafish (danRer7).
+More detailed usage of each step will be described in following sections with a concreate example of CNE identification and visualisation for the region of genes "barhl2" and "sox14" in Zebrafish (danRer10) genome against Human (hg38).
 
 ## CNE identification
 
