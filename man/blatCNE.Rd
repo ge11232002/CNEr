@@ -2,87 +2,60 @@
 \alias{blatCNE}
 
 \title{
-Wrapper function of blat for CNEs
+  Wrapper function of blat for \code{CNE} object
 }
+
 \description{
-This wrapper function blat the CNEs against the reference genome.
+  This wrapper function blat the CNEs against the reference genome.
 }
+
 \usage{
-blatCNE(CNE, winSize, cutoffs1, cutoffs2, assembly1Twobit, assembly2Twobit,
-        blatOptions=NULL, cutIdentity=90, tmpDir=tempdir(), blatBinary="blat")
+  blatCNE(cne, blatOptions=NULL, cutIdentity=90)
 }
 
 \arguments{
-  \item{CNE}{
-    A object of \code{data.frame}. 
-      Usually it is generated from \code{cneMerge} function.
-  }
-  \item{winSize}{
-    A object of \code{integer}. 
-    The window size used for identifying the CNEs, such as 50 or 30.
-  }
-  \item{cutoffs1, cutoffs2}{
-    A object of \code{integer}.
-    The CNEs with more than the cutoff hits on the reference genome are removed.
-  }
-  \item{assembly1Twobit, assembly2Twobit}{
-    A object of \code{character}.
-    The path of reference genome in two bit file format.
+  \item{cne}{
+    \code{cne} object after \code{cneMerge} step.
   }
   \item{blatOptions}{
-    A object of \code{character}.
-    When it is NULL, a bunch of preset parameters for blat 
-    will be given based on the winSize parameter.
+    \code{character}(1): the \command{blat} options.
+    When it is NULL, the options will be chosen based on the window size of
+    scanning CNEs.
   }
   \item{cutIdentity}{
-    A object of \code{integer}.
-    Sets minimum sequence identity (in percent) in blat. Default is 90.
-  }
-  \item{tmpDir}{
-    A object of \code{character}.
-    By default, the R's temp dir is used.
-    You can specify other path if your R's temp dir is small.
-  }
-  \item{blatBinary}{
-    A object of \code{character}.
-    The path of blat binary.
+    \code{integer}(1): the minimum sequence identity (in percent) for a match
+    in \command{blat}. By default, it is 90.
   }
 }
 
 \details{
-  When winSize > 45, the blat options is 
+  When winSize > 45, the blat option is 
   "-tileSize=11 -minScore=30 -repMatch=1024".
   
-  When 35 < winSize <= 45, the blat options is 
+  When 35 < winSize <= 45, the blat option is 
   "-tileSize=10 -minScore=28 -repMatch=4096".
   
-  When the winSize <= 35, the blat options is 
+  When the winSize <= 35, the blat option is 
   "-tileSize=9 -minScore=24 -repMatch=16384".
 }
 
 \value{
-  A \code{data.frame} containing the CNEs is returned.
+  A \code{CNE} object with final set of CNEs.
 }
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 \examples{
   \dontrun{
-    assemblyHg19Twobit = "/Users/gtan/CSC/CNEr/2bit/hg19.2bit"
-    assemblyDanRer7Twobit = "/Users/gtan/CSC/CNEr/2bit/danRer7.2bit"
-    cneBlatedDanRer7Hg19 = list()
-    for(i in 1:length(cneMergedDanRer7Hg19)){
-      cneBlatedDanRer7Hg19[[names(cneMergedDanRer7Hg19)[i]]] = 
-      blatCNE(cneMergedDanRer7Hg19[[i]], 
-        as.integer(sub("\\d+_", "", names(cneMergedDanRer7Hg19)[i])), 
-        cutoffs1=4L, cutoffs2=8L, 
-        assembly1Twobit=assemblyDanRer7Twobit, 
-        assembly2Twobit=assemblyHg19Twobit,
-        blatBinary="blat")
-      }
-    }
+    data(CNEDanRer10Hg38)
+    data(CNEHg38DanRer10)
+    cne <- CNE(assembly1="/Users/gtan/Downloads/CNEr-Data/2bit/danRer10.2bit",
+               assembly2="/Users/gtan/Downloads/CNEr-Data/2bit/hg38.2bit",
+               window=50L, identity=45L, CNE12=CNEDanRer10Hg38[["45_50"]],
+               CNE21=CNEHg38DanRer10[["45_50"]], aligner="blat")
+    cne <- cneMerge(cne)
+    cne <- blatCNE(cne)
+  }
 }
-
-

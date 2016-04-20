@@ -11,6 +11,8 @@ setClass(Class="CNE",
                  CNEMerged="GRangePairs",
                  CNEFinal="GRangePairs",
                  aligner="character",
+                 cutoffs1="integer",
+                 cutoffs2="integer",
                  smoothingWindow1="integer",
                  smoothingWindow2="integer"
          ),
@@ -23,6 +25,8 @@ setClass(Class="CNE",
                         CNEMerged=GRangePairs(),
                         CNEFinal=GRangePairs(),
                         aligner="blat",
+                        cutoffs1=4L,
+                        cutoffs2=4L,
                         smoothingWindow1=300L,
                         smoothingWindow2=300L
                         )
@@ -31,11 +35,11 @@ setClass(Class="CNE",
 setValidity("CNE",
             function(object){
               if(length(assembly1(object)) != 1L)
-                return("The name of assembly1 must be length 1!")
+                return("The filename of assembly1 must be length 1!")
               if(length(assembly2(object)) != 1L)
-                return("The name of assembly2 must be length 1!")
+                return("The filename of assembly2 must be length 1!")
               if(length(object@aligner) != 1L)
-                return("The align method must be length 1!")
+                return("The aligner must be length 1!")
               if(object@identity > object@window)
                 return("The identity must be equal to smaller than window")
               if(object@smoothingWindow1 > 1000 || object@smoothingWindow1 < 10)
@@ -86,12 +90,14 @@ CNE <- function(assembly1=character(1), assembly2=character(1),
                 CNE12=GRangePairs(), CNE21=GRangePairs(),
                 CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
                 aligner="blat",
+                cutoffs1=4L, cutoffs2=4L,
                 smoothingWindow1=300L,
                 smoothingWindow2=300L
 ){
   new("CNE", assembly1=assembly1, assembly2=assembly2,
       window=window, identity=identity, CNE12=CNE12, CNE21=CNE21,
       CNEMerged=CNEMerged, CNEFinal=CNEFinal,
-      aligner=aligner, smoothingWindow1=smoothingWindow1, 
+      aligner=aligner, cutoffs1=cutoffs1, cutoffs2=cutoffs2,
+      smoothingWindow1=smoothingWindow1, 
       smoothingWindow2=smoothingWindow2)
 }

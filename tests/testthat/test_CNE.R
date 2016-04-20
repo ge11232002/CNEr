@@ -59,11 +59,12 @@ test_that("test_CNE", {
                    smoothingWindow1=2000L, smoothingWindow2=300L))
   
   # Test the getter
-  cne <- CNE(assembly1="hg38", assembly2="danRer10", window=50L, identity=50L,
+  cne <- CNE(assembly1="hg38.2bit", assembly2="danRer10.2bit",
+             window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
-             aligner="BLAT", smoothingWindow1=300L, smoothingWindow2=300L)
-  expect_identical(assembly1(cne), "hg38")
-  expect_identical(assembly2(cne), "danRer10")
+             aligner="blat", smoothingWindow1=300L, smoothingWindow2=300L)
+  expect_identical(assembly1(cne), "hg38.2bit")
+  expect_identical(assembly2(cne), "danRer10.2bit")
   expect_identical(CNE12(cne), CNE12)
   expect_identical(CNE21(cne), CNE21)
   expect_identical(thresholds(cne), "50_50")

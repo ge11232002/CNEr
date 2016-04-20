@@ -3,7 +3,7 @@
 \alias{CNEHg19DanRer7}
 \docType{data}
 \title{
-CNEHg19DanRer7 and CNEHg19DanRer7 dataset
+CNEHg19DanRer7 and CNEDanRer7Hg19 dataset
 }
 \description{
 These two datasets are the direct output from \code{ceScan}.

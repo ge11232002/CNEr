@@ -272,7 +272,7 @@ queryAnnotationSQLite <- function(dbname, tablename, chr, start, end){
 fetchChromSizes <- function(assembly){
   # UCSC
   message("Trying UCSC...")
-  goldenPath <- "ftp://hgdownload.cse.ucsc.edu/goldenPath/"
+  goldenPath <- "http://hgdownload.cse.ucsc.edu/goldenPath/"
   targetURL <- paste0(goldenPath, assembly, "/database/chromInfo.txt.gz")
   targetFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
   download <- try(download.file(url=targetURL, destfile=targetFile, 

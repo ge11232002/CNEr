@@ -249,13 +249,14 @@ we usually scan at two diffrent window sizes 30 and 50 with
 several similarity criterias (__I/C__) range from 70% to 100%.
 
 ```{r CNEScan, eval=TRUE, echo=TRUE}
+identities <- c(45L, 48L, 49L)
 ## axt, GRanges objects as input
 CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
                           qFilter=bedDanRer10, qSizes=qSizesDanRer10,
-                          window=50, identity=c(45, 48, 49))
+                          window=50L, identity=identities)
 CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
                           qFilter=bedHg38, qSizes=qSizesHg38,
-                          window=50, identity=c(45, 48, 49))
+                          window=50L, identity=identities)
 ```
 
 At this stage, a list of `data.frame` is returned 
@@ -270,6 +271,21 @@ lapply(CNEHg38DanRer10, head)
 In the result table, even though the strand for query element can be negative,
 the coordiante for that query element is already on the positive strand.
 
+Now we can create a `CNE` object.
+
+```{r CNEConstructor, eval=TRUE, echo=TRUE}
+cneListDanRer10Hg38 <- list()
+for(i in 1:length(CNEDanRer10Hg38)){
+  cneListDanRer10Hg38[[names(CNEDanRer10Hg38)[i]]] <- 
+    CNE(assembly1="/Users/gtan/Downloads/CNEr-Data/2bit/danRer10.2bit",
+        assembly2="/Users/gtan/Downloads/CNEr-Data/2bit/hg38.2bit",
+        window=50L, identity=identities[i],
+        cutoffs1=8L, cutoffs2=4L,
+        CNE12=CNEDanRer10Hg38[[i]], CNE21=CNEHg38DanRer10[[i]],
+        aligner="blat")
+}
+```
+
 ## Merge CNEs
 Because we do two rounds of CNE detections with each genome as reference,
 some conserved elements overlap on both genomes and are supposed to be removed.
@@ -277,9 +293,7 @@ But elements that only overlap on one of the genomes are kept,
 so that duplicated elements remain distinct.
 
 ```{r CNEMerge, eval=TRUE, echo=TRUE}
-cneMergedDanRer10Hg38 <- mapply(cneMerge, CNEDanRer10Hg38, CNEHg38DanRer10,
-                                SIMPLIFY=FALSE)
-lapply(cneMergedDanRer10Hg38, head)
+cneMergedListDanRer10Hg38 <- lapply(cneListDanRer10Hg38, cneMerge)
 ```
 
 ## Realignment of CNEs
@@ -294,38 +308,27 @@ Other alignment method can also be considerd, such as Bowtie2, BWA.
 The two bit file for each assembly is required.
 
 ```{r CNERealignment, eval=FALSE, echo=TRUE}
-assemblyHg19Twobit <- "/Users/gtan/CSC/CNEr/2bit/hg19.2bit"
-assemblyDanRer7Twobit <- "/Users/gtan/CSC/CNEr/2bit/danRer7.2bit"
-cneBlatedDanRer7Hg19 <- list()
-for(i in 1:length(cneMergedDanRer7Hg19)){
-  cneBlatedDanRer7Hg19[[names(cneMergedDanRer7Hg19)[i]]] <-
-    blatCNE(cneMergedDanRer7Hg19[[i]], 
-            as.integer(sub(".+_.+_\\d+_", "", names(cneMergedDanRer7Hg19)[i])), 
-            cutoffs1=8L, cutoffs2=8L, 
-            assembly1Twobit=assemblyDanRer7Twobit, 
-            assembly2Twobit=assemblyHg19Twobit,
-            blatBinary="blat")
-}
+cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
 ```
 
-Now at this stage, these elements are the final CNEs.
-We also prepare a one step function `ceScanOneStep`
-and it returns a `CNE` object directly
-which wrapps all the necessary information.
-This one-step function is highly recommended to avoid the tedious steps above.
+<!-- Now at this stage, these elements are the final CNEs. -->
+<!-- We also prepare a one step function `ceScanOneStep` -->
+<!-- and it returns a `CNE` object directly -->
+<!-- which wrapps all the necessary information. -->
+<!-- This one-step function is highly recommended to avoid the tedious steps above. -->
 
-```{r ceScanOneStep, eval=FALSE, echo=TRUE}
-assemblyHg19Twobit <- "/Users/gtan/CSC/CNEr/2bit/hg19.2bit"
-assemblyDanRer7Twobit <- "/Users/gtan/CSC/CNEr/2bit/danRer7.2bit"
-finalCNE <- ceScanOneStep(axt1=axtHg19DanRer7, filter1=bedHg19, 
-                          sizes1=qSizesHg19, assembly1="hg19", 
-                          twoBit1=assemblyHg19Twobit,
-                          axt2=axtDanRer7Hg19, filter2=bedDanRer7,
-                          sizes2=qSizesDanRer7, assembly2="danRer7",
-                          twoBit2=assemblyDanRer7Twobit,
-                          thresholds=c("45_50", "48_50", "49_50"),
-                          blatBinary="blat", blatCutoff1=8L, blatCutoff2=8L)
-```
+<!-- ```{r ceScanOneStep, eval=FALSE, echo=TRUE} -->
+<!-- assemblyHg19Twobit <- "/Users/gtan/CSC/CNEr/2bit/hg19.2bit" -->
+<!-- assemblyDanRer7Twobit <- "/Users/gtan/CSC/CNEr/2bit/danRer7.2bit" -->
+<!-- finalCNE <- ceScanOneStep(axt1=axtHg19DanRer7, filter1=bedHg19, -->
+<!--                           sizes1=qSizesHg19, assembly1="hg19",  -->
+<!--                           twoBit1=assemblyHg19Twobit, -->
+<!--                           axt2=axtDanRer7Hg19, filter2=bedDanRer7, -->
+<!--                           sizes2=qSizesDanRer7, assembly2="danRer7", -->
+<!--                           twoBit2=assemblyDanRer7Twobit, -->
+<!--                           thresholds=c("45_50", "48_50", "49_50"), -->
+<!--                           blatBinary="blat", blatCutoff1=8L, blatCutoff2=8L) -->
+<!-- ``` -->
 
 ## CNE storage and query
 As the computation of CNEs from the whole pipeline and 

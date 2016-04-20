@@ -38,3 +38,27 @@ danRer10Filter <- danRer10Filter[seqnames(danRer10Filter) == "chr6" &
                                  end(danRer10Filter) <= 27000000]
 export.bed(hg38Filter, con="~/filter_regions.hg38.bed")
 export.bed(danRer10Filter, con="~/filter_regions.danRer10.bed")
+
+# Prepare the CNE data 
+axtFnHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"), 
+                               "hg38.danRer10.net.axt")
+axtHg38DanRer10 <- readAxt(axtFnHg38DanRer10)
+axtFnDanRer10Hg38 <- file.path(system.file("extdata", package="CNEr"), 
+                               "danRer10.hg38.net.axt")
+axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38)
+bedHg38Fn <- file.path(system.file("extdata", package="CNEr"), 
+                       "filter_regions.hg38.bed")
+bedHg38 <- readBed(bedHg38Fn)
+bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"), 
+                           "filter_regions.danRer10.bed")
+bedDanRer10 <- readBed(bedDanRer10Fn)
+qSizesHg38 <- fetchChromSizes("hg38")
+qSizesDanRer10 <- fetchChromSizes("danRer10")
+CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
+                          qFilter=bedDanRer10, qSizes=qSizesDanRer10,
+                          window=50, identity=c(45, 48, 49))
+save(CNEHg38DanRer10, file="~/CNEHg38DanRer10.rda")
+CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
+                          qFilter=bedHg38, qSizes=qSizesHg38,
+                          window=50, identity=c(45, 48, 49))
+save(CNEDanRer10Hg38, file="~/CNEDanRer10Hg38.rda")

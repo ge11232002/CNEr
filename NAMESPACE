@@ -101,7 +101,7 @@ export(
   ceScan, 
   cneMerge,
   blatCNE,
-  ceScanOneStep,
+  #ceScanOneStep,
 
   ## makeGeneDbFromUCSC.r
   #supportedUCSCtables,

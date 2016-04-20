@@ -30,7 +30,8 @@ CNE(assembly1=character(1), assembly2=character(1),
     window=50L, identity=50L,
     CNE12=GRangePairs(), CNE21=GRangePairs(),
     CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
-    aligner="blat", smoothingWindow1=300L, smoothingWindow2=300L)
+    aligner="blat", cutoffs1=4L, cutoffs2=4L,
+    smoothingWindow1=300L, smoothingWindow2=300L)
 
 ### Accessor-like methods:
 \S4method{assembly1}{CNE}(x)
@@ -65,6 +66,9 @@ CNE(assembly1=character(1), assembly2=character(1),
       with blat in current implementation.}
     \item{aligner}{Object of class \code{"character"}:
       The method to realign CNEs back to reference genome.}
+    \item{cutoffs1, cutoffs2}{Object of class \code{"integer"}:
+      The CNEs with more than the cutoff hits on the reference genome 
+      are removed.}
     \item{x}{Object of class \code{"CNE"}:
       A \code{"CNE"} object.}
     \item{smoothingWindow1}{Object of class \code{"integer"}:
@@ -129,7 +133,8 @@ CNE(assembly1=character(1), assembly2=character(1),
                        )
   cne <- CNE(assembly1="hg38", assembly2="danRer10", window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
-             aligner="blat", smoothingWindow1=300L, smoothingWindow2=300L)
+             aligner="blat", cutoffs1=4L, cutoffs2=4L,
+             smoothingWindow1=300L, smoothingWindow2=300L)
              
   ## Accessor
   assembly1(cne)
