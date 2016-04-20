@@ -70,10 +70,16 @@
   bedDanRer10 <- readBed(bedDanRer10Fn)
   qSizesHg38 <- fetchChromSizes("hg38")
   qSizesDanRer10 <- fetchChromSizes("danRer10")
+  ## Axt object
   CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
                             qFilter=bedDanRer10, qSizes=qSizesDanRer10,
                             window=50, identity=c(45, 48, 49))
   CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
                             qFilter=bedHg38, qSizes=qSizesHg38,
+                            window=50, identity=c(45, 48, 49))                    
+                            
+  ## Axt file names
+  CNEHg38DanRer10 <- ceScan(axts=axtFnHg38DanRer10, tFilter=bedHg38,
+                            qFilter=bedDanRer10, qSizes=qSizesDanRer10,
                             window=50, identity=c(45, 48, 49))
 }

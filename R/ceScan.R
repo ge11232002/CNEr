@@ -102,38 +102,6 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
   return(CNE)
 }
 
-
-### -----------------------------------------------------------------
-### Another main function for CNEs identification, 
-### but it takes the axt files and bed files as input
-### Not exported!
-# ceScanFile <- function(axtFiles, tFilterFile=NULL, qFilterFile=NULL, 
-#                        qSizes=NULL,
-#                        thresholds=c("49_50")){
-#   ## Here the returned tStart and qStart are 1-based coordinates. 
-#   ## Of course ends are also 1-based.
-#   if(!is.null(qFilterFile))
-#     if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
-#       stop("qSizes must exist and be a Seqinfo object when qFilter exists")
-#   winSize <- as.integer(sapply(strsplit(thresholds, "_"), "[", 2))
-#   minScore <- as.integer(sapply(strsplit(thresholds, "_"), "[", 1))
-#   resFiles <- tempfile(pattern=paste(minScore, winSize, "ceScan", sep="-"), 
-#                       tmpdir=tempdir(), fileext="")
-#   .Call2("myCeScanFile", axtFiles, tFilterFile, qFilterFile, 
-#         as.character(seqnames(qSizes)), as.character(seqlengths(qSizes)),
-#         winSize, minScore,
-#         resFiles, PACKAGE="CNEr")
-#   CNE <- lapply(resFiles,
-#                function(x){
-#                  res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
-#                  colnames(res) <- c("tName", "tStart", "tEnd", "qName", 
-#                                    "qStart", "qEnd", "strand", "score", "cigar")
-#                  return(res)})
-#   names(CNE) <-  paste(minScore, winSize, sep="_")
-#   unlink(resFiles)
-#   return(CNE)
-# }
-
 ### -----------------------------------------------------------------
 ### The function for ceScan one way
 ### Exported!
@@ -173,7 +141,20 @@ ceScan <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
 ### Merge two side cnes (GRangePairs object), mcols will be discarded.
 ### strand information is no longer important.
 ### Exported!
-cneMerge <- function(cne12, cne21){
+setGeneric("cneMerge", function(cne12, cne21) standardGeneric("cneMerge"))
+
+setMethod("cneMerge", signature(cne12="CNE", cne21="missing"),
+          function(cne12, cne21){
+            cneMerged <- cneMergeGRangePairs(cne12@CNE12, cne12@CNE21)
+            BiocGenerics:::replaceSlots(cne12, CNEMerged=cneMerged)
+          })
+
+setMethod("cneMerge", signature(cne12="GRangePairs", cne21="GRangePairs"),
+          function(cne12, cne21){
+            cneMergeGRangePairs(cne12, cne21)
+          })
+
+cneMergeGRangePairs <- function(cne12, cne21){
   if(!is(cne12, "GRangePairs") || !is(cne21, "GRangePairs")){
     stop("cne12 and cne21 must be a GRangePairs object!")
   }

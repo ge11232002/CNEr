@@ -22,7 +22,7 @@ setClass(Class="CNE",
                         CNE21=GRangePairs(),
                         CNEMerged=GRangePairs(),
                         CNEFinal=GRangePairs(),
-                        aligner="BLAT",
+                        aligner="blat",
                         smoothingWindow1=300L,
                         smoothingWindow2=300L
                         )
@@ -85,7 +85,7 @@ CNE <- function(assembly1=character(1), assembly2=character(1),
                 window=50L, identity=50L,
                 CNE12=GRangePairs(), CNE21=GRangePairs(),
                 CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
-                aligner="BLAT",
+                aligner="blat",
                 smoothingWindow1=300L,
                 smoothingWindow2=300L
 ){
