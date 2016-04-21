@@ -8,7 +8,7 @@ cneDanRer10Hg38 <-
 danRer10Filter <- readBed("/Users/gtan/Downloads/CNEr-Data/filters/filter_regions.danRer10.bed")
 hg38Filter <- readBed("/Users/gtan/Downloads/CNEr-Data/filters/filter_regions.hg38.bed")
 cneDanRer10Hg38 <- ceScan(cneDanRer10Hg38, danRer10Filter, hg38Filter,
-                          window=50L, identity=c(49L, 50L))
+                          window=50L, identity=c(45L, 49L, 50L))
 cneMergedDanRer10Hg38 <- lapply(cneDanRer10Hg38, cneMerge)
 cneFinalDanRer10Hg38 <- lapply(cneMergedDanRer10Hg38, blatCNE)
 
