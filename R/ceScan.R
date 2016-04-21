@@ -128,10 +128,18 @@ setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
   axt12 <- readAxt(x@axt12Fn)
   axt21 <- readAxt(x@axt21Fn)
   cne12 <- ceScan(axt12, tFilter, qFilter,
-                  qSizes=seqinfo(TwoBitFile(x@assembly2Fn)))
+                  qSizes=seqinfo(TwoBitFile(x@assembly2Fn)),
+                  window=window, identity=identity)
   cne21 <- ceScan(axt21, qFilter, tFilter,
-                  qSizes=seqinfo(TwoBitFile(x@assembly1Fn)))
-  BiocGenerics:::replaceSlots(x, CNE12=cne12, CNE21=cne21)
+                  qSizes=seqinfo(TwoBitFile(x@assembly1Fn)),
+                  window=window, identity=identity)
+  ans <- list()
+  for(i in 1:length(cne12)){
+    ans[[names(cne12)[i]]] <- BiocGenerics:::replaceSlots(x, 
+                                                          CNE12=cne12[[i]],
+                                                          CNE21=cne21[[i]])
+  }
+  return(ans)
 })
 
 ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
@@ -184,26 +192,37 @@ cneMergeGRangePairs <- function(cne12, cne21){
   strand(cne12@first) <- strand(cne12@last) <- strand(cne21@first) <- 
     strand(cne21@last) <- "+"
   cne <- c(cne12, swap(cne21), ignore.mcols=TRUE)
-  firstReduce <- reduce(first(cne), with.revmap=TRUE)
-  lastReduce <- reduce(last(cne), with.revmap=TRUE)
-  overlapFirstLast <- IntegerList(intersect(firstReduce$revmap,
-                                            lastReduce$revmap))
   
-  ## First deal with the merged ranges
-  overlapFirstLast <- overlapFirstLast[elementNROWS(overlapFirstLast) > 1L]
-  firstIndex <- match(paste(overlapFirstLast, collapse="-"),
-                      paste(firstReduce$revmap, collapse="-"))
-  lastIndex <- match(paste(overlapFirstLast, collapse="-"),
-                     paste(lastReduce$revmap, collapse="-"))
-  ansFirst <- firstReduce[firstIndex]
-  mcols(ansFirst) <- NULL
-  ansLast <- lastReduce[lastIndex]
-  mcols(ansLast) <- NULL
+  # 1. using reduce: the problem: it won't deal with {1,2,3}, {1,2} case
+  # firstReduce <- reduce(first(cne), with.revmap=TRUE)
+  # lastReduce <- reduce(last(cne), with.revmap=TRUE)
+  # overlapFirstLast <- IntegerList(intersect(firstReduce$revmap,
+  #                                           lastReduce$revmap))
+  # 
+  # ## First deal with the merged ranges
+  # overlapFirstLast <- overlapFirstLast[elementNROWS(overlapFirstLast) > 1L]
+  # firstIndex <- match(paste(overlapFirstLast, collapse="-"),
+  #                     paste(firstReduce$revmap, collapse="-"))
+  # lastIndex <- match(paste(overlapFirstLast, collapse="-"),
+  #                    paste(lastReduce$revmap, collapse="-"))
+  # ansFirst <- firstReduce[firstIndex]
+  # mcols(ansFirst) <- NULL
+  # ansLast <- lastReduce[lastIndex]
+  # mcols(ansLast) <- NULL
+  # 
+  # ## Then deal with the unmerged ranges
+  # ansFirst <- c(ansFirst, first(cne)[-sort(unlist(overlapFirstLast))])
+  # ansLast <- c(ansLast, last(cne)[-sort(unlist(overlapFirstLast))])
+  # return(GRangePairs(first=ansFirst, last=ansLast))
   
-  ## Then deal with the unmerged ranges
-  ansFirst <- c(ansFirst, first(cne)[-sort(unlist(overlapFirstLast))])
-  ansLast <- c(ansLast, last(cne)[-sort(unlist(overlapFirstLast))])
-  return(GRangePairs(first=ansFirst, last=ansLast))
+  # 2. using the findOverlaps:
+  firstHits <- findOverlaps(first(cne), type="within",
+                            drop.self=TRUE, drop.redundant=TRUE)
+  lastHist <- findOverlaps(last(cne), type="within",
+                           drop.self=TRUE, drop.redundant=TRUE)
+  redundance <- IRanges::intersect(firstHits, lastHist)
+  ans <- cne[-queryHits(redundance)]
+  return(ans)
 }
 
 ### -----------------------------------------------------------------
@@ -307,8 +326,8 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
                                ]
                           )
   CNEqNameIndex[is.na(CNEqNameIndex)] <- 0
-  cneFinal <- cne@CNEMerged[CNEtNameIndex <= cutoffs1 &
-                            CNEqNameIndex <= cutoffs2, ]
+  cneFinal <- cne@CNEMerged[as.integer(CNEtNameIndex) <= cutoffs1 &
+                            as.integer(CNEqNameIndex) <= cutoffs2]
   BiocGenerics:::replaceSlots(cne, CNEFinal=cneFinal)
 }
 

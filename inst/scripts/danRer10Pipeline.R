@@ -1,3 +1,18 @@
+### Verify the whole CNE pipeline
+cneDanRer10Hg38 <- 
+  CNE(assembly1Fn="/Users/gtan/Downloads/CNEr-Data/2bit/danRer10.2bit",
+      assembly2Fn="/Users/gtan/Downloads/CNEr-Data/2bit/hg38.2bit",
+      axt12Fn="/Users/gtan/Downloads/CNEr-Data/axt/danRer10.hg38.net.axt.gz",
+      axt21Fn="/Users/gtan/Downloads/CNEr-Data/axt/hg38.danRer10.net.axt.gz",
+      cutoffs1=8L, cutoffs2=4L)
+danRer10Filter <- readBed("/Users/gtan/Downloads/CNEr-Data/filters/filter_regions.danRer10.bed")
+hg38Filter <- readBed("/Users/gtan/Downloads/CNEr-Data/filters/filter_regions.hg38.bed")
+cneDanRer10Hg38 <- ceScan(cneDanRer10Hg38, danRer10Filter, hg38Filter,
+                          window=50L, identity=c(49L, 50L))
+cneMergedDanRer10Hg38 <- lapply(cneDanRer10Hg38, cneMerge)
+cneFinalDanRer10Hg38 <- lapply(cneMergedDanRer10Hg38, blatCNE)
+
+
 ############## Read CNE from SQLite ########
 dbName = "/mnt/biggley/home/gtan/work/projects/CNEr/CNErData/cne.sqlite"
 tableName = "cne2wBf_danRer7_hg19_40_50"
