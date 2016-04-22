@@ -295,8 +295,7 @@ When the number of matches exceed certain threshold, for instance, 8,
 that CNE will be discarded.
 
 This step can be very time-consuming when the number of CNEs are large.
-Other alignment method can also be considerd, such as Bowtie2, BWA.
-The two bit file for each assembly is required.
+Other alignment method can also be added later, such as Bowtie2, BWA.
 
 ```{r CNERealignment, eval=FALSE, echo=TRUE}
 cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
