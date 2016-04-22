@@ -26,7 +26,9 @@ Suggests: Gviz(>= 1.7.4),
           BiocStyle,
           knitr,
           rmarkdown,
-          testthat
+          testthat,
+          BSgenome.Drerio.UCSC.danRer10,
+          BSgenome.Hsapiens.UCSC.hg38
 LinkingTo: S4Vectors, IRanges, XVector
 VignetteBuilder: knitr
 License: GPL-2 | file LICENSE

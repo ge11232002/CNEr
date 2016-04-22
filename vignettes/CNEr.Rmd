@@ -58,7 +58,7 @@ Such CNE density plots generated using precise locations of CNEs
 can be used to identify genes involved in developmental regulation, 
 even for novel genes that are not annotated yet.
 
-# Pipeline of the package
+# Workflow of the package
 This section will briefly demonstrate the pipeline of CNE identification 
 and visualisation.
 More detailed usage of each step will be described in following sections with a concreate example of CNE identification and visualisation for the region of genes "barhl2" and "sox14" (chr6:24,000,000..27,000,000) in Zebrafish (danRer10) genome against Human (hg38).
@@ -76,9 +76,8 @@ More detailed usage of each step will be described in following sections with a 
 2. Horizon plot: visualise CNE densities with the package `r Biocpkg("Gviz")`.
 
 # Input
-`r Biocpkg("CNEr")` starts from 
-[axt](http://genome.ucsc.edu/goldenPath/help/axt.html)
-net files of two genomes pairwise alignments.
+The minimal input for `r Biocpkg("CNEr")` includes the whole genome pairwise alignment of two assemblies, [axt](http://genome.ucsc.edu/goldenPath/help/axt.html)
+net files.
 UCSC already provides a set of precomputed axt files on http://hgdownload.soe.ucsc.edu/downloads.html for most of popular genomes.
 In case the _axt_ net files are not available from UCSC, you can always generate the axt net files by following another vignette "Pairwise whole genome alignment" in this `r Biocpkg("CNEr")` package.
 
@@ -122,27 +121,22 @@ axtHg38DanRer10
 axtDanRer10Hg38
 ```
 
-```{r subAxt, eval=TRUE, echo=TRUE}
-## A common operation on Axt object is to get subset of Axt alignments
-subsetAxt <- subAxt(axtDanRer10Hg38, chr=)
-```
+There are methods defined for `Axt` object, including subsetting, match/mistach summary and write back to axt files.
+More details can be found in the man page.
 
-## filtering information
-The gene annotation information, including exons coordinates, repeats,
-is used to filter out the undesired regions.
+## Filtering information
+The gene annotation information, including exons and repeats, is used to filter out the undesired regions.
 Here we summarise a table of filtering information we used:
 
 Assembly    |  Name     |  Exon    |   Repeat 
------------ | --------- | -------- | ---------
+----------- | ----------- |  ----------------------------------------- | ---------
 hg38        |  Human    |   RefSeq Genes, Ensembl Genes, UCSC Known Genes | RepeatMasker 
-hg19        |  Human    |   RefSeq Genes, Ensembl Genes, UCSC Known Genes | RepeatMasker 
 mm10        |  Mouse    |   RefSeq Genes, Ensembl Genes, UCSC Known Genes | RepeatMasker  
 xenTro3     |  Frog     |   RefSeq Genes, Ensembl Genes  | RepeatMasker 
 tetNig2     |  Tetraodon |  Ensembl Genes   |   | 
 canFam3     |  Dog      |   RefSeq Genes, Ensembl Genes  | RepeatMasker 
 galGal4     |  Chicken  |   RefSeq Genes, Ensembl Genes  | RepeatMasker 
 danRer10     |  Zebrafish |  RefSeq Genes, Ensembl Genes  | RepeatMasker 
-danRer7     |  Zebrafish |  RefSeq Genes, Ensembl Genes  | RepeatMasker 
 fr3         |  Fugu     |   RefSeq Genes                 | RepeatMasker 
 anoCar2     |  Lizard   |   Ensembl Genes                | RepeatMasker 
 equCab2     |  Horse    |   RefSeq Genes, Ensembl Genes  | RepeatMasker 
@@ -195,54 +189,58 @@ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg19.knownGene)
 ```
 
-Of course, more customised gene annotation can be included in the bed file.
-To import bed file into `r Biocpkg("GRanges")` in `R`, 
+The regions to filter out can also be provdied in a bed file.
+To import the bed file into `r Biocpkg("GRanges")` in `R`, 
 `r Biocpkg("rtracklayer")` provides a general function 
 `import.bed` to do that.
-However, if your bed file only contains 3 columns: chromosome, start and end,
-that are the information needed by `r Biocpkg("CNEr")`,
-then it is better to use the `readBed` function that is much faster with C implementation.
+Since only the chromosome names, start and end are used in `r Biocpkg("CNEr")`,
+we have a more efficient `readBed` function.
 
 ```{r Bed, eval=TRUE, echo=TRUE}
-bedHg38Fn <- file.path(system.file("extdata", package="CNEr"), 
-                      "filter_regions.hg38.bed")
-bedHg38 <- readBed(bedHg38Fn)
-bedHg38
+## Prepared bed file for chr6:24,000,000..27,000,000 of Zebrafish danRer10
 bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"), 
                            "filter_regions.danRer10.bed")
-bedDanRer10 <- readBed(bedDanRer10Fn)
-bedDanRer10
+danRer10Filter <- readBed(bedDanRer10Fn)
+danRer10Filter
+
+## Prepared bed file for alignment region in Human hg38 against
+## chr6:24,000,000..27,000,000 of danRer10
+bedHg38Fn <- file.path(system.file("extdata", package="CNEr"), 
+                       "filter_regions.hg38.bed")
+hg38Filter <- readBed(bedHg38Fn)
+hg38Filter
 ```
 
-## Chromosome size of query assembly
-The chromosome size of the query assembly is necessary 
-when the filters for query assembly is provided.
+## Creating a `CNE` class
+We designed a `CNE` class to store all metadata of running a set of CNEs between two species, including the intermediate and final results.
+`CNE` can be created by proving the paths of the twoBit files of two assemblies,
+the paths of axt files with each assembly as reference.
 
-To facilitate the fetch of chromosome sizes,
-we prepared a function `fetchChromSizes` to automate the procedure.
-Currently the assemblies from UCSC are supported,
-and more assemblies from other sources will be implemented in the future.
-A object of `Seqinfo` is returned 
-which suits the input to downstream analysis.
-
-```{r chromSizes, eval=TRUE, echo=TRUE}
-qSizesHg38 <- fetchChromSizes("hg38")
-qSizesDanRer10 <- fetchChromSizes("danRer10")
+```{r CNE, eval=TRUE, echo=TRUE}
+## Here we have the twoBit files from Bioconductor package
+## BSgenome.Drerio.UCSC.danRer10 and BSgenome.Hsapiens.UCSC.hg38
+cneDanRer10Hg38 <- CNE(
+  assembly1Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit"),
+  assembly2Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit"),
+  axt12Fn=axtFilesDanRer10Hg38, axt21Fn=axtFilesHg38DanRer10,
+  cutoffs1=8L, cutoffs2=4L)
+cneDanRer10Hg38
 ```
 
-```{r showchromSizesData, eval=TRUE, echo=TRUE}
-qSizesHg38
-qSizesDanRer10
-```
-
-`Seqinfo` can also be generated from local two bit file 
-with `seqinfo` from 
-`r Biocpkg("rtracklayer")`.
+__Note__: the order of assemblies when creating CNE object is important.
+Here we have danRer10 as assembly1 and hg38 as assembly2.
+Then the `axt12Fn` contains the axt alignment with assembly1 danRer10 as reference and `axt21Fn` contains the alignment with assembly2 hg38 as reference.
+The `cutoffs1` and `cutoffs2` are the maximal number of hits during the realignment in later step.
+Because zebrafish has undergone additional whole genome duplication compared to human, the cutoffs of zebrafish also doubles the cutoffs of human.
 
 # CNE identification
 In this section, we will go through the details of CNE identification.
 
-## net alignments scan
+## Scan axt alignments
 Detecting CNEs highly relies on the whole-genome pairwise net alignments.
 To correct the bias of a chosen genome and 
 capture the duplicated CNEs during genome evolution,
@@ -257,41 +255,27 @@ several similarity criterias (__I/C__) range from 70% to 100%.
 
 ```{r CNEScan, eval=TRUE, echo=TRUE}
 identities <- c(45L, 48L, 49L)
-## axt, GRanges objects as input
-CNEHg38DanRer10 <- ceScan(x=axtHg38DanRer10, tFilter=bedHg38,
-                          qFilter=bedDanRer10, qSizes=qSizesDanRer10,
-                          window=50L, identity=identities)
-CNEDanRer10Hg38 <- ceScan(x=axtDanRer10Hg38, tFilter=bedDanRer10,
-                          qFilter=bedHg38, qSizes=qSizesHg38,
-                          window=50L, identity=identities)
+## Here danRer10Filter is tFilter since danRer10 is assembly1
+cneListDanRer10Hg38 <- ceScan(x=cneDanRer10Hg38, tFilter=danRer10Filter,
+                              qFilter=hg38Filter,
+                              window=50L, identity=identities)
 ```
 
-At this stage, a list of `data.frame` is returned 
-from `ceScan`,
-which contains the preliminary CNEs.
-Here is some exemple output:
+At this stage, a list of `CNE` is returned from `ceScan`, which contains the preliminary two sets of CNEs from two sets of axt alignments.
+We can examine the intermediate CNEs by
 
 ```{r CNEScanHead, eval=TRUE, echo=TRUE}
-lapply(CNEHg38DanRer10, head)
+## CNEs from the alignments with danRer10 as reference
+CNE12(cneListDanRer10Hg38[["45_50"]])
+## CNEs from the alignments with hg38 as reference
+CNE21(cneListDanRer10Hg38[["45_50"]])
 ```
 
 In the result table, even though the strand for query element can be negative,
 the coordiante for that query element is already on the positive strand.
 
-Now we can create a `CNE` object.
-
-```{r CNEConstructor, eval=TRUE, echo=TRUE}
-cneListDanRer10Hg38 <- list()
-for(i in 1:length(CNEDanRer10Hg38)){
-  cneListDanRer10Hg38[[names(CNEDanRer10Hg38)[i]]] <- 
-    CNE(assembly1="/Users/gtan/Downloads/CNEr-Data/2bit/danRer10.2bit",
-        assembly2="/Users/gtan/Downloads/CNEr-Data/2bit/hg38.2bit",
-        window=50L, identity=identities[i],
-        cutoffs1=8L, cutoffs2=4L,
-        CNE12=CNEDanRer10Hg38[[i]], CNE21=CNEHg38DanRer10[[i]],
-        aligner="blat")
-}
-```
+It is essential to scan two sets of pairwise net alignments with each assembly as reference, in order not to miss any duplicated elements in either lineage.
+This is particularly important for comparison between teleost fish and other vertebrates, because one (for instance, zebrafish) or two (ommon carp) extra whole genome duplications occured.
 
 ## Merge CNEs
 Because we do two rounds of CNE detections with each genome as reference,
