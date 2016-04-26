@@ -1,11 +1,10 @@
 CHANGES IN Bioc 3.3
 ------------------------
 BUG FIXES
-    o Fix a bug caused by "format" in the blat step
+    o Fix a bug caused by "format" in the blat step.
 
 NEW FEATURES
     o Add the pairwise whole genome alignment pipeline
     o Add a new class "GRangePairs"
     o "Axt" class is now based on "GRangePairs" class.
-
-
+    o readAncora for reading Ancora format CNE files.

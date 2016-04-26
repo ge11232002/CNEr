@@ -54,8 +54,12 @@ Then we can run `lastz` function to generate the _lav_ files.
 ## lastz aligner
 assemblyDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit"
 axtDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/axt"
-assemblyTarget <- file.path(assemblyDir, "danRer10.2bit")
-assemblyQuery <- file.path(assemblyDir, "hg38.2bit")
+assemblyTarget <- file.path(system.file("extdata",
+                              package="BSgenome.Drerio.UCSC.danRer10"),
+                            "single_sequences.2bit")
+assemblyQuery <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
 lavs <- lastz(assemblyTarget, assemblyQuery, 
               outputDir=axtDir,
 	            chrsTarget=c("chr1", "chr2", "chr3"),
