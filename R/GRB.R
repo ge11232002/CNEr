@@ -46,6 +46,5 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
     clusterRanges <- clusterRanges[indexKeep]
   }
   return(clusterRanges)
-
 }
 

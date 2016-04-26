@@ -124,6 +124,9 @@ export(
   ## GRB.R
   makeGRBs,
   
+  ## Ancora.R
+  readAncora,
+  
   ## AssemblyStats.R
   N50, N90
 )
