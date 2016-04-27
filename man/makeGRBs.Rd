@@ -26,7 +26,7 @@
     \code{NULL} or \code{GRanges} object: the protein-coding genes ranges.
   }
   \item{ratio}{
-    \code{numeric}(1) between 0 and 1: 
+    \code{numeric}(1): 
     the threshold to control the stringency of the GRBs.
     Higher value, shorter and fewer GRBs, and vice versa.
   }
