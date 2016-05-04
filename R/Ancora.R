@@ -35,7 +35,7 @@ readAncora <- function(fn, assembly){
   }else if(assembly == assembly2){
     ans <- GRanges(seqnames=cne$X4,
                    ranges=IRanges(start=cne$X5+1,
-                                  end=cne$X6+1),
+                                  end=cne$X6),
                    strand="*",
                    name=paste0(cne$X1, ":", (cne$X2+1), "-", cne$X3),
                    itemRgb=chr2colour(cne$X1)
