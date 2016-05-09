@@ -39,7 +39,8 @@
   As last step, the putative GRBs that do not encompass any gene are filtered out.
 }
 \value{
-  A \code{GRanges} object with GRB coordinates is returned.
+  A \code{GRanges} of GRB coordinates is returned, with the numebr of CNEs
+  within each GRB.
 }
 
 \author{
@@ -47,7 +48,16 @@
 }
 
 \examples{
-  \dontrun{
-    ## Add example CNEs to make an example.
-  }
+  library(TxDb.Drerio.UCSC.danRer10.refGene)
+  refGenesDanRer10 <- genes(TxDb.Drerio.UCSC.danRer10.refGene)
+  ancoraCNEsFns <- file.path(system.file("extdata", package="CNEr"), 
+                             c("cne2wBf_cypCar1_danRer10_100_100",
+                               "cne2wBf_cteIde1_danRer10_100_100",
+                               "cne2wBf_AstMex102_danRer10_48_50"))
+  cneList <- do.call(GRangesList, 
+                     lapply(ancoraCNEsFns, readAncora, assembly="danRer10"))
+  names(cneList) <- c("Common carp", "Grass carp", "Blind cave fish")
+  seqlengths(cneList) <- seqlengths(TxDb.Drerio.UCSC.danRer10.refGene)[
+                           names(seqlengths(cneList))]
+  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2)
 }

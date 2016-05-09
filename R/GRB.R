@@ -5,13 +5,16 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
   if(!is(x, "GRangesList")){
     stop("The input `x` must be a `GRangesList` object!")
   }
-  
-  # winSize in kb
+  xList <- x
+  if(is.null(names(xList))){
+    names(xList) <- as.character(1:length(xList))
+  }
   x <- unlist(x)
   x <- reduce(x)
   cov <- coverage(x)
 
   # Guess winSize from genome size if NULL
+  # winSize in kb
   if(is.null(winSize)){
     ## Based on 300kb for human
     winSize <- seqlengths(x) / 3e6 * 300
@@ -23,7 +26,12 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
   }
 
   # calculate the background percentage of coverage
-  coveredAll <- sum(sum(cov)) / sum(as.numeric(seqlengths(x)))
+  totalGenomeSize <- 
+    sum(as.numeric(seqlengths(x)[as.character(unique(seqnames(x)))]))
+  if(is.na(totalGenomeSize)){
+    stop("seqlengths must be provided in input x!")
+  }
+  coveredAll <- sum(sum(cov)) / totalGenomeSize
   density <- runmean(cov, k=winSize,  endrule="constant")
 
   # slice the density into GRBs
@@ -41,6 +49,16 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
     indexKeep <- unique(subjectHits(hits))
     clusterRanges <- clusterRanges[indexKeep]
   }
+  
+  # Count the number of CNEs within the GRBs
+  for(i in 1:length(xList)){
+    hitsCNEs <- findOverlaps(xList[[i]], clusterRanges,
+                             ignore.strand=TRUE, type="within")
+    cnes <- sapply(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)), length)
+    mcols(clusterRanges)[[names(xList)[i]]] <- 0L
+    mcols(clusterRanges)[[names(xList)[i]]][as.integer(names(cnes))] <- cnes
+  }
+  
   return(clusterRanges)
 }
 
