@@ -96,6 +96,7 @@ export(
   readAxt,
   axtInfo,
   writeAxt,
+  read.rmMask.GRanges,
 
   ## ceScan.R
   

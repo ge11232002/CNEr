@@ -91,3 +91,11 @@ test_that("test_writeAxt", {
   expect_silent(writeAxt(axtHg19DanRer7, con=tempfile()))
   
 })
+
+test_that("test_read.rmMask.GRanges", {
+  fn <- system.file("extdata", "ce2chrM.fa.out", package="IRanges")
+  ans <- read.rmMask.GRanges(fn)
+  
+  ## Check the number of repeats
+  expect_identical(length(ans), 28L)
+})

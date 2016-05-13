@@ -76,3 +76,19 @@ writeAxt <- function(axt, con){
                       "", sep="\n")
   writeLines(wholeLines, con)
 }
+
+### -----------------------------------------------------------------
+### read RepeatMasker out file into a GRanges object
+### Exported!
+read.rmMask.GRanges <- function(fn){
+  rmMaskOut <- read.table(fn, header=FALSE, sep="", skip=3, as.is=TRUE,
+                          col.names=1:16, fill=TRUE)
+  rmMaskGRanges <- GRanges(seqnames=rmMaskOut$X5,
+                           ranges=IRanges(start=rmMaskOut$X6,
+                                          end=rmMaskOut$X7),
+                           strand=ifelse(rmMaskOut$X9=="+", "+", "-"),
+                           name=rmMaskOut$X10,
+                           type=rmMaskOut$X11,
+                           score=rmMaskOut$X1)
+  return(rmMaskGRanges)
+}

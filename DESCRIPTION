@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.9.1
-Date: 2016-05-09
+Version: 1.9.2
+Date: 2016-05-13
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
