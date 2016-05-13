@@ -13,7 +13,7 @@
 
 \arguments{
   \item{fn}{
-    \character(1): the filename of a RepeatMasker .out file.
+    \code{character}(1): the filename of a RepeatMasker .out file.
   }
 }
 
