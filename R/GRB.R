@@ -71,6 +71,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
                             strand="+",
                             seqinfo=seqinfo(x))
   clusterRanges <- GRBMergedClean
+  names(clusterRanges) <- paste(clusterRanges)
   
   # remove GRBs (which do not encompass any gene)
   if(!is.null(genes)){
