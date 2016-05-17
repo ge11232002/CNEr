@@ -11,7 +11,10 @@ test_that("test_makeGRBs", {
   seqlengths(cneList) <- seqlengths(TxDb.Drerio.UCSC.danRer10.refGene)[
     names(seqlengths(cneList))]
   danRer10GRBs <- makeGRBs(cneList, winSize=200, genes=refGenesDanRer10,
-                           ratio=1.2)
+                           ratio=1.2, background="genome")
   expect_identical(length(danRer10GRBs), 368L)
+  danRer10GRBs <- makeGRBs(cneList, winSize=200, genes=refGenesDanRer10,
+                           ratio=1.2, background="chromosome")
+  expect_identical(length(danRer10GRBs), 411L)
 }
 )

@@ -8,7 +8,8 @@
   Make Genomic Regulatory Blocks (GRBs) boundaries prediction from a set of CNEs.
 }
 \usage{
-  makeGRBs(x, winSize=NULL, genes=NULL, ratio=0.5)
+  makeGRBs(x, winSize=NULL, genes=NULL, ratio=1,
+           background=c("chromosome", "genome"))
 }
   
 \arguments{
@@ -30,13 +31,19 @@
     the threshold to control the stringency of the GRBs.
     Higher value, shorter and fewer GRBs, and vice versa.
   }
+  \item{background}{
+    \code{character}(1):
+    can be "chromosome" or "genome". When slice the CNE density,
+    the background is calculated based on per chromosome or the whole genome.
+  }
 }
 \details{
   First we calculated the CNE densities from the CNEs.
   Then we segment the regions according to the value of CNE densities.
   The regions with CNE densities above the expected CNE densities * ratio are
   consider as putative GRBs.
-  As last step, the putative GRBs that do not encompass any gene are filtered out.
+  As last step, the putative GRBs that do not encompass any gene
+  are filtered out.
 }
 \value{
   A \code{GRanges} of GRB coordinates is returned, with the numebr of CNEs
@@ -59,5 +66,8 @@
   names(cneList) <- c("Common carp", "Grass carp", "Blind cave fish")
   seqlengths(cneList) <- seqlengths(TxDb.Drerio.UCSC.danRer10.refGene)[
                            names(seqlengths(cneList))]
-  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2)
+  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
+           background="genome")
+  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
+           background="chromosome")
 }

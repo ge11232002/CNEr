@@ -35,7 +35,7 @@ importFrom(RSQLite, SQLite)
 importFrom(methods, is, new)
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
-importFrom(IRanges, IRanges, IntegerList)
+importFrom(IRanges, IRanges, IntegerList, RleViewsList)
 importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
            normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript,
            isTRUEorFALSE, isSingleString)

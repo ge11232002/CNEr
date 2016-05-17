@@ -1,10 +1,13 @@
 ### -----------------------------------------------------------------
 ### make GRBs from CNEs
 ### Exported!
-makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
+makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1, 
+                     background=c("chromosome", "genome")){
   if(!is(x, "GRangesList")){
     stop("The input `x` must be a `GRangesList` object!")
   }
+  background <- match.arg(background)
+  
   xList <- x
   if(is.null(names(xList))){
     names(xList) <- as.character(1:length(xList))
@@ -25,18 +28,30 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
     stop("The `genes` must be a `GRanges` object!")
   }
 
-  # calculate the background percentage of coverage
-  totalGenomeSize <- 
-    sum(as.numeric(seqlengths(x)[as.character(unique(seqnames(x)))]))
-  if(is.na(totalGenomeSize)){
-    stop("seqlengths must be provided in input x!")
-  }
-  coveredAll <- sum(sum(cov)) / totalGenomeSize
   density <- runmean(cov, k=winSize,  endrule="constant")
-
-  # slice the density into GRBs
-  slicedDensities <- slice(density, lower=coveredAll*ratio, includeLower=FALSE)
-  clusterRanges <- GRanges(seqnames=rep(names(slicedDensities), 
+  if(background == "genome"){
+    # calculate the background percentage of coverage
+    totalGenomeSize <- 
+      sum(as.numeric(seqlengths(x)[as.character(unique(seqnames(x)))]))
+    if(is.na(totalGenomeSize)){
+      stop("seqlengths must be provided in input x!")
+    }
+    coveredAll <- sum(sum(cov)) / totalGenomeSize
+    # slice the density into GRBs
+    slicedDensities <- slice(density, lower=coveredAll*ratio, 
+                             includeLower=FALSE)
+  }else if(background == "chromosome"){
+    # calculate the background percentage of coverage per chromosome
+    coveredAllPerChromosome <- sum(cov)/seqlengths(x)[names(cov)]
+    slicedDensities <- list()
+    for(i in 1:length(density)){
+      slicedDensities[[names(density)[i]]] <- slice(density[[i]],
+        lower=coveredAllPerChromosome[names(density)[i]], includeLower=FALSE)
+    }
+    slicedDensities <- RleViewsList(slicedDensities)
+  }
+  
+  clusterRanges <- GRanges(seqnames=rep(names(slicedDensities),
                                         elementNROWS(slicedDensities)),
                            ranges=unlist(ranges(slicedDensities)),
                            strand="+",
