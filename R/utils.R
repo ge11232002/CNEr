@@ -118,10 +118,6 @@ binRestrictionString <- function(start, end, field="bin"){
   return(cmdString)
 }
 
-
-
-
-
 #get_cne_ranges_in_region = function(CNE, whichAssembly=c(1,2), 
 #                                    chr, CNEstart, CNEend, min_length){
 #  ## This CNE data.frame does not have the bin column yet. 
@@ -160,42 +156,6 @@ binRestrictionString <- function(start, end, field="bin"){
 #                ranges=IRanges(start=res[ ,2], end=res[ ,3]))
 #  return(res)
 #}
-
-### -----------------------------------------------------------------
-### save the CNE tables into a local SQLite database
-### Exported!!
-setMethod("saveCNEToSQLite",
-          signature(CNE="data.frame", tableName="character"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            ## tableName should be in the format "danRer7_hg19_49_50"
-            if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
-              stop("The tableName should be in the format danRer7_hg19_49_50.")
-            CNE$bin1 <- binFromCoordRange(CNE$start1, CNE$end1)
-            CNE$bin2 <- binFromCoordRange(CNE$start2, CNE$end2)
-            # reorder it
-            CNE <- CNE[ ,c("bin1", "chr1", "start1", "end1", "bin2",
-                           "chr2", "start2", "end2", "strand", 
-                           "similarity", "cigar")]
-            con <- dbConnect(SQLite(), dbname=dbName)
-            on.exit(dbDisconnect(con))
-            dbWriteTable(con, tableName, CNE, row.names=FALSE, overwrite=overwrite)
-          }
-          )
-
-setMethod("saveCNEToSQLite",
-          signature(CNE="CNE", tableName="missing"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            tableNames = names(CNE@CNERepeatsFiltered)
-            for(i in 1:length(CNE@CNERepeatsFiltered)){
-              saveCNEToSQLite(CNE@CNERepeatsFiltered[[i]],
-                              dbName=dbName, tableName=tableNames[i],
-                              overwrite=overwrite)
-            }
-          }
-          )
-          
-
-
 
 ### -----------------------------------------------------------------
 ### read CNE ranges from a local SQLite database.

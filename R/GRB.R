@@ -46,7 +46,8 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     slicedDensities <- list()
     for(i in 1:length(density)){
       slicedDensities[[names(density)[i]]] <- slice(density[[i]],
-        lower=coveredAllPerChromosome[names(density)[i]], includeLower=FALSE)
+        lower=coveredAllPerChromosome[names(density)[i]]*ratio, 
+        includeLower=FALSE)
     }
     slicedDensities <- RleViewsList(slicedDensities)
   }

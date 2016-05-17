@@ -227,7 +227,7 @@ cneDanRer10Hg38 <- CNE(
                                     package="BSgenome.Hsapiens.UCSC.hg38"),
                         "single_sequences.2bit"),
   axt12Fn=axtFilesDanRer10Hg38, axt21Fn=axtFilesHg38DanRer10,
-  cutoffs1=8L, cutoffs2=4L)
+  cutoffs1=8L, cutoffs2=4L, smoothingWindow1=200L, smoothingWindow2=300L)
 cneDanRer10Hg38
 ```
 
@@ -324,7 +324,7 @@ cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
 As the computation of CNEs from the whole pipeline and 
 the preparation of annotation package can be very time-consuming,
 for a smoother visualisation experience, 
-we decided to use a local SQLite database to store these information.
+we decided to use a local SQLite database to store CNEs.
 
 ## CNE storage and query
 Since the CNEs `data.frame` is just a table and 

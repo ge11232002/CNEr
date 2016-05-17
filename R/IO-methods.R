@@ -92,3 +92,36 @@ read.rmMask.GRanges <- function(fn){
                            score=rmMaskOut$X1)
   return(rmMaskGRanges)
 }
+
+### -----------------------------------------------------------------
+### save the CNE tables into a local SQLite database
+### Exported!!
+setMethod("saveCNEToSQLite",
+          signature(CNE="data.frame", tableName="character"),
+          function(CNE, dbName, tableName, overwrite=FALSE){
+            ## tableName should be in the format "danRer7_hg19_49_50"
+            if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
+              stop("The tableName should be in the format danRer7_hg19_49_50.")
+            CNE$bin1 <- binFromCoordRange(CNE$start1, CNE$end1)
+            CNE$bin2 <- binFromCoordRange(CNE$start2, CNE$end2)
+            # reorder it
+            CNE <- CNE[ ,c("bin1", "chr1", "start1", "end1", "bin2",
+                           "chr2", "start2", "end2", "strand", 
+                           "similarity", "cigar")]
+            con <- dbConnect(SQLite(), dbname=dbName)
+            on.exit(dbDisconnect(con))
+            dbWriteTable(con, tableName, CNE, row.names=FALSE, overwrite=overwrite)
+          }
+)
+
+setMethod("saveCNEToSQLite",
+          signature(CNE="CNE", tableName="missing"),
+          function(CNE, dbName, tableName, overwrite=FALSE){
+            tableNames = names(CNE@CNERepeatsFiltered)
+            for(i in 1:length(CNE@CNERepeatsFiltered)){
+              saveCNEToSQLite(CNE@CNERepeatsFiltered[[i]],
+                              dbName=dbName, tableName=tableNames[i],
+                              overwrite=overwrite)
+            }
+          }
+)
