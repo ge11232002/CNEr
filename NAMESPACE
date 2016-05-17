@@ -64,7 +64,7 @@ exportMethods(
   names, seqnames, "names<-", strand,
   
   ## GRangePairs-class.R
-  first, last, grglist, seqinfo, swap,
+  first, last, grglist, seqinfo, unique,
 
   ## Axt-methods.R
   mismatchSummary
@@ -147,6 +147,9 @@ exportMethods(
   CNE12, CNE21,
   thresholds,
   CNEMerged, CNEFinal,
+  
+  # GRangePairs-class.R
+  swap,
   
   ## ceScan.R
   ceScan, 

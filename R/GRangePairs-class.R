@@ -336,6 +336,14 @@ setMethod("swap", "GRangePairs", function(x){
 })
 
 ### -----------------------------------------------------------------
+### unique: keep the unique GRangePairs
+### Exported!
+setMethod("unique", "GRangePairs", function(x){
+  duplicatedIndex <- duplicated(paste(paste(first(x)), paste(last(x))))
+  x[!duplicatedIndex]
+})
+
+### -----------------------------------------------------------------
 ### show methods for GRangePairs
 ###
 .makeNakedMatFromGRangePairs <- function(x)

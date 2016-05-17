@@ -33,6 +33,8 @@
 % Swaping:
 \alias{swap}
 \alias{swap,GRangePairs-method}
+% unique:
+\alias{unique,GRangePairs-method}
 
 % "show" method:
 \alias{show,GRangePairs-method}
@@ -169,6 +171,10 @@ GRangePairs objects
         Swap the first, last GRanges.
     }
     \item{}{
+      \code{unique(x)}:
+        Get the unique GRangePairs.
+    }
+    \item{}{
       \code{show(x)}:
       By default the \code{show} method displays 5 head and 5 tail
       elements. This can be changed by setting the global options
@@ -229,4 +235,10 @@ GRangePairs objects
   
   ## Combining
   c(grangesPairs1, grangesPairs2)
+  
+  ## Swap
+  swap(grangesPairs1)
+  
+  ## Unique
+  unique(c(grangesPairs1, grangesPairs1))
 }

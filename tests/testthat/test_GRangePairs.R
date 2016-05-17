@@ -76,6 +76,8 @@ test_that("test_GRangePairs", {
   # test swapping
   expect_identical(first(swap(grangesPairs1)), last(grangesPairs1))
   
+  # test unique
+  expect_identical(unique(c(grangesPairs1, grangesPairs1)), grangesPairs1)
   # test reduce
   # firstGRange <- GRanges(seqnames=c("chr1", "chr1", "chr2", "chr2", "chr5"),
   #                  ranges=IRanges(start=c(1, 20, 2, 3, 1),
