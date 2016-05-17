@@ -42,6 +42,20 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=0.5){
                            strand="+",
                            seqinfo=seqinfo(x))
 
+  # shrink the GRBs with actual CNE locations
+  hits <- findOverlaps(x, clusterRanges, type="within", select="all",
+                       ignore.strand=TRUE)
+  mergedGRBCNEsList <- split(x[queryHits(hits)], subjectHits(hits))
+  starts <- min(start(mergedGRBCNEsList))
+  ends <- max(end(mergedGRBCNEsList))
+  seqnames <- sapply(seqnames(mergedGRBCNEsList), runValue)
+  GRBMergedClean <- GRanges(seqnames=seqnames,
+                            ranges=IRanges(start=starts,
+                                           end=ends),
+                            strand="+",
+                            seqinfo=seqinfo(x))
+  clusterRanges <- GRBMergedClean
+  
   # remove GRBs (which do not encompass any gene)
   if(!is.null(genes)){
     hits <- findOverlaps(genes, clusterRanges, type="within", select="all",

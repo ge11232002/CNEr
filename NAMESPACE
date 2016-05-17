@@ -20,7 +20,7 @@ importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
-                  showAsCell, extractROWS, mcols, "mcols<-")
+                  showAsCell, extractROWS, mcols, "mcols<-", split, runValue)
 importMethodsFrom(IRanges, slice, ranges)
 importMethodsFrom(GenomicAlignments, last)
 

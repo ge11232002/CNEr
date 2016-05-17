@@ -12,6 +12,6 @@ test_that("test_makeGRBs", {
     names(seqlengths(cneList))]
   danRer10GRBs <- makeGRBs(cneList, winSize=200, genes=refGenesDanRer10,
                            ratio=1.2)
-  expect_identical(length(danRer10GRBs), 502L)
+  expect_identical(length(danRer10GRBs), 368L)
 }
 )
