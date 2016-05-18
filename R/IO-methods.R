@@ -96,7 +96,7 @@ read.rmMask.GRanges <- function(fn){
 ### -----------------------------------------------------------------
 ### save the CNE tables into a local SQLite database
 ### Exported!!
-saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=TRUE){
+saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
   ## by default tableName is in the format "danRer7_hg19_49_50"
   if(is.null(tableName)){
     tableName <- paste(sub("\\.2bit", "", basename(x@assembly1Fn)),
