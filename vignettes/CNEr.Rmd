@@ -255,10 +255,11 @@ several similarity criterias (__I/C__) range from 70% to 100%.
 
 ```{r CNEScan, eval=TRUE, echo=TRUE}
 identities <- c(45L, 48L, 49L)
+windows <- c(50L, 50L, 50L)
 ## Here danRer10Filter is tFilter since danRer10 is assembly1
 cneListDanRer10Hg38 <- ceScan(x=cneDanRer10Hg38, tFilter=danRer10Filter,
                               qFilter=hg38Filter,
-                              window=50L, identity=identities)
+                              window=windows, identity=identities)
 ```
 
 At this stage, a list of `CNE` is returned from `ceScan`, which contains the preliminary two sets of CNEs from two sets of axt alignments.
@@ -337,23 +338,20 @@ and [genomewiki](http://genomewiki.ucsc.edu/index.php/Bin_indexing_system).
 ```{r saveCNE, eval=TRUE, echo=TRUE}
 ## on individual tables
 dbName <- tempfile()
-data(cneBlatedDanRer7Hg19)
-for(i in 1:length(cneBlatedDanRer7Hg19)){
-  tableName <- paste("danRer7_hg19", names(cneBlatedDanRer7Hg19)[i],
-                      sep="_")
-	saveCNEToSQLite(cneBlatedDanRer7Hg19[[i]], dbName, tableName, overwrite=TRUE)
+data(cneFinalListDanRer10Hg38)
+tableNames <- paste("danRer10", "hg38", names(cneFinalListDanRer10Hg38),
+                    sep="_")
+for(i in 1:length(cneFinalListDanRer10Hg38)){
+	saveCNEToSQLite(cneFinalListDanRer10Hg38[[i]], dbName, tableNames[i],
+	                overwrite=TRUE)
 }
-
-## on CNE class
-data(finalCNE)
-saveCNEToSQLite(finalCNE, dbName=dbName, overwrite=TRUE)
 ```
 
 When querying results from the local SQLite database based on the chr, 
 coordinates and other criterias, 
 a `IRanges` object is returned.
 
-```{r queryCNE, eval=TRUE, echo=TRUE}
+```{r queryCNE, eval=FALSE, echo=TRUE}
 chr <- "chr11"
 start <- 31000000L
 end <-  33000000L
@@ -443,7 +441,7 @@ For more details, please look into the vignette of `r Biocpkg("Gviz")`.
 
 ## CNEs horizon plot
 
-```{r CNEDensity, eval=TRUE, echo=TRUE}
+```{r CNEDensity, eval=FALSE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
                     "cne.sqlite")
 windowSize <- 300L

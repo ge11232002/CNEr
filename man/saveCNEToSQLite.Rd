@@ -1,68 +1,56 @@
 \name{saveCNEToSQLite-methods}
 \docType{methods}
 \alias{saveCNEToSQLite}
-\alias{saveCNEToSQLite-methods}
-\alias{saveCNEToSQLite,CNE,ANY,missing-method}
-\alias{saveCNEToSQLite,data.frame,ANY,character-method}
 
 \title{
-saveCNEToSQLite function
+  Save CNE to SQLite
 }
 
 \description{
-This function save the CNE results into a local SQLite database.
+  This function save the CNE results into a local SQLite database.
 }
 
 \usage{
-saveCNEToSQLite(CNE, dbName, tableName, overwrite=FALSE)
+  saveCNEToSQLite(x, dbName, tableName=NULL, overwrite=FALSE)
 }
 
 \arguments{
-  \item{CNE}{
-    An object of \code{data.frame}, the CNE data table
-    or an object of \code{CNE}.
+  \item{x}{
+    An object of \code{CNE}, with CNEFinal computed.
   }
   \item{dbName}{
-    An object of \code{character}, the path of the local SQLite database.
+    \code{character}(1): the filename of the local SQLite database.
   }
   \item{tableName}{
-    An object of \code{character}, the name of table for this CNE data table,
-    or missing when CNE is an object of \code{CNE}.
+    \code{character}(1): the name of table for this CNE data table.
+    When it is NULL, the table name will be infered from the assembly filenames
+    and scanning window/identity, in a format of "danRer10_hg38_49_50".
   }
   \item{overwrite}{
-    An object of \code{boolean}, 
-    whether or not to overwrite the table with same table name.
+    \code{boolean}(1):
+    whether or not to overwrite the existing table.
   }
 }
 
 \details{
-  The input CNE table should have the colnames 
-  "chr1", "start1", "end1", "chr2", "start2", "end2", 
-  "strand", "similarity", "cigar".
-  After the bin indexing, two additional columns "bin1" and "bin2" will be
-  added before the column "chr1" and "chr2", respectively.
-  
-  If the input CNE is a \code{CNE} object,
-  the tableName will be a combination of assembly names and thresholds.
-  For instance, "danRer7_hg19_49_50" for "hg19" and "danRer7" with
-  threshold "49_50".
+  before loading into a SQLite database, 
+  a bin indexing system is used to index the CNE range,
+  which provides faster SQL query.
 }
 
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 \examples{
-  dbName = tempfile()
-  data(cneBlatedDanRer7Hg19)
-  for(i in 1:length(cneBlatedDanRer7Hg19)){
-    tableName = paste("danRer7_hg19", names(cneBlatedDanRer7Hg19)[i],
+  dbName <- tempfile()
+  data(cneFinalListDanRer10Hg38)
+  tableNames <- paste("danRer10", "hg38", names(cneFinalListDanRer10Hg38),
                       sep="_")
-    saveCNEToSQLite(cneBlatedDanRer7Hg19[[i]], dbName, tableName, 
+  for(i in 1:length(cneFinalListDanRer10Hg38)){
+    saveCNEToSQLite(cneFinalListDanRer10Hg38[[i]], dbName, tableNames[i], 
                     overwrite=TRUE)
   }
-  data(finalCNE)
-  saveCNEToSQLite(finalCNE, dbName=dbName, overwrite=TRUE)
 }
 

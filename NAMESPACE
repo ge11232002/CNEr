@@ -97,6 +97,7 @@ export(
   axtInfo,
   writeAxt,
   read.rmMask.GRanges,
+  saveCNEToSQLite,
 
   ## ceScan.R
   
@@ -154,11 +155,7 @@ exportMethods(
   ## ceScan.R
   ceScan, 
   cneMerge,
-  
-  ## utils.r
-  saveCNEToSQLite,
 
   ## plot.r
   CNEDensity
 )
-

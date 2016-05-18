@@ -96,32 +96,34 @@ read.rmMask.GRanges <- function(fn){
 ### -----------------------------------------------------------------
 ### save the CNE tables into a local SQLite database
 ### Exported!!
-setMethod("saveCNEToSQLite",
-          signature(CNE="data.frame", tableName="character"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            ## tableName should be in the format "danRer7_hg19_49_50"
-            if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
-              stop("The tableName should be in the format danRer7_hg19_49_50.")
-            CNE$bin1 <- binFromCoordRange(CNE$start1, CNE$end1)
-            CNE$bin2 <- binFromCoordRange(CNE$start2, CNE$end2)
-            # reorder it
-            CNE <- CNE[ ,c("bin1", "chr1", "start1", "end1", "bin2",
-                           "chr2", "start2", "end2", "strand", 
-                           "similarity", "cigar")]
-            con <- dbConnect(SQLite(), dbname=dbName)
-            on.exit(dbDisconnect(con))
-            dbWriteTable(con, tableName, CNE, row.names=FALSE, overwrite=overwrite)
-          }
-)
-
-setMethod("saveCNEToSQLite",
-          signature(CNE="CNE", tableName="missing"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            tableNames = names(CNE@CNERepeatsFiltered)
-            for(i in 1:length(CNE@CNERepeatsFiltered)){
-              saveCNEToSQLite(CNE@CNERepeatsFiltered[[i]],
-                              dbName=dbName, tableName=tableNames[i],
-                              overwrite=overwrite)
-            }
-          }
-)
+saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=TRUE){
+  ## by default tableName is in the format "danRer7_hg19_49_50"
+  if(is.null(tableName)){
+    tableName <- paste(sub("\\.2bit", "", basename(x@assembly1Fn)),
+                       sub("\\.2bit", "", basename(x@assembly2Fn)),
+                       x@identity, x@window, sep="_")
+  }
+  if(length(CNEFinal(x)) == 0L){
+    warning("There is no CNEs.")
+  }
+  cneFinal <- as.data.frame(CNEFinal(x))
+  colnames(cneFinal) <- sub("^X\\.", "", colnames(cneFinal))
+  
+  ## Create the bin column
+  cneFinal$first.bin <- binFromCoordRange(cneFinal$first.start,
+                                          cneFinal$first.end)
+  cneFinal$last.bin <- binFromCoordRange(cneFinal$last.start,
+                                         cneFinal$last.end)
+  cneFinal <- cneFinal[ ,c("first.bin", "first.seqnames",
+                           "first.start", "first.end",
+                           "last.bin",
+                           "last.seqnames", "last.start", "last.end"
+  )]
+  
+  ## SQLite
+  con <- dbConnect(SQLite(), dbname=dbName)
+  on.exit(dbDisconnect(con))
+  dbWriteTable(con, tableName, cneFinal, row.names=FALSE,
+               overwrite=overwrite)
+  invisible(tableName)
+}

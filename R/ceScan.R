@@ -137,7 +137,9 @@ setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
   for(i in 1:length(cne12)){
     ans[[names(cne12)[i]]] <- BiocGenerics:::replaceSlots(x, 
                                                           CNE12=cne12[[i]],
-                                                          CNE21=cne21[[i]])
+                                                          CNE21=cne21[[i]],
+                                                          window=window[i],
+                                                          identity=identity[i])
   }
   return(ans)
 })
@@ -160,8 +162,7 @@ ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
     stop("The scanning window size must be equal or larger than identity!")
   }
   if(length(identity) != length(window)){
-    warning("The length of identity and window are different.
-            The short one will be recycled.")
+    stop("The length of identity and window are different!")
   }
   thresholds <- paste(identity, window, sep="_")
   ans <- ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 

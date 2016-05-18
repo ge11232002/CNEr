@@ -66,6 +66,9 @@ my.system <- function(cmd, echo=TRUE, intern=FALSE, ...){
 ### a feature spanning the given range. * USE THIS WHEN CREATING A DB *
 ### Exported!
 .validateBinRanges <- function(starts, ends){
+  if(length(starts) != length(ends)){
+    stop("starts and ends must be same length!")
+  }
   if(any(ends <= 0 | starts <= 0)){
     stop("starts and ends must be positive integers!")
   }
