@@ -127,3 +127,61 @@ saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
                overwrite=overwrite)
   invisible(tableName)
 }
+
+### -----------------------------------------------------------------
+### read CNE from a local SQLite database
+### Exported!
+readCNERangesFromSQLite <- function(dbName, tableName, chr, start, end, 
+                                    whichAssembly=c("first", "last"),
+                                    minLength=NULL){
+  nrGraphs <- 1
+  ## Let's make nrGraphs=1, make all the cnes together.
+  CNEstart <- as.integer(start)
+  CNEend <- as.integer(end)
+  whichAssembly <- match.arg(whichAssembly)
+  
+  con <- dbConnect(SQLite(), dbname=dbName)
+  on.exit(dbDisconnect(con))
+  
+  if(nrGraphs == 1){
+    sqlCmd <- switch(whichAssembly,
+                     "first"=paste("SELECT start1,end1 from", tableName, 
+                                   "WHERE chr1=", paste0("'", chr, "'"), 
+                                   "AND start1 >=", CNEstart, "AND end1 <=", 
+                                   CNEend, "AND", 
+                                   binRestrictionString(CNEstart, CNEend,
+                                                        "bin1")),
+                     "last"=paste("SELECT start2,end2 from", tableName, 
+                               "WHERE chr2=", paste0("'", chr, "'"), 
+                               "AND start2 >=", CNEstart, "AND end2 <=", 
+                               CNEend, "AND", 
+                               binRestrictionString(CNEstart, CNEend, "bin2"))
+    )
+    if(!is.null(minLength))
+      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
+                      "AND end2-start2+1 >=", minLength)
+    fetchedCNE <- dbGetQuery(con, sqlCmd)
+    fetchedCNE <- IRanges(start=fetchedCNE[ ,1], end=fetchedCNE[, 2])
+  }else if(nrGraphs > 1){
+    sqlCmd <- switch(whichAssembly,
+                     "L"=paste("SELECT chr2,start1,end1 from", tableName, 
+                               "WHERE chr1=", paste0("'", chr, "'"), 
+                               "AND start1 >=", CNEstart, "AND end1 <=", 
+                               CNEend, "AND", 
+                               binRestrictionString(CNEstart, CNEend, "bin1")),
+                     "R"=paste("SELECT chr1,start2,end2 from", tableName, 
+                               "WHERE chr2=", paste0("'", chr, "'"), 
+                               "AND start2 >=", CNEstart, "AND end2 <=", 
+                               CNEend, "AND", 
+                               binRestrictionString(CNEstart, CNEend, "bin2"))
+    )
+    if(!is.null(minLength))
+      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
+                      "AND end2-start2+1 >=", minLength)
+    fetchedCNE <- dbGetQuery(con, sqlCmd)
+    fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1], 
+                          ranges=IRanges(start=fetchedCNE[ ,2], 
+                                         end=fetchedCNE[ ,3]))
+  }
+  return(fetchedCNE)
+}
