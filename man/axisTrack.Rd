@@ -2,7 +2,6 @@
 \alias{axisTrack}
 \alias{cpgIslands}
 \alias{refGenes}
-\alias{ideoTrack}
 \docType{data}
 \title{
   Example data for plotting annotation.
@@ -14,7 +13,6 @@
   data(axisTrack)
   data(cpgIslands)
   data(refGenes)
-  data(ideoTrack)  
 }
 
 \details{
@@ -25,6 +23,5 @@
 data(axisTrack)
 data(cpgIslands)
 data(refGenes)
-data(ideoTrack)
 }
 \keyword{datasets}

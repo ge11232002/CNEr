@@ -327,7 +327,6 @@ the preparation of annotation package can be very time-consuming,
 for a smoother visualisation experience, 
 we decided to use a local SQLite database to store CNEs.
 
-## CNE storage and query
 Since the CNEs `data.frame` is just a table and 
 can be imported into a SQL table naturally.
 To speed up the query from the SQL database,
@@ -349,17 +348,18 @@ for(i in 1:length(cneFinalListDanRer10Hg38)){
 
 When querying results from the local SQLite database based on the chr, 
 coordinates and other criterias, 
-a `IRanges` object is returned.
+a `GRanges` object is returned.
 
-```{r queryCNE, eval=FALSE, echo=TRUE}
-chr <- "chr11"
-start <- 31000000L
-end <-  33000000L
+```{r queryCNE, eval=TRUE, echo=TRUE}
+chr <- "chr6"
+start <- 24000000L
+end <-  27000000L
 minLength <- 50L
-tableName <- "danRer7_hg19_45_50"
+tableName <- "danRer10_hg38_45_50"
 fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
-                                           start, end, whichAssembly="L",
-                                           minLength=minLength)
+                                            start, end, whichAssembly="first",
+                                            minLength=minLength)
+fetchedCNERanges
 ```
 
 
@@ -390,45 +390,48 @@ is available from
 http://timelyportfolio.blogspot.co.uk/2012/08/horizon-on-ggplot2.html.
 
 ## Gene annotation visualisation
-For the example of hg19 vs danRer7 in this vignette, 
-we choose hg19 as the reference and 
-show the range of developmental gene __PAX6__.
+For the example of hg38 vs danRer10 in this vignette, 
+we choose danRer10 as the reference and 
+show the range of developmental gene __barhl2__ and __sox14__. 
 
 ```{r queryUCSC, eval=FALSE, echo=TRUE}
 library(Gviz)
-genome <- "hg19"
-chr <- "chr11"
-start <- 31000000L
-end <-  33000000L
+library(biomaRt)
+genome <- "danRer10"
 axisTrack <- GenomeAxisTrack()
-ideoTrack <- IdeogramTrack(genome=genome, chromosome=chr)
 cpgIslands <- UcscTrack(genome=genome, chromosome=chr,
-                       track="cpgIslandExt", from=start, to=end,
-                       trackType="AnnotationTrack", start="chromStart",
-                       end="chromEnd", id="name", shape="box",
-                       fill="#006400", name="CpG Islands")
-refGenes <- UcscTrack(genome="hg19", chromosome=chr,
-                     track="refGene", from=start, to=end,
-                     trackType="GeneRegionTrack", rstarts="exonStarts",
-                     rends="exonEnds", gene="name2", symbol="name2",
-                     transcript="name", strand="strand", fill="#8282d2",
-                     name="refSeq Genes", collapseTranscripts=TRUE)
-biomTrack <- BiomartGeneRegionTrack(genome="hg19", chromosome=chr, 
-                                   start=start , end=end, name="Ensembl")
+                        track="cpgIslandExt", from=start, to=end,
+                        trackType="AnnotationTrack", start="chromStart",
+                        end="chromEnd", id="name", shape="box",
+                        showId=FALSE,
+                        fill="#006400", name="CpG Islands",
+                        background.title="brown")
+refGenes <- UcscTrack(genome=genome, chromosome=chr,
+                      track="refGene", from=start, to=end,
+                      trackType="GeneRegionTrack", rstarts="exonStarts",
+                      rends="exonEnds", gene="name2", symbol="name2",
+                      transcript="name", strand="strand", fill="#8282d2",
+                      name="refSeq Genes", collapseTranscripts=TRUE,
+                      showId=TRUE, background.title="brown")
+ensembl <- useMart(biomart="ENSEMBL_MART_ENSEMBL",
+                   host="dec2015.archive.ensembl.org")
+ensembl <-  useDataset("drerio_gene_ensembl",mart=ensembl)
+biomTrack <- BiomartGeneRegionTrack(genome=genome, chromosome=chr, 
+                                    biomart=ensembl,
+                                    start=start , end=end, name="Ensembl Genes")
 ```
 
 ```{r loadAnnotation, eval=TRUE, echo=FALSE}
 data(axisTrack)
-data(ideoTrack)
 data(cpgIslands)
 data(refGenes)
 ```
 
-```{r plotAnnotation, eval=TRUE, echo=TRUE, fig.height=10, fig.width=7.5}
+```{r plotAnnotation, eval=TRUE, echo=TRUE, fig.height=7.5}
 library(Gviz)
-plotTracks(list(axisTrack, ideoTrack, cpgIslands, refGenes), 
+plotTracks(list(axisTrack, cpgIslands, refGenes), 
            collapseTranscripts=TRUE, shape="arrow",
-           showId=TRUE, transcriptAnnotation="symbol")
+           transcriptAnnotation="symbol")
 ```
 
 It is also possible to plot the annotation from an ordinary `R` object,
@@ -438,74 +441,63 @@ Usually the __gff__ file containing the gene annotation can be processed by
 `r Biocpkg("Gviz")` directly.
 For more details, please look into the vignette of `r Biocpkg("Gviz")`.
 
-
 ## CNEs horizon plot
 
-```{r CNEDensity, eval=FALSE, echo=TRUE}
+```{r CNEDensity, eval=TRUE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
                     "cne.sqlite")
-windowSize <- 300L
+genome <- "danRer10"
+windowSize <- 200L
 minLength <- 50L
-cneHg19DanRer7_45_50 <- 
+cneDanRer10Hg38_45_50 <- 
   CNEDensity(dbName=dbName, 
-             tableName="danRer7_hg19_45_50", 
-             assembly1="hg19", chr=chr, start=start,
+             tableName="danRer10_hg38_45_50", 
+             whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
-cneHg19DanRer7_48_50 <-
+cneDanRer10Hg38_48_50 <-
   CNEDensity(dbName=dbName, 
-             tableName="danRer7_hg19_48_50", 
-             assembly1="hg19", chr=chr, start=start,
+             tableName="danRer10_hg38_48_50", 
+             whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
-cneHg19DanRer7_49_50 <-
+cneDanRer10Hg38_49_50 <-
   CNEDensity(dbName=dbName, 
-             tableName="danRer7_hg19_49_50", 
-             assembly1="hg19", chr=chr, start=start,
+             tableName="danRer10_hg38_49_50", 
+             whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
 ```
 
 ```{r GvizDataTrack, eval=TRUE, echo=TRUE}
-data(cneHg19DanRer7_45_50)
-data(cneHg19DanRer7_48_50)
-data(cneHg19DanRer7_49_50)
-genome <- "hg19"
-chr <- "chr11"
-start <- 31000000L
-end <-  33000000L
 #axisTrack = GenomeAxisTrack()
 #ideoTrack = IdeogramTrack(genome=genome, chromosome=chr)
-strand <- "+"
-dataMatrix <- cneHg19DanRer7_45_50
-dTrack1 <- DataTrack(start=dataMatrix[ ,1], end=dataMatrix[ ,1], 
-                     data=dataMatrix[ ,2], chromosome=chr, strand=strand, 
-                     genome=genome, type="horiz", horizon.scale=0.1, 
+dTrack1 <- DataTrack(range=cneDanRer10Hg38_45_50, 
+                     genome=genome, type="horiz", 
+                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer7 45/50")
-dataMatrix <- cneHg19DanRer7_48_50
-dTrack2 <- DataTrack(start=dataMatrix[ ,1], end=dataMatrix[ ,1], 
-                     data=dataMatrix[ ,2], chromosome=chr, strand=strand, 
-                     genome=genome, type="horiz", horizon.scale=0.1, 
+                     name="danRer10 45/50")
+dTrack2 <- DataTrack(range=cneDanRer10Hg38_48_50,
+                     genome=genome, type="horiz", 
+                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer7 48/50")
-dataMatrix <- cneHg19DanRer7_49_50
-dTrack3 <- DataTrack(start=dataMatrix[ ,1], end=dataMatrix[ ,1], 
-                     data=dataMatrix[ ,2], chromosome=chr, strand=strand, 
-                     genome=genome, type="horiz", horizon.scale=0.1, 
+                     name="danRer10 48/50")
+dTrack3 <- DataTrack(range=cneDanRer10Hg38_49_50,
+                     genome=genome, type="horiz", 
+                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer7 49/50")
+                     name="danRer10 49/50")
 ```
 
 ```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=15, fig.width=7.5}
-plotTracks(list(axisTrack, ideoTrack, cpgIslands, 
-                refGenes, 
+plotTracks(list(axisTrack, cpgIslands, refGenes, 
                 dTrack1, dTrack2, dTrack3),
            collapseTranscripts=TRUE, shape="arrow",
-           showId=TRUE, transcriptAnnotation="symbol")
+           transcriptAnnotation="symbol",
+           from=24000000, to=28000000)
 ```
 
 From this horizon plot compared with Zebrafish with Human as reference genome, 

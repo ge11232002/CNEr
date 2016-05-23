@@ -1,13 +1,13 @@
 ### -----------------------------------------------------------------
 ### The main function for scanning the axts and get the CNEs
 ### Not exported!
-ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL, 
-                   thresholds=c("49_50")){
-  ## Here the returned tStart and qStart are 1-based coordinates. 
-  ## Of course ends are also 1-based.
-  if(!is.null(qFilter))
-    if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
-      stop("qSizes must exist and be a Seqinfo object when qFilter exists")
+ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes=NULL,
+                    qSizes=NULL, 
+                    thresholds=c("49_50")){
+  if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
+    stop("qSizes must exist and be a Seqinfo object when qFilter exists")
+  if(is.null(tSizes) || !is(tSizes, "Seqinfo"))
+    stop("tSizes must exist and be a Seqinfo object when qFilter exists")
   
   winSize <- as.integer(sapply(strsplit(thresholds, "_"), "[", 2))
   minScore <- as.integer(sapply(strsplit(thresholds, "_"), "[", 1))
@@ -86,11 +86,13 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
                   ans <- GRangePairs(first=GRanges(seqnames=res$tName,
                                              ranges=IRanges(start=res$tStart,
                                                             end=res$tEnd),
-                                             strand="+"),
+                                             strand="+",
+                                             seqinfo=tSizes),
                                      last=GRanges(seqnames=res$qName,
                                             ranges=IRanges(start=res$qStart,
                                                            end=res$qEnd),
-                                            strand=res$strand)
+                                            strand=res$strand,
+                                            seqinfo=qSizes)
                                      )
                   ans@elementMetadata <- DataFrame(score=res$score,
                                                    cigar=res$score)
@@ -105,32 +107,38 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
 ### -----------------------------------------------------------------
 ### The function for ceScan: one way for axt object, two way for CNE
 ### Exported!
-setGeneric("ceScan", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+setGeneric("ceScan", function(x, tFilter=NULL, qFilter=NULL,
+                              tSizes=NULL, qSizes=NULL,
                               window=50L, identity=50L)
   standardGeneric("ceScan"))
 
-setMethod("ceScan", "Axt", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+setMethod("ceScan", "Axt", function(x, tFilter=NULL, qFilter=NULL,
+                                    tSizes=NULL, qSizes=NULL,
                                     window=50L, identity=50L){
-  ceScanAxt(x, tFilter=tFilter, qFilter=qFilter, qSizes=qSizes, 
+  ceScanAxt(x, tFilter=tFilter, qFilter=qFilter, tSizes=tSizes, qSizes=qSizes, 
             window=window, identity=identity)
 })
 
 setMethod("ceScan", "character", function(x, tFilter=NULL, qFilter=NULL, 
-                                          qSizes=NULL,
+                                          tSizes=NULL, qSizes=NULL,
                                     window=50L, identity=50L){
   axtsAll <- readAxt(x)
-  ceScan(axtsAll, tFilter=tFilter, qFilter=qFilter, qSizes=qSizes, 
-            window=window, identity=identity)
+  ceScan(axtsAll, tFilter=tFilter, qFilter=qFilter, 
+         tSizes=tSizes, qSizes=qSizes, 
+         window=window, identity=identity)
 })
 
-setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
+setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL,
+                                    tSizes=NULL, qSizes=NULL,
                                     window=50L, identity=50L){
   axt12 <- readAxt(x@axt12Fn)
   axt21 <- readAxt(x@axt21Fn)
   cne12 <- ceScan(axt12, tFilter, qFilter,
+                  tSizes=seqinfo(TwoBitFile(x@assembly1Fn)),
                   qSizes=seqinfo(TwoBitFile(x@assembly2Fn)),
                   window=window, identity=identity)
   cne21 <- ceScan(axt21, qFilter, tFilter,
+                  tSizes=seqinfo(TwoBitFile(x@assembly2Fn)),
                   qSizes=seqinfo(TwoBitFile(x@assembly1Fn)),
                   window=window, identity=identity)
   ans <- list()
@@ -144,19 +152,20 @@ setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL, qSizes=NULL,
   return(ans)
 })
 
-ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
-                   window=50L, identity=50L){
+ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL,
+                      tSizes=NULL, qSizes=NULL,
+                      window=50L, identity=50L){
   if(!is.null(tFilter) && !is(tFilter, "GRanges")){
     stop("tFilter must be NULL or a GRanges object!")
   }
   if(!is.null(qFilter) && !is(qFilter, "GRanges")){
     stop("qFilter must be NULL or a GRanges object!")
   }
+  if(!is.null(tSizes) && !is(tSizes, "Seqinfo")){
+    stop("tSizes must be NULL or a Seqinfo object!")
+  }
   if(!is.null(qSizes) && !is(qSizes, "Seqinfo")){
     stop("qSizes must be NULL or a Seqinfo object!")
-  }
-  if(!is.null(qFilter) && is.null(qSizes)){
-    stop("qSizes must not be NULL when qFilter is not NULL!")
   }
   if(any(window < identity)){
     stop("The scanning window size must be equal or larger than identity!")
@@ -166,7 +175,7 @@ ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL, qSizes=NULL,
   }
   thresholds <- paste(identity, window, sep="_")
   ans <- ceScanR(axts, tFilter=tFilter, qFilter=qFilter, 
-                 qSizes=qSizes, thresholds=thresholds)
+                 tSizes=tSizes, qSizes=qSizes, thresholds=thresholds)
 }
 
 ### -----------------------------------------------------------------

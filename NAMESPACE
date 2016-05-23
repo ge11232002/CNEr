@@ -129,6 +129,9 @@ export(
   ## Ancora.R
   readAncora,
   
+  ## plot.R
+  CNEDensity,
+  
   ## AssemblyStats.R
   N50, N90
 )
@@ -154,8 +157,5 @@ exportMethods(
   
   ## ceScan.R
   ceScan, 
-  cneMerge,
-
-  ## plot.r
-  CNEDensity
+  cneMerge
 )

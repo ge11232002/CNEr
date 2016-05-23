@@ -1,72 +1,38 @@
 ### -----------------------------------------------------------------
 ### Fetch the CNE coordinates from SQL and compute the densities
 ### Exported!
-setMethod("CNEDensity", 
-          signature(tableName="character", assembly1="character",
-                    assembly2="missing", threshold="missing"),
-          function(dbName, tableName, assembly1, assembly2, threshold,
-                   chr, start, end, windowSize, minLength=NULL){
-            if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
-              stop("The tableName should be in the format danRer7_hg19_49_50.")
-            assemblyNames <- strsplit(tableName, "_")[[1]][1:2]
-            stopifnot(assembly1 %in% assemblyNames)
-            if(which(assembly1 == assemblyNames) == 1){
-              whichAssembly = "L"
-            }else{
-              whichAssembly = "R"
-            }
-            .CNEDensityInternal(dbName=dbName, tableName=tableName,
-                                whichAssembly=whichAssembly,
-                                chr=chr, start=start, end=end,
-                                windowSize=windowSize, minLength=minLength)
-          }
-          )
-setMethod("CNEDensity", signature(tableName="missing", assembly1="character",
-                                  assembly2="character", threshold="character"),
-          function(dbName, tableName, assembly1, assembly2, threshold,
-                   chr, start, end, windowSize, minLength=NULL){
-            stopifnot(length(threshold) == 1L)
-            builtTableName = paste(paste(sort(c(assembly1, assembly2)), 
-                                         sep="_", collapse="_"), threshold, 
-                                   sep="_", collapse="_")
-            if(which(assembly1 == sort(c(assembly1, assembly2))) == 1){
-              whichAssembly = "L"
-            }else{
-              whichAssembly = "R"
-            }
-            .CNEDensityInternal(dbName=dbName, tableName=builtTableName,
-                                whichAssembly=whichAssembly,
-                                chr=chr, start=start, end=end,
-                                windowSize=windowSize, minLength=minLength)
-          }
-          )
+CNEDensity <- function(dbName, tableName, chr, start, end, 
+                       whichAssembly=c("first", "last"),
+                       windowSize=300, minLength=NULL){
+  .CNEDensityInternal(dbName=dbName, tableName=tableName,
+                      whichAssembly=whichAssembly,
+                      chr=chr, start=start, end=end,
+                      windowSize=windowSize, minLength=minLength)
+}
 
-
-
-.CNEDensityInternal <- function(dbName, tableName, whichAssembly=c("L","R"), 
-                       chr, start, end, windowSize, 
-                       minLength=NULL){
+.CNEDensityInternal <- function(dbName, tableName,
+                                whichAssembly=c("first","last"),
+                                chr, start, end, windowSize, 
+                                minLength=NULL){
   nrGraphs <- 1
   CNEstart <- start
   CNEend <- end
   # This is the pipeline of doing the density plot
   # The windowSize is in kb.
   whichAssembly <- match.arg(whichAssembly)
-  if(!is(windowSize, "integer"))
-    stop("windowSize must be an integer!")
-  windowSize <- windowSize * 1000
-  CNElength <- CNEend - CNEstart + 1
-  pixel_width <- 2048
-  if(CNElength <= pixel_width) {
-    step_size <- 1
-  }else{
-    step_size <- as.integer(CNElength/pixel_width)
-    if(step_size > windowSize/10)
-      step_size <- windowSize/10
-    while(windowSize %% step_size){
-      step_size <- step_size - 1
-    }
-  }
+  windowSize <- as.integer(windowSize) * 1000
+  # CNElength <- CNEend - CNEstart + 1
+  # pixel_width <- 2048
+  # if(CNElength <= pixel_width) {
+  #   step_size <- 1
+  # }else{
+  #   step_size <- as.integer(CNElength/pixel_width)
+  #   if(step_size > windowSize/10)
+  #     step_size <- windowSize/10
+  #   while(windowSize %% step_size){
+  #     step_size <- step_size - 1
+  #   }
+  # }
   # make things easier
   if(windowSize %% 2 == 0)
     windowSize <- windowSize - 1L
@@ -78,32 +44,75 @@ setMethod("CNEDensity", signature(tableName="missing", assembly1="character",
   #  context_start = 1
   #context_end = CNEend + 
   #  as.integer(((win_nr_steps-1)*step_size)/2+step_size+0.5)
-  ranges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+  ranges <- readCNERangesFromSQLite(dbName, tableName, chr,
                                     context_start, context_end, 
                                     whichAssembly, minLength)
   # Implement get_cne_ranges_in_region_partitioned_by_other_chr later!!!
   ranges <- reduce(ranges)
-  covAll <- coverage(ranges, width=context_end)
+  covAll <- coverage(ranges)
   runMeanAll <- runmean(covAll, k=windowSize, "constant")
-  resStart <- max(CNEstart, (windowSize-1)/2+1)
-  resEnd <- min(CNEend, context_end-(windowSize-1)/2)
-  resCoords <- seq(resStart, resEnd, by=step_size)
-  if(nrGraphs == 1){
-    runMeanRes <- runMeanAll[resCoords]*100
-    res <- cbind(resCoords, as.numeric(runMeanRes))
-    colnames(res) <- c("coordinates", "y")
-  }else{
-    runMeanRes <- lapply(runMeanAll, "[", resCoords)
-    runMeanRes <- lapply(runMeanRes, "*", 100)
-    res <- list()
-    for(i in 1:length(runMeanRes)){
-      res[[names(runMeanRes)[i]]] <- cbind(resCoords, 
-                                           as.numeric(runMeanRes[[i]]))
-      colnames(res[[names(runMeanRes)[i]]]) <- c("coordinates", "y")
-    }
-  }
-  return(res)
+  ans <- as(runMeanAll, "GRanges")
+  ans$score <- ans$score * 100
+  #resStart <- max(CNEstart, (windowSize-1)/2+1)
+  #resEnd <- min(CNEend, context_end-(windowSize-1)/2)
+  #resCoords <- seq(resStart, resEnd, by=step_size)
+  # if(nrGraphs == 1){
+  #   runMeanRes <- runMeanAll[resCoords]*100
+  #   res <- cbind(resCoords, as.numeric(runMeanRes))
+  #   colnames(res) <- c("coordinates", "y")
+  # }else{
+  #   runMeanRes <- lapply(runMeanAll, "[", resCoords)
+  #   runMeanRes <- lapply(runMeanRes, "*", 100)
+  #   res <- list()
+  #   for(i in 1:length(runMeanRes)){
+  #     res[[names(runMeanRes)[i]]] <- cbind(resCoords, 
+  #                                          as.numeric(runMeanRes[[i]]))
+  #     colnames(res[[names(runMeanRes)[i]]]) <- c("coordinates", "y")
+  #   }
+  # }
+  return(ans)
 }
+
+# setMethod("CNEDensity", 
+#           signature(tableName="character", assembly1="character",
+#                     assembly2="missing", threshold="missing"),
+#           function(dbName, tableName, assembly1, assembly2, threshold,
+#                    chr, start, end, windowSize, minLength=NULL){
+#             if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
+#               stop("The tableName should be in the format danRer7_hg19_49_50.")
+#             assemblyNames <- strsplit(tableName, "_")[[1]][1:2]
+#             stopifnot(assembly1 %in% assemblyNames)
+#             if(which(assembly1 == assemblyNames) == 1){
+#               whichAssembly = "L"
+#             }else{
+#               whichAssembly = "R"
+#             }
+#             .CNEDensityInternal(dbName=dbName, tableName=tableName,
+#                                 whichAssembly=whichAssembly,
+#                                 chr=chr, start=start, end=end,
+#                                 windowSize=windowSize, minLength=minLength)
+#           }
+#           )
+# setMethod("CNEDensity", signature(tableName="missing", assembly1="character",
+#                                   assembly2="character", threshold="character"),
+#           function(dbName, tableName, assembly1, assembly2, threshold,
+#                    chr, start, end, windowSize, minLength=NULL){
+#             stopifnot(length(threshold) == 1L)
+#             builtTableName = paste(paste(sort(c(assembly1, assembly2)), 
+#                                          sep="_", collapse="_"), threshold, 
+#                                    sep="_", collapse="_")
+#             if(which(assembly1 == sort(c(assembly1, assembly2))) == 1){
+#               whichAssembly = "L"
+#             }else{
+#               whichAssembly = "R"
+#             }
+#             .CNEDensityInternal(dbName=dbName, tableName=builtTableName,
+#                                 whichAssembly=whichAssembly,
+#                                 chr=chr, start=start, end=end,
+#                                 windowSize=windowSize, minLength=minLength)
+#           }
+#           )
+
 
 
 #calc_window_scores = function(CNEstart, CNEend, ranges, 

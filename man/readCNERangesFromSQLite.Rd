@@ -2,7 +2,7 @@
 \alias{readCNERangesFromSQLite}
 
 \title{
-readCNERangesFromSQLite function
+  readCNERangesFromSQLite function
 }
 \description{
 Query the SQLite database based on chromosome, 
@@ -12,7 +12,7 @@ For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
 readCNERangesFromSQLite(dbName, tableName, chr, start, end,
-                        whichAssembly=c("L","R"), minLength=NULL)
+                        whichAssembly=c("first","last"), minLength=NULL)
 }
 
 \arguments{
@@ -29,8 +29,8 @@ readCNERangesFromSQLite(dbName, tableName, chr, start, end,
     A object of \code{integer}, the start and end coordiante to fetch the CNEs.
   }
   \item{whichAssembly}{
-    A object of \code{character}, 
-    the genome to fetch is in the "Left" columns or "Right" 
+    \code{character}(1):
+    the genome to fetch is in the "first" columns or "last" 
     columns of the table.
   }
   \item{minLength}{
@@ -39,7 +39,7 @@ readCNERangesFromSQLite(dbName, tableName, chr, start, end,
 }
 
 \value{
-A object of \code{IRanges} is retu
+  A object of \code{GRanges} is returned.
 }
 
 \author{
@@ -48,13 +48,14 @@ Ge Tan
 
 \examples{
     dbName <- file.path(system.file("extdata", package="CNEr"),
-                       "cne.sqlite")
-    chr <- "chr11"
-    start <- 31000000L
-    end <-  33000000L
+                        "cne.sqlite")
+    chr <- "chr6"
+    start <- 24000000L
+    end <-  27000000
     minLength <- 50L
-    tableName <- "danRer7_hg19_45_50"
+    tableName <- "danRer10_hg38_45_50"
     fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
-                                               start, end, whichAssembly="L",
-                                               minLength=minLength)
+                                                start, end, 
+                                                whichAssembly="first",
+                                                minLength=minLength)
 }

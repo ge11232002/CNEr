@@ -6,46 +6,43 @@
 \alias{CNEDensity,ANY,missing,character,character,character-method}
 
 \title{
-CNEDensity function
+  CNEDensity function
 }
 
 \description{
-This function queries the database and generates the CNEs density values.
+  This function queries the database and generates the CNEs density values.
 }
 
 \usage{
-CNEDensity(dbName, tableName, assembly1, assembly2, threshold,
-           chr, start, end, windowSize, minLength=NULL)
+CNEDensity(dbName, tableName, chr, start, end, 
+           whichAssembly=c("first", "last"),
+           windowSize=300, minLength=NULL)
 }
 
 \arguments{
   \item{dbName}{
-    A object of \code{character}, the path of the local SQLite database.
+    \code{character}(1): the path of the local SQLite database.
   }
   \item{tableName}{
-    A object of \code{character}, the name of table for this CNE data table.
+    \code{character}(1): the name of table for this CNE data table.
     It can be missing when assembly1, assembly2 and threshold are provided.
   }
-  \item{assembly1}{
-    A object of \code{character}, the assembly to search.
-  }
-  \item{assembly2}{
-    The comparison assembly. It can be missing when tableName is provided.
-  } 
-  \item{threshold}{
-    The threshold to search. It can be missing when tableName is provided.
-  }
   \item{chr}{
-     A object of \code{character}, the chromosome to query.
+     \code{character}(1): the chromosome to query.
   }
   \item{start, end}{
-    A object of \code{integer}, the start and end coordiante to fetch the CNEs.
+    \code{integer}(1): the start and end coordiante to fetch the CNEs.
+  }
+  \item{whichAssembly}{
+    \code{character}(1):
+    the genome to fetch is in the "first" columns or "last" 
+    columns of the table.
   }
   \item{windowSize}{
-    A object of \code{integer}, the window size in kb used to smooth the CNEs.
+    \code{integer}(1): the window size in kb used to smooth the CNEs.
   }
   \item{minLength}{
-    A object of \code{integer}, the minimal length of CNEs to fetch.
+    \code{integer}(1): the minimal length of CNEs to fetch.
   }
 }
 
@@ -71,31 +68,30 @@ Ge Tan
 
 
 \examples{
-    dbName <- file.path(system.file("extdata", package="CNEr"),
-                        "cne.sqlite")
-    chr <- "chr11"
-    start <- 31000000L
-    end <-  33000000L
-    windowSize <- 300L
-    minLength <- 50L
-    cneHg19DanRer7_45_50 <- 
-      CNEDensity(dbName=dbName, 
-                 tableName="danRer7_hg19_45_50", 
-                 assembly1="hg19", chr=chr, start=start,
-                 end=end, windowSize=windowSize, 
-                 minLength=minLength)
-    cneHg19DanRer7_48_50 <- 
-      CNEDensity(dbName=dbName, 
-                 tableName="danRer7_hg19_45_50", 
-                 assembly1="hg19", chr=chr, start=start,
-                 end=end, windowSize=windowSize, 
-                 minLength=minLength)
-    cneHg19DanRer7_49_50 <- 
-      CNEDensity(dbName=dbName, 
-                 tableName="danRer7_hg19_45_50", 
-                 assembly1="hg19", chr=chr, start=start,
-                 end=end, windowSize=windowSize, 
-                 minLength=minLength)
+dbName <- file.path(system.file("extdata", package="CNEr"),
+                    "cne.sqlite")
+genome <- "danRer10"
+chr <- "chr6"
+start <- 24000000L
+end <-  27000000L
+windowSize <- 200L
+minLength <- 50L
+cneDanRer10Hg38_45_50 <- 
+  CNEDensity(dbName=dbName, 
+             tableName="danRer10_hg38_45_50", 
+             whichAssembly="first", chr=chr, start=start,
+             end=end, windowSize=windowSize, 
+             minLength=minLength)
+cneDanRer10Hg38_48_50 <-
+  CNEDensity(dbName=dbName, 
+             tableName="danRer10_hg38_48_50", 
+             whichAssembly="first", chr=chr, start=start,
+             end=end, windowSize=windowSize, 
+             minLength=minLength)
+cneDanRer10Hg38_49_50 <-
+  CNEDensity(dbName=dbName, 
+             tableName="danRer10_hg38_49_50", 
+             whichAssembly="first", chr=chr, start=start,
+             end=end, windowSize=windowSize, 
+             minLength=minLength)
 }
-
-

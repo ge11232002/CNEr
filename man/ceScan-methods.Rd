@@ -12,12 +12,14 @@
 }
 
 \usage{
-  ceScan(x, tFilter=NULL, qFilter=NULL, qSizes, window=50L, identity=50L)
+  ceScan(x, tFilter=NULL, qFilter=NULL,
+         tSizes=NULL, qSizes=NULL, window=50L, identity=50L)
 }
 
 \arguments{
   \item{x}{
-    \code{Axt} object or \code{character}(n) object of Axt filenames.
+    \code{CNE} object, or \code{Axt} object,
+    or \code{character}(n) object of Axt filenames.
   }
   \item{tFilter}{
     \code{GRanges} object or NULL: regions to filter out for target assembly.
@@ -25,10 +27,13 @@
   \item{qFilter}{
     \code{GRanges} object or NULL: regions to filter out for query assembly.
   }
+  \item{tSizes}{
+    \code{Seqinfo} object or NULL: it contains the \code{seqnames} and 
+    \code{seqlengths} for target/reference genome.
+  }
   \item{qSizes}{
     \code{Seqinfo} object or NULL: it contains the \code{seqnames} and 
     \code{seqlengths} for query genome.
-    This argument can be NULL when \code{qFilter} is NULL.
   }
   \item{window}{
     \code{integer}(n): the window size of scanning CNEs.
@@ -80,14 +85,33 @@
   windows <- c(50L, 50L, 50L)
   identities <- c(45L, 48L, 49L)
   CNEHg38DanRer10 <- ceScan(x=axtHg38DanRer10, tFilter=bedHg38,
-                            qFilter=bedDanRer10, qSizes=qSizesDanRer10,
+                            qFilter=bedDanRer10, 
+                            tSizes=qSizesHg38, qSizes=qSizesDanRer10,
                             window=windows, identity=identities)
   CNEDanRer10Hg38 <- ceScan(x=axtDanRer10Hg38, tFilter=bedDanRer10,
-                            qFilter=bedHg38, qSizes=qSizesHg38,
-                            window=windows, identity=identities)                  
+                            qFilter=bedHg38, 
+                            tSizes=qSizesDanRer10, qSizes=qSizesHg38,
+                            window=windows, identity=identities)
                             
   ## Axt file names
   CNEHg38DanRer10 <- ceScan(x=axtFnHg38DanRer10, tFilter=bedHg38,
-                            qFilter=bedDanRer10, qSizes=qSizesDanRer10,
+                            qFilter=bedDanRer10, 
+                            tSizes=qSizesHg38, qSizes=qSizesDanRer10,
                             window=windows, identity=identities)
+                            
+  ## CNE object
+  cneDanRer10Hg38 <- CNE(
+    assembly1Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit"),
+    assembly2Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit"),
+    axt12Fn=axtFnDanRer10Hg38, axt21Fn=axtFnHg38DanRer10,
+    cutoffs1=8L, cutoffs2=4L, 
+    smoothingWindow1=200L, smoothingWindow2=300L)
+  ## Here danRer10Filter is tFilter since danRer10 is assembly1
+  cneListDanRer10Hg38 <- ceScan(x=cneDanRer10Hg38, tFilter=bedDanRer10,
+                                qFilter=bedHg38,
+                                window=windows, identity=identities)
 }

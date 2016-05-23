@@ -66,10 +66,6 @@ setGeneric("CNEFinal", function(x) standardGeneric("CNEFinal"))
 setGeneric("saveCNEToSQLite", 
            function(CNE, dbName, tableName, overwrite=FALSE) 
              standardGeneric("saveCNEToSQLite"))
-setGeneric("CNEDensity",
-           function(dbName, tableName, assembly1, assembly2, threshold,
-                    chr, start, end, windowSize, minLength=NULL)
-             standardGeneric("CNEDensity"))
 setGeneric("ceScan", 
            function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L)
              standardGeneric("ceScan"))

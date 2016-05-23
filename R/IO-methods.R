@@ -145,24 +145,35 @@ readCNERangesFromSQLite <- function(dbName, tableName, chr, start, end,
   
   if(nrGraphs == 1){
     sqlCmd <- switch(whichAssembly,
-                     "first"=paste("SELECT start1,end1 from", tableName, 
-                                   "WHERE chr1=", paste0("'", chr, "'"), 
-                                   "AND start1 >=", CNEstart, "AND end1 <=", 
+                     "first"=paste("SELECT [first.start],[first.end] from",
+                                   tableName, 
+                                   "WHERE [first.seqnames]=", 
+                                   paste0("'", chr, "'"), 
+                                   "AND [first.start] >=", CNEstart, 
+                                   "AND [first.end] <=", 
                                    CNEend, "AND", 
                                    binRestrictionString(CNEstart, CNEend,
-                                                        "bin1")),
-                     "last"=paste("SELECT start2,end2 from", tableName, 
-                               "WHERE chr2=", paste0("'", chr, "'"), 
-                               "AND start2 >=", CNEstart, "AND end2 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin2"))
+                                                        "[first.bin]")),
+                     "last"=paste("SELECT [last.start],[last.end] from",
+                                  tableName, 
+                                  "WHERE [last.seqnames]=", 
+                                  paste0("'", chr, "'"), 
+                                  "AND [last.start] >=", CNEstart, 
+                                  "AND [last.end] <=", 
+                                  CNEend, "AND", 
+                                  binRestrictionString(CNEstart, CNEend, 
+                                                       "[last.bin]"))
     )
     if(!is.null(minLength))
-      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
-                      "AND end2-start2+1 >=", minLength)
+      sqlCmd <- paste(sqlCmd, "AND [first.end]-[first.start]+1 >=", minLength, 
+                      "AND [last.end]-[last.start]+1 >=", minLength)
     fetchedCNE <- dbGetQuery(con, sqlCmd)
-    fetchedCNE <- IRanges(start=fetchedCNE[ ,1], end=fetchedCNE[, 2])
+    fetchedCNE <- GRanges(seqnames=chr,
+                          ranges=IRanges(start=fetchedCNE[ ,1],
+                                         end=fetchedCNE[, 2]),
+                          strand="*")
   }else if(nrGraphs > 1){
+    ## This chunk is not executed for now.
     sqlCmd <- switch(whichAssembly,
                      "L"=paste("SELECT chr2,start1,end1 from", tableName, 
                                "WHERE chr1=", paste0("'", chr, "'"), 
