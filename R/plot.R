@@ -17,6 +17,8 @@ CNEDensity <- function(dbName, tableName, chr, start, end,
   nrGraphs <- 1
   CNEstart <- start
   CNEend <- end
+  stopifnot(length(CNEstart) == 1L)
+  stopifnot(length(CNEend) == 1L)
   # This is the pipeline of doing the density plot
   # The windowSize is in kb.
   whichAssembly <- match.arg(whichAssembly)
@@ -49,7 +51,7 @@ CNEDensity <- function(dbName, tableName, chr, start, end,
                                     whichAssembly, minLength)
   # Implement get_cne_ranges_in_region_partitioned_by_other_chr later!!!
   ranges <- reduce(ranges)
-  covAll <- coverage(ranges)
+  covAll <- coverage(ranges, width=context_end)
   runMeanAll <- runmean(covAll, k=windowSize, "constant")
   ans <- as(runMeanAll, "GRanges")
   ans$score <- ans$score * 100

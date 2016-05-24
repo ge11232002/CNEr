@@ -64,6 +64,12 @@ CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
 save(CNEDanRer10Hg38, file="~/CNEDanRer10Hg38.rda")
 
 ## Prepare danRer10CNE.sqlite
-cneTables = list.files("/export/data/CNEs/blatFiltered_19-07-2013", 
-                       pattern=".*danRer10.*tetNig2.*", 
-                       full.names=TRUE)
+library(CNEr)
+cneFns <- file.path("/mnt/biggles/data/CNEs/blatFiltered_19-07-2013/",
+                    c("cne2wBf_AstMex102_danRer10_48_50",
+                      "cne2wBf_cteIde1_danRer10_75_75",
+                      "cne2wBf_danRer10_hg38_21_30",
+                      "cne2wBf_danRer10_hg38_45_50",
+                      "cne2wBf_danRer10_hg38_49_50"))
+dbName <- "danRer10CNE.sqlite"
+readAncoraIntoSQLite(cneFns, dbName=dbName, overwrite=FALSE)

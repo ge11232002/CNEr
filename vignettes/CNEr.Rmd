@@ -445,19 +445,19 @@ For more details, please look into the vignette of `r Biocpkg("Gviz")`.
 
 ```{r CNEDensity, eval=TRUE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
-                    "cne.sqlite")
+                    "danRer10CNE.sqlite")
 genome <- "danRer10"
 windowSize <- 200L
 minLength <- 50L
-cneDanRer10Hg38_45_50 <- 
+cneDanRer10Hg38_21_30 <- 
   CNEDensity(dbName=dbName, 
-             tableName="danRer10_hg38_45_50", 
+             tableName="danRer10_hg38_21_30",
              whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
-cneDanRer10Hg38_48_50 <-
+cneDanRer10Hg38_45_50 <-
   CNEDensity(dbName=dbName, 
-             tableName="danRer10_hg38_48_50", 
+             tableName="danRer10_hg38_45_50", 
              whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
@@ -467,37 +467,63 @@ cneDanRer10Hg38_49_50 <-
              whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
+cneDanRer10AstMex102_48_50 <-
+  CNEDensity(dbName=dbName, 
+             tableName="AstMex102_danRer10_48_50",
+             whichAssembly="last", chr=chr, start=start,
+             end=end, windowSize=windowSize, 
+             minLength=minLength)
+cneDanRer10CteIde1_75_75 <-
+  CNEDensity(dbName=dbName, 
+             tableName="cteIde1_danRer10_75_75", 
+             whichAssembly="last", chr=chr, start=start,
+             end=end, windowSize=windowSize, 
+             minLength=minLength)
 ```
 
 ```{r GvizDataTrack, eval=TRUE, echo=TRUE}
-#axisTrack = GenomeAxisTrack()
-#ideoTrack = IdeogramTrack(genome=genome, chromosome=chr)
-dTrack1 <- DataTrack(range=cneDanRer10Hg38_45_50, 
+dTrack1 <- DataTrack(range=cneDanRer10Hg38_21_30,
                      genome=genome, type="horiz", 
-                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
+                     horizon.scale=max(cneDanRer10Hg38_21_30$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 45/50", background.title="brown")
-dTrack2 <- DataTrack(range=cneDanRer10Hg38_48_50,
+                     name="human 21/30", background.title="brown")
+dTrack2 <- DataTrack(range=cneDanRer10Hg38_45_50,
                      genome=genome, type="horiz", 
-                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
+                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/2, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 48/50", background.title="brown")
+                     name="human 45/50", background.title="brown")
 dTrack3 <- DataTrack(range=cneDanRer10Hg38_49_50,
                      genome=genome, type="horiz", 
-                     horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
+                     horizon.scale=max(cneDanRer10Hg38_21_30$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 49/50", background.title="brown")
+                     name="human 49/50", background.title="brown")
+dTrack4 <- DataTrack(range=cneDanRer10AstMex102_48_50,
+                     genome=genome, type="horiz", 
+                     horizon.scale=max(cneDanRer10Hg38_21_30$score)/3, 
+                     fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
+                                    "yellow", "orange", "red"), 
+                     name="blind cave fish 48/50", background.title="brown")
+dTrack5 <- DataTrack(range=cneDanRer10CteIde1_75_75,
+                     genome=genome, type="horiz", 
+                     horizon.scale=max(cneDanRer10CteIde1_75_75$score)/3, 
+                     fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
+                                    "yellow", "orange", "red"), 
+                     name="grass carp 75/75", background.title="brown")
 ```
 
-```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=10, fig.width=7}
-plotTracks(list(axisTrack, cpgIslands, refGenes, 
-                dTrack1, dTrack2, dTrack3),
+```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=15, fig.width=7}
+ht <- HighlightTrack(trackList=list(refGenes, dTrack5, dTrack4, 
+                                    dTrack1, dTrack2, dTrack3), 
+                     start=c(24300000, 25300000, 26300000), 
+                     end=c(25200000, 26100000, 26800000),
+                     chromosome =chr)
+plotTracks(list(axisTrack, cpgIslands, ht),
            collapseTranscripts=TRUE, shape="arrow",
            transcriptAnnotation="symbol",
-           from=24000000, to=28000000)
+           from=24000000, to=27000000)
 ```
 
 From this horizon plot compared with Zebrafish with Human as reference genome, 

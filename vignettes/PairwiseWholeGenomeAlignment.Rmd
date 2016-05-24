@@ -62,9 +62,9 @@ assemblyQuery <- file.path(system.file("extdata",
                            "single_sequences.2bit")
 lavs <- lastz(assemblyTarget, assemblyQuery, 
               outputDir=axtDir,
-	            chrsTarget=c("chr1", "chr2", "chr3"),
-	            chrsQuery=c("chr1", "chr2", "chr3"),
-	            distance="far", mc.cores=4)
+              chrsTarget=c("chr1", "chr2", "chr3"),
+              chrsQuery=c("chr1", "chr2", "chr3"),
+              distance="far", mc.cores=4)
 
 ## lav files to psl files conversion
 psls <- lavToPsl(lavs, removeLav=FALSE, binary="lavToPsl")
