@@ -91,10 +91,10 @@ system2(command="lastdb", args=c("-c", file.path(assemblyDir, "danRer10"),
                                  file.path(assemblyDir, "danRer10.fa")))
 
 ## Run last aligner
-last(db=file.path(assemblyDir, "danRer10"),
-     queryFn=file.path(assemblyDir, "hg38.fa"),
-     outputFn=file.path(axtDir, "danRer10.hg38.maf"),
-     distance="far", binary="lastal", mc.cores=4L)
+lastal(db=file.path(assemblyDir, "danRer10"),
+       queryFn=file.path(assemblyDir, "hg38.fa"),
+       outputFn=file.path(axtDir, "danRer10.hg38.maf"),
+       distance="far", binary="lastal", mc.cores=4L)
 
 ## maf to psl 
 psls <- file.path(axtDir, "danRer10.hg38.psl")

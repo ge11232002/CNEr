@@ -412,7 +412,7 @@ lastal <- function(db, queryFn,
   matrixFile <- tempfile(fileext=".lastzMatrix")
   on.exit(unlink(matrixFile))
   write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
-              sep=" ", row.names=FALSE, col.names=TRUE)
+              sep=" ", row.names=TRUE, col.names=TRUE)
   
   ## -a: Gap existence cost.
   ## -b: Gap extension cost.
@@ -447,5 +447,3 @@ lastal <- function(db, queryFn,
   }
   invisible(outputFn)
 }
-
-
