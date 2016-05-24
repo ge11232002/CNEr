@@ -32,8 +32,8 @@
 
 
 \examples{
-  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"),
-                                   "hg19.danRer7.net.axt")
-  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
-  mismatchSummary(axtHg19DanRer7)
+  axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"),
+                                   "hg38.danRer10.net.axt")
+  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
+  mismatchSummary(axtHg38DanRer10)
 }

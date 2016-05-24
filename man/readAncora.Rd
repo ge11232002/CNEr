@@ -5,10 +5,10 @@
   Read the cne file from Ancora format.
 }
 \description{
-  Read the Ancora CNE file into a \code{GRanges}.
+  Read the Ancora CNE file into a \code{GRanges} or \code{GRangePairs}.
 }
 \usage{
-  readAncora(fn, assembly)
+  readAncora(fn, assembly=NULL)
 }
 
 \arguments{
@@ -17,7 +17,8 @@
     "cne2wBf_hg38_mm10_50_50".
   }
   \item{assembly}{
-    \code{character}(1): the assembly to fetch.
+    \code{character}(1): the assembly to fetch. When it is NULL,
+    CNE on both assemblies are returned.
   }
 }
 \details{
@@ -28,7 +29,8 @@
   The start coordinate is 0-based.
 }
 \value{
-  \code{GRange} object of the CNE ranges will be returned.
+  A \code{GRange} object of the CNE ranges when assembly is specified,
+  or a \code{GRangePair} object when assembly is NULL.
 }
 
 \author{
@@ -43,4 +45,5 @@
                   "cne2wBf_danRer10_hg38_45_50")
   zebrafishCNEs <- readAncora(fn, "danRer10")
   humanCNEs <- readAncora(fn, "hg38")
+  zebrafishHumanCNEs <- readAncora(fn)
 }

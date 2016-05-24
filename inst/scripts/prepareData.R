@@ -62,3 +62,8 @@ CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
                           qFilter=bedHg38, qSizes=qSizesHg38,
                           window=50, identity=c(45, 48, 49))
 save(CNEDanRer10Hg38, file="~/CNEDanRer10Hg38.rda")
+
+## Prepare danRer10CNE.sqlite
+cneTables = list.files("/export/data/CNEs/blatFiltered_19-07-2013", 
+                       pattern=".*danRer10.*tetNig2.*", 
+                       full.names=TRUE)

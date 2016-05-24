@@ -19,29 +19,51 @@ chr2colour <- function(chromosomes){
 ### It reads the CNE file (filename format: cne2wBf_hg38_mm10_50_50)
 ### and return a GRanges.
 ### Exported!
-readAncora <- function(fn, assembly){
+readAncora <- function(fn, assembly=NULL){
   assembly1 <- strsplit(basename(fn), split="_")[[1]][2]
   assembly2 <- strsplit(basename(fn), split="_")[[1]][3]
   cne <- read_tsv(fn, col_names=FALSE)
-  
-  if(assembly == assembly1){
-    ans <- GRanges(seqnames=cne$X1,
-                   ranges=IRanges(start=cne$X2+1,
-                                  end=cne$X3),
-                   strand="*",
-                   name=paste0(cne$X4, ":", (cne$X5+1), "-", cne$X6),
-                   itemRgb=chr2colour(cne$X4)
-                   )
+  ans <- GRangePairs(first=GRanges(seqnames=cne$X1,
+                                   ranges=IRanges(start=cne$X2+1,
+                                                  end=cne$X3),
+                                   strand="*",
+                                   name=paste0(cne$X4, ":", 
+                                               (cne$X5+1), "-", cne$X6),
+                                   itemRgb=chr2colour(cne$X4)),
+                     last=GRanges(seqnames=cne$X4,
+                                  ranges=IRanges(start=cne$X5+1,
+                                                 end=cne$X6),
+                                  strand="*",
+                                  name=paste0(cne$X1, ":", 
+                                              (cne$X2+1), "-", cne$X3),
+                                  itemRgb=chr2colour(cne$X1))
+                     )
+  if(is.null(assembly)){
+    ## Real both assemblies
+    return(ans)
+  }else if(assembly == assembly1){
+    ## Read first assembly
+    return(first(ans))
   }else if(assembly == assembly2){
-    ans <- GRanges(seqnames=cne$X4,
-                   ranges=IRanges(start=cne$X5+1,
-                                  end=cne$X6),
-                   strand="*",
-                   name=paste0(cne$X1, ":", (cne$X2+1), "-", cne$X3),
-                   itemRgb=chr2colour(cne$X1)
-                   )
+    ## Read last assembly
+    return(last(ans))
   }else{
     stop("Wrongly specified assembly!")
   }
-  return(ans)
+}
+
+### -----------------------------------------------------------------
+### readAncoraIntoSQLite: read the Ancora format CNE files into a SQLite
+### Exported!
+readAncoraIntoSQLite <- function(cneFns, dbName, overwrite=FALSE){
+  tableNames <- c()
+  for(cneFn in cneFns){
+    ## cneFn in format of cne2wBf_AstMex102_danRer10_48_50
+    tableName <- sub("^cne2wBf_", "", basename(cneFn))
+    tableNames <- c(tableNames, tableName)
+    df <- readAncora(cneFn, assembly=NULL)
+    saveCNEToSQLite(df, dbName=dbName, tableName=tableName,
+                    overwrite=overwrite)
+  }
+  invisible(tableNames)
 }

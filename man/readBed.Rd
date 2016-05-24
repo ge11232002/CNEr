@@ -49,7 +49,7 @@
 }
 
 \examples{
-  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
-                         "filter_regions.hg19.bed")
-  bedHg19 <- readBed(bedHg19Fn)
+  bedFn <- file.path(system.file("extdata", package="CNEr"), 
+                     "filter_regions.hg38.bed")
+  bed <- readBed(bedFn)
 }

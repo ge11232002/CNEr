@@ -16,8 +16,8 @@
 }
 
 \details{
-  These tracks are based on genome="hg19", chr = "chr11", 
-  start = 31000000L, end =  33000000L.
+  These tracks are based on genome="danRer10", chr = "chr6", 
+  start = 24000000, end = 27000000. 
 }
 \examples{
 data(axisTrack)

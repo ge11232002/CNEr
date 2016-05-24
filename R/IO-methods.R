@@ -94,7 +94,7 @@ read.rmMask.GRanges <- function(fn){
 }
 
 ### -----------------------------------------------------------------
-### save the CNE tables into a local SQLite database
+### save the CNE class or GRangePairs object into a local SQLite database
 ### Exported!!
 saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
   ## by default tableName is in the format "danRer7_hg19_49_50"
@@ -103,10 +103,18 @@ saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
                        sub("\\.2bit", "", basename(x@assembly2Fn)),
                        x@identity, x@window, sep="_")
   }
-  if(length(CNEFinal(x)) == 0L){
+  if(class(x) == "CNE"){
+    ## CNE class
+    cneFinal <- as.data.frame(CNEFinal(x))
+  }else if(class(x) == "GRangePairs"){
+    ## GRangePairs class 
+    cneFinal <- as.data.frame(x)
+  }else{
+    stop(" x must be a CNE class or GRangePairs class.")
+  }
+  if(nrow(cneFinal) == 0L){
     warning("There is no CNEs.")
   }
-  cneFinal <- as.data.frame(CNEFinal(x))
   colnames(cneFinal) <- sub("^X\\.", "", colnames(cneFinal))
   
   ## Create the bin column

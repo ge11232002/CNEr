@@ -16,7 +16,8 @@
 
 \arguments{
   \item{x}{
-    An object of \code{CNE}, with CNEFinal computed.
+    An object of \code{CNE}, with CNEFinal computed or 
+    a \code{GRangePairs} object.
   }
   \item{dbName}{
     \code{character}(1): the filename of the local SQLite database.

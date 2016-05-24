@@ -30,7 +30,7 @@
 }
 
 \examples{
-  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
-                                   "hg19.danRer7.net.axt")
-  axtInfoHg19DanRer7 <- axtInfo(axtFilesHg19DanRer7)
+  axtFile <- file.path(system.file("extdata", package="CNEr"), 
+                       "hg38.danRer10.net.axt")
+  axtInfo <- axtInfo(axtFile)
 }

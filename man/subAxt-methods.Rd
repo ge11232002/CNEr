@@ -69,34 +69,39 @@
 
 \examples{
   library(GenomicRanges)
+  library(rtracklayer)
   ## Prepare the axt object
-  axtFilesHg19DanRer7 <- file.path(system.file("extdata", package="CNEr"), 
-                                  "hg19.danRer7.net.axt")
-  axtHg19DanRer7 <- readAxt(axtFilesHg19DanRer7)
+  axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"), 
+                                  "hg38.danRer10.net.axt")
+  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
   
   ## "character", "integer", "integer" on "target" sequence
-  subAxt(axtHg19DanRer7, chr="chr11", start=31500000L, end=32500000L,
+  subAxt(axtHg38DanRer10, chr="chr1", start=148165963L, end=222131835L,
          select="target")
   
   ## "GRanges"" on "target" sequence
-  searchGRanges <- GRanges(seqnames="chr11",
-                           ranges=IRanges(start=31500000,
-                                          end=32500000),
+  searchGRanges <- GRanges(seqnames="chr1",
+                           ranges=IRanges(start=148165963L,
+                                          end=222131835L),
                            strand="+")
-  subAxt(axtHg19DanRer7, searchGRanges, select="target")
+  subAxt(axtHg38DanRer10, searchGRanges, select="target")
   
   ## multiple "character", "integer", "integer" on "target" sequence
-  subAxt(axtHg19DanRer7, chr="chr11", start=c(31082021L, 32461267L),
-         end=c(31082862L, 32461581L), select="target")
+  subAxt(axtHg38DanRer10, chr=c("chr1", "chr13"), 
+         start=c(148165963L, 94750629L),
+         end=c(222131835L, 94966991L), select="target")
   
   ## "character" only on "target" sequence
-  subAxt(axtHg19DanRer7, chr="chr11", select="target")
+  subAxt(axtHg38DanRer10, chr="chr1", select="target")
   
   ## GRanges on "query" sequence
-  searchGRanges <- GRanges(seqnames="chr25",
-                           ranges=IRanges(start=15559655,
-                                          end=15575192),
+  danRer10Seqlengths <- seqlengths(TwoBitFile(file.path(system.file("extdata",
+                                   package="BSgenome.Drerio.UCSC.danRer10"),
+                                   "single_sequences.2bit")))
+  searchGRanges <- GRanges(seqnames="chr6",
+                           ranges=IRanges(start=25825774,
+                                          end=26745499),
                            strand="+")
-  subAxt(axtHg19DanRer7, searchGRanges, select="query", 
-         qSize=c("chr25"=38499472L))
+  subAxt(axtHg38DanRer10, searchGRanges, select="query", 
+         qSize=danRer10Seqlengths["chr6"])
 }
