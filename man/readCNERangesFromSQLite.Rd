@@ -11,7 +11,7 @@ Usually not to be used directly.
 For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
-readCNERangesFromSQLite(dbName, tableName, chr, start, end,
+readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
                         whichAssembly=c("first","last"), minLength=NULL)
 }
 
@@ -23,10 +23,11 @@ readCNERangesFromSQLite(dbName, tableName, chr, start, end,
     A object of \code{character}, the name of table for this CNE data table.
   }
   \item{chr}{
-    A object of \code{character}, the chromosome to query
+    \code{character}(n): the chromosomes to query.
+    When it's NULL, all CNEs will be returned.
   }
   \item{start, end}{
-    A object of \code{integer}, the start and end coordiante to fetch the CNEs.
+    \code{integer}(n): the start and end coordiantes to fetch the CNEs.
   }
   \item{whichAssembly}{
     \code{character}(1):
@@ -34,7 +35,7 @@ readCNERangesFromSQLite(dbName, tableName, chr, start, end,
     columns of the table.
   }
   \item{minLength}{
-    A object of \code{integer}, the minimal length for selected CNEs.
+    \code{integer}(1): the minimal length for selected CNEs.
   }
 }
 
@@ -47,15 +48,31 @@ Ge Tan
 }
 
 \examples{
-    dbName <- file.path(system.file("extdata", package="CNEr"),
-                        "cne.sqlite")
-    chr <- "chr6"
-    start <- 24000000L
-    end <-  27000000
-    minLength <- 50L
-    tableName <- "danRer10_hg38_45_50"
-    fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
-                                                start, end, 
-                                                whichAssembly="first",
-                                                minLength=minLength)
+  dbName <- file.path(system.file("extdata", package="CNEr"),
+                      "cne.sqlite")
+  tableName <- "danRer10_hg38_45_50"
+  
+  ## single chr, start, end
+  chr <- "chr6"
+  start <- 24000000L
+  end <-  27000000
+  minLength <- 50L
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start, end, 
+                                              whichAssembly="first",
+                                              minLength=minLength)
+  ## multiple chr, start, end
+  chr=c("chr1", "chr3")
+  start=c(90730248, 137523122)
+  end=c(90730300, 137523190)
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start, end, 
+                                              whichAssembly="last",
+                                              minLength=minLength)
+  
+  ## chr, NULL, NULL
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start=NULL, end=NULL,
+                                              whichAssembly="last",
+                                              minLength=minLength)
 }

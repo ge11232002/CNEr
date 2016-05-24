@@ -131,68 +131,119 @@ saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
 ### -----------------------------------------------------------------
 ### read CNE from a local SQLite database
 ### Exported!
-readCNERangesFromSQLite <- function(dbName, tableName, chr, start, end, 
+readCNERangesFromSQLite <- function(dbName, tableName,
+                                    chr=NULL, start=NULL, end=NULL,
                                     whichAssembly=c("first", "last"),
                                     minLength=NULL){
   nrGraphs <- 1
   ## Let's make nrGraphs=1, make all the cnes together.
-  CNEstart <- as.integer(start)
-  CNEend <- as.integer(end)
   whichAssembly <- match.arg(whichAssembly)
-  
   con <- dbConnect(SQLite(), dbname=dbName)
   on.exit(dbDisconnect(con))
   
-  if(nrGraphs == 1){
+  if(is.null(chr) && is.null(start) & is.null(end)){
+    # 1. fetch all the CNEs: chr=NULL, start=NULL, end=NULl
     sqlCmd <- switch(whichAssembly,
-                     "first"=paste("SELECT [first.start],[first.end] from",
-                                   tableName, 
-                                   "WHERE [first.seqnames]=", 
-                                   paste0("'", chr, "'"), 
-                                   "AND [first.start] >=", CNEstart, 
-                                   "AND [first.end] <=", 
-                                   CNEend, "AND", 
+      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
+                                   tableName),
+      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
+                                  tableName)
+                     )
+  }else if(!is.null(chr) && is.null(start) && is.null(end)){
+    # 2. fetch all CNEs on chromosomes chr
+    sqlCmd <- switch(whichAssembly,
+      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
+                                   tableName,
+                                   "WHERE [first.seqnames] IN (",
+                                   paste(paste0("'", chr, "'"), collapse=","),
+                    ")"),
+      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
+                                  tableName,
+                                  "WHERE [last.seqnames] IN (",
+                                  paste(paste0("'", chr, "'"), collapse=","),
+                   ")")
+    )
+  }else if(!is.null(chr) && !is.null(start) && !is.null(end)){
+    # 3. fetch all CNEs on potentially multiple chr, start, end
+    CNEstart <- as.integer(start)
+    CNEend <- as.integer(end)
+    sqlCmd <- switch(whichAssembly,
+      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
+                                   tableName,
+                                   "WHERE", paste("([first.seqnames]=",
+                                   paste0("'", chr, "'"),
+                                   "AND [first.start] >=", CNEstart,
+                                   "AND [first.end] <=",
+                                   CNEend, "AND",
                                    binRestrictionString(CNEstart, CNEend,
-                                                        "[first.bin]")),
-                     "last"=paste("SELECT [last.start],[last.end] from",
-                                  tableName, 
-                                  "WHERE [last.seqnames]=", 
-                                  paste0("'", chr, "'"), 
-                                  "AND [last.start] >=", CNEstart, 
-                                  "AND [last.end] <=", 
-                                  CNEend, "AND", 
-                                  binRestrictionString(CNEstart, CNEend, 
-                                                       "[last.bin]"))
-    )
-    if(!is.null(minLength))
-      sqlCmd <- paste(sqlCmd, "AND [first.end]-[first.start]+1 >=", minLength, 
-                      "AND [last.end]-[last.start]+1 >=", minLength)
-    fetchedCNE <- dbGetQuery(con, sqlCmd)
-    fetchedCNE <- GRanges(seqnames=chr,
-                          ranges=IRanges(start=fetchedCNE[ ,1],
-                                         end=fetchedCNE[, 2]),
-                          strand="*")
-  }else if(nrGraphs > 1){
-    ## This chunk is not executed for now.
-    sqlCmd <- switch(whichAssembly,
-                     "L"=paste("SELECT chr2,start1,end1 from", tableName, 
-                               "WHERE chr1=", paste0("'", chr, "'"), 
-                               "AND start1 >=", CNEstart, "AND end1 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin1")),
-                     "R"=paste("SELECT chr1,start2,end2 from", tableName, 
-                               "WHERE chr2=", paste0("'", chr, "'"), 
-                               "AND start2 >=", CNEstart, "AND end2 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin2"))
-    )
-    if(!is.null(minLength))
-      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
-                      "AND end2-start2+1 >=", minLength)
-    fetchedCNE <- dbGetQuery(con, sqlCmd)
-    fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1], 
-                          ranges=IRanges(start=fetchedCNE[ ,2], 
-                                         end=fetchedCNE[ ,3]))
+                                                          "[first.bin]"),
+                                   ")", collapse=" OR ")),
+      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
+                                    tableName,
+                                    "WHERE", paste("([last.seqnames]=",
+                                    paste0("'", chr, "'"),
+                                    "AND [last.start] >=", CNEstart,
+                                    "AND [last.end] <=",
+                                    CNEend, "AND",
+                                    binRestrictionString(CNEstart, CNEend,
+                                                         "[last.bin]"),
+                                    ")", collapse=" OR "))
+      )
+  }else{
+    stop("Unsupported search criteria!")
   }
+  if(!is.null(minLength))
+    sqlCmd <- paste(sqlCmd, "AND [first.end]-[first.start]+1 >=", minLength, 
+                    "AND [last.end]-[last.start]+1 >=", minLength)
+  fetchedCNE <- dbGetQuery(con, sqlCmd)
+  fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1],
+                        ranges=IRanges(start=fetchedCNE[ ,2],
+                                       end=fetchedCNE[, 3]),
+                        strand="*")
+  
+  # if(nrGraphs == 1){
+  #   sqlCmd <- switch(whichAssembly,
+  #                    "first"=paste("SELECT [first.start],[first.end] from",
+  #                                  tableName, 
+  #                                  "WHERE [first.seqnames]=", 
+  #                                  paste0("'", chr, "'"), 
+  #                                  "AND [first.start] >=", CNEstart, 
+  #                                  "AND [first.end] <=", 
+  #                                  CNEend, "AND", 
+  #                                  binRestrictionString(CNEstart, CNEend,
+  #                                                       "[first.bin]")),
+  #                    "last"=paste("SELECT [last.start],[last.end] from",
+  #                                 tableName, 
+  #                                 "WHERE [last.seqnames]=", 
+  #                                 paste0("'", chr, "'"), 
+  #                                 "AND [last.start] >=", CNEstart, 
+  #                                 "AND [last.end] <=", 
+  #                                 CNEend, "AND", 
+  #                                 binRestrictionString(CNEstart, CNEend, 
+  #                                                      "[last.bin]"))
+  #   )
+    
+  # }else if(nrGraphs > 1){
+  #   ## This chunk is not executed for now.
+  #   sqlCmd <- switch(whichAssembly,
+  #                    "L"=paste("SELECT chr2,start1,end1 from", tableName, 
+  #                              "WHERE chr1=", paste0("'", chr, "'"), 
+  #                              "AND start1 >=", CNEstart, "AND end1 <=", 
+  #                              CNEend, "AND", 
+  #                              binRestrictionString(CNEstart, CNEend, "bin1")),
+  #                    "R"=paste("SELECT chr1,start2,end2 from", tableName, 
+  #                              "WHERE chr2=", paste0("'", chr, "'"), 
+  #                              "AND start2 >=", CNEstart, "AND end2 <=", 
+  #                              CNEend, "AND", 
+  #                              binRestrictionString(CNEstart, CNEend, "bin2"))
+  #   )
+  #   if(!is.null(minLength))
+  #     sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
+  #                     "AND end2-start2+1 >=", minLength)
+  #   fetchedCNE <- dbGetQuery(con, sqlCmd)
+  #   fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1], 
+  #                         ranges=IRanges(start=fetchedCNE[ ,2], 
+  #                                        end=fetchedCNE[ ,3]))
+  # }
   return(fetchedCNE)
 }

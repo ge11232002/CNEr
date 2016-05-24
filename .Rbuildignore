@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^autom4te\.cache$
 ^vignettes/rsconnect$
+^vignettes/cache$

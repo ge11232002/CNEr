@@ -106,19 +106,26 @@ binRangesFromCoordRange <- function(start, end){
 ### section of a SQL SELECT statement that is to 
 ### select features overlapping a certain range. * USE THIS WHEN QUERYING A DB *
 ### EXPORTED!
-binRestrictionString <- function(start, end, field="bin"){
+.singleBinRestrictionString <- function(start, end, field="bin"){
   binRanges <- binRangesFromCoordRange(start, end)
   cmdString <- mapply(function(x,y, field){
-                      if(x==y){
-                        paste(field, "=", x)
-                      }else{
-                        paste(field, ">=", x, "and", field, "<=", y)
-                      }
-                     }, binRanges[ ,1], binRanges[ ,2], field=field
-                     )
+    if(x==y){
+      paste(field, "=", x)
+    }else{
+      paste(field, ">=", x, "and", field, "<=", y)
+    }
+  }, binRanges[ ,1], binRanges[ ,2], field=field
+  )
   cmdString <- paste(cmdString, collapse=") or (")
   cmdString <- paste0("((", cmdString, "))")
   return(cmdString)
+}
+
+binRestrictionString <- function(start, end, field="bin"){
+  stopifnot(length(start) == length(end))
+  ans <- mapply(.singleBinRestrictionString, start, end,
+                MoreArgs=list(field=field), SIMPLIFY=TRUE)
+  return(ans)
 }
 
 #get_cne_ranges_in_region = function(CNE, whichAssembly=c(1,2), 

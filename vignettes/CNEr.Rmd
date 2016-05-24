@@ -394,7 +394,7 @@ For the example of hg38 vs danRer10 in this vignette,
 we choose danRer10 as the reference and 
 show the range of developmental gene __barhl2__ and __sox14__. 
 
-```{r queryUCSC, eval=FALSE, echo=TRUE}
+```{r queryUCSC, eval=FALSE, echo=TRUE, cache=TRUE}
 library(Gviz)
 library(biomaRt)
 genome <- "danRer10"
@@ -404,7 +404,7 @@ cpgIslands <- UcscTrack(genome=genome, chromosome=chr,
                         trackType="AnnotationTrack", start="chromStart",
                         end="chromEnd", id="name", shape="box",
                         showId=FALSE,
-                        fill="#006400", name="CpG Islands",
+                        fill="#006400", name="CpG",
                         background.title="brown")
 refGenes <- UcscTrack(genome=genome, chromosome=chr,
                       track="refGene", from=start, to=end,
@@ -427,7 +427,7 @@ data(cpgIslands)
 data(refGenes)
 ```
 
-```{r plotAnnotation, eval=TRUE, echo=TRUE, fig.height=7.5}
+```{r plotAnnotation, eval=TRUE, echo=TRUE, fig.height=5, fig.width=7}
 library(Gviz)
 plotTracks(list(axisTrack, cpgIslands, refGenes), 
            collapseTranscripts=TRUE, shape="arrow",
@@ -477,22 +477,22 @@ dTrack1 <- DataTrack(range=cneDanRer10Hg38_45_50,
                      horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 45/50")
+                     name="danRer10 45/50", background.title="brown")
 dTrack2 <- DataTrack(range=cneDanRer10Hg38_48_50,
                      genome=genome, type="horiz", 
                      horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 48/50")
+                     name="danRer10 48/50", background.title="brown")
 dTrack3 <- DataTrack(range=cneDanRer10Hg38_49_50,
                      genome=genome, type="horiz", 
                      horizon.scale=max(cneDanRer10Hg38_45_50$score)/3, 
                      fill.horizon=c("#B41414", "#E03231", "#F7A99C", 
                                     "yellow", "orange", "red"), 
-                     name="danRer10 49/50")
+                     name="danRer10 49/50", background.title="brown")
 ```
 
-```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=15, fig.width=7.5}
+```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=10, fig.width=7}
 plotTracks(list(axisTrack, cpgIslands, refGenes, 
                 dTrack1, dTrack2, dTrack3),
            collapseTranscripts=TRUE, shape="arrow",
