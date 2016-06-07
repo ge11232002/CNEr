@@ -209,7 +209,7 @@ lavToPsl <- function(lavs,
 axtChain <- function(psls,
                      chains=sub("\\.psl$", ".chain", psls, ignore.case=TRUE), 
                      assemblyTarget, assemblyQuery,
-                     distance=c("far", "medium", "far"),
+                     distance=c("near", "medium", "far"),
                      removePsl=TRUE,
                      binary="axtChain"){
   distance <- match.arg(distance)
