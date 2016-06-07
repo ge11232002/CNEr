@@ -1,7 +1,7 @@
 ### -----------------------------------------------------------------
 ### scoringMatrix
 ### Exported!
-scoringMatrix <- function(distance=c("far", "medium", "close")){
+scoringMatrix <- function(distance=c("far", "medium", "near")){
   distance <- match.arg(distance)
   lastzMatrix <- list(medium=matrix(c(91, -114, -31, -123,
                                       -114, 100, -125, -31,
@@ -38,7 +38,7 @@ scoringMatrix <- function(distance=c("far", "medium", "close")){
 lastz <- function(assemblyTarget, assemblyQuery,
                   outputDir=".",
                   chrsTarget=NULL, chrsQuery=NULL, 
-                  distance=c("far", "medium", "close"),
+                  distance=c("far", "medium", "near"),
                   binary="lastz",
                   mc.cores=getOption("mc.cores", 2L),
                   echoCommand=FALSE){
@@ -399,7 +399,7 @@ lastal <- function(db, queryFn,
                    outputFn=sub("\\.(fa|fasta)$", ".maf", 
                                 paste(basename(db), basename(queryFn), sep=","),
                                 ignore.case=TRUE),
-                   distance=c("far", "medium", "close"),
+                   distance=c("far", "medium", "near"),
                    binary="lastal",
                    mc.cores=getOption("mc.cores", 2L),
                    echoCommand=FALSE){
