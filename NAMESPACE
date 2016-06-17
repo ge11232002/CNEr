@@ -19,7 +19,7 @@ importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
 importMethodsFrom(XVector, subseq)
 importMethodsFrom(RSQLite, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
-importMethodsFrom(Biostrings, mismatchSummary)
+importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
                   showAsCell, extractROWS, mcols, "mcols<-", split, runValue)
 importMethodsFrom(IRanges, slice, ranges)
@@ -72,7 +72,8 @@ exportMethods(
   first, last, grglist, seqinfo, unique,
 
   ## Axt-methods.R
-  mismatchSummary
+  #  mismatchSummary
+  summary
 )
 
 ### -----------------------------------------------------------------

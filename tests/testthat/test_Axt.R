@@ -91,3 +91,12 @@ test_that("test_subAxt", {
   expect_identical(length(axt), 9L)
 })
 
+test_that("test_summaryAxt", {
+  axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"),
+                                    "hg38.danRer10.net.axt")
+  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
+  ans <- summary(axtHg38DanRer10)
+  expect_identical(as.integer(ans), c(907L, 5012L, 1133L, 3274L, 1801L, 
+                                      1606L, 3078L))
+}
+)

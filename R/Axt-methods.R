@@ -4,6 +4,7 @@
 ### This implementation is too slow for large Axt. Should implment in C.
 setGeneric("matchDistribution", function(x, size=10000)
   standardGeneric("matchDistribution"))
+
 setMethod("matchDistribution", signature(x="Axt"),
           function(x, size=10000){
             if(length(x) > size){
@@ -37,12 +38,30 @@ setMethod("matchDistribution", signature(x="Axt"),
 ### -----------------------------------------------------------------
 ### summary function for Axt
 ### Exported!
-setMethod("mismatchSummary", signature(x="Axt"),
-          function(x, ...){
-            compResults <- compDNAStringSet(targetSeqs(x), querySeqs(x))
-            count <- sum(as.numeric(symCount(x))) - 
-                       sum(sapply(compResults, sum))
-            probability <- count / sum(as.numeric(symCount(x)))
-            return(c("Count"=count, "Probability"=probability))
+setMethod("summary", signature=(object="Axt"),
+          function(object, ...){
+            x <- object
+            totalLengthAlignments <- sum(as.numeric(symCount(x)))
+            ## length, number of alignment,
+            cat("Alignment number: ", length(x), 
+                " total length: ", totalLengthAlignments, "\n")
+            
+            ## mismatches counts and percentage
+            #compResults <- compDNAStringSet(targetSeqs(x), querySeqs(x))
+            compResults <- compareStrings(targetSeqs(x), querySeqs(x))
+            compResults <- table(unlist(strsplit(compResults, "")))
+            #count <- sum(as.numeric(symCount(x))) - 
+            #  sum(sapply(compResults, sum))
+            #probability <- count / sum(as.numeric(symCount(x)))
+            cat("Insertion count: ", compResults["+"],
+                " percentage: ", compResults["+"] / totalLengthAlignments, "\n")
+            cat("Delection count: ", compResults["-"],
+                " percentage: ", compResults["-"] / totalLengthAlignments, "\n")
+            cat("Mismatch count: ", compResults["?"],
+                " percentage: ", compResults["?"] / totalLengthAlignments, "\n")
+            cat("Match count: ", 
+                sum(as.numeric(compResults[c("A", "C", "G", "T")])),
+                " percentage: ", sum(as.numeric(compResults[c("A", "C", "G", "T")])) / totalLengthAlignments, "\n")
+            invisible(compResults)
           }
           )
