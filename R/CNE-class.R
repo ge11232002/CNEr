@@ -63,9 +63,9 @@ setGeneric("CNE21", function(x) standardGeneric("CNE21"))
 setGeneric("thresholds", function(x) standardGeneric("thresholds"))
 setGeneric("CNEMerged", function(x) standardGeneric("CNEMerged"))
 setGeneric("CNEFinal", function(x) standardGeneric("CNEFinal"))
-setGeneric("saveCNEToSQLite", 
-           function(CNE, dbName, tableName, overwrite=FALSE) 
-             standardGeneric("saveCNEToSQLite"))
+#setGeneric("saveCNEToSQLite", 
+#           function(CNE, dbName, tableName, overwrite=FALSE) 
+#             standardGeneric("saveCNEToSQLite"))
 setGeneric("ceScan", 
            function(axts, tFilter, qFilter, qSizes, window=50L, identity=50L)
              standardGeneric("ceScan"))

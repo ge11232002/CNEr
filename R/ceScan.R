@@ -95,7 +95,7 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes=NULL,
                                             seqinfo=qSizes)
                                      )
                   ans@elementMetadata <- DataFrame(score=res$score,
-                                                   cigar=res$score)
+                                                   cigar=res$cigar)
                   return(ans)
                   }
                 )

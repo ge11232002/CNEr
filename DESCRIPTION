@@ -58,3 +58,4 @@ Collate:
         GRB.R
         WholeGenomeAlignment.R
         Ancora.R
+        CNE-utils.R
