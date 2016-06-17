@@ -65,7 +65,6 @@ setGeneric("subAxt", function(x, chr, start, end,
                               qSize=NULL) 
   standardGeneric("subAxt")
 )
-setGeneric("matchDistr", function(x) standardGeneric("matchDistr"))
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

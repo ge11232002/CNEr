@@ -121,6 +121,12 @@ axtHg38DanRer10
 axtDanRer10Hg38
 ```
 
+```{r matchDistribution, eval=TRUE, echo=TRUE}
+## Distribution of matched alignments
+matchDistribution(axtHg38DanRer10)
+matchDistribution(axtDanRer10Hg38)
+```
+
 There are methods defined for `Axt` object, including subsetting, match/mistach summary and write back to axt files.
 More details can be found in the man page.
 

@@ -14,7 +14,7 @@
 \usage{
   axtChain(psls, chains=sub("\\\.psl$", ".chain", psls, ignore.case=TRUE),
            assemblyTarget, assemblyQuery,
-           distance=c("far", "medium", "far"),
+           distance=c("far", "medium", "near"),
            removePsl=TRUE, binary="axtChain")
 }
 

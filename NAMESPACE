@@ -1,5 +1,6 @@
 useDynLib(CNEr, .registration = TRUE)
 import(BiocGenerics)
+
 ### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
@@ -16,7 +17,7 @@ importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame)
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
                                  findOverlaps, coverage, grglist)
 importMethodsFrom(XVector, subseq)
-importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
+importMethodsFrom(RSQLite, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, mismatchSummary)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
@@ -43,6 +44,10 @@ importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
 importFrom(utils, download.file, read.table, write.table)
 importFrom("stats", "setNames")
+importFrom(reshape2, melt)
+importFrom(ggplot2, ggplot, aes, aes_q, aes_string, geom_tile, theme_bw, 
+    xlab, ylab, ggtitle,
+    scale_fill_continuous, geom_text)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -146,6 +151,9 @@ exportMethods(
   targetSeqs, querySeqs,
   symCount,
   subAxt,
+
+  ## Axt-methods.R
+  matchDistribution,
   
   # CNE-class.R
   CNE12, CNE21,
