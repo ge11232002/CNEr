@@ -1,23 +1,10 @@
 library(CNEr)
 library(rtracklayer)
 library(GenomicRanges)
-# Prepare the files under data/
-axtFn <- file.path(system.file("extdata", package="CNEr"), 
-                 "hg19.danRer7.net.axt")
-axtHg19DanRer7 <- readAxt(axtFn)
-save(axtHg19DanRer7,
-     file="/Users/gtan/Repos/github/CNEr/data/axtHg19DanRer7.rda")
-
-axtFn <- file.path(system.file("extdata", package="CNEr"), 
-                   "danRer7.hg19.net.axt")
-axtDanRer7Hg19 <- readAxt(axtFn)
-save(axtDanRer7Hg19, 
-     file="/Users/gtan/Repos/github/CNEr/data/axtDanRer7Hg19.rda")
-
 # Prepare the Axt alignments for the regions of barhl2 and sox14
 ## hg38 vs danRer10
-axtFnHg38DanRer10 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/hg38.danRer10.net.axt.gz"
-axtFnDanRer10Hg38 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/danRer10.hg38.net.axt.gz"
+axtFnHg38DanRer10 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/hg38.danRer10.net.axt"
+axtFnDanRer10Hg38 <- "/Users/gtan/Repos/github/CNEr/inst/extdata/danRer10.hg38.net.axt"
 axtHg38DanRer10 <- readAxt(axtFnHg38DanRer10)
 axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38)
 qSize <- fetchChromSizes("hg38")
@@ -54,13 +41,15 @@ bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"),
 bedDanRer10 <- readBed(bedDanRer10Fn)
 qSizesHg38 <- fetchChromSizes("hg38")
 qSizesDanRer10 <- fetchChromSizes("danRer10")
-CNEHg38DanRer10 <- ceScan(axts=axtHg38DanRer10, tFilter=bedHg38,
-                          qFilter=bedDanRer10, qSizes=qSizesDanRer10,
-                          window=50, identity=c(45, 48, 49))
+CNEHg38DanRer10 <- ceScan(x=axtHg38DanRer10, tFilter=bedHg38,
+                          qFilter=bedDanRer10, tSizes=qSizesHg38,
+                          qSizes=qSizesDanRer10,
+                          window=c(50,50,50), identity=c(45, 48, 49))
 save(CNEHg38DanRer10, file="~/CNEHg38DanRer10.rda")
-CNEDanRer10Hg38 <- ceScan(axts=axtDanRer10Hg38, tFilter=bedDanRer10,
-                          qFilter=bedHg38, qSizes=qSizesHg38,
-                          window=50, identity=c(45, 48, 49))
+CNEDanRer10Hg38 <- ceScan(x=axtDanRer10Hg38, tFilter=bedDanRer10,
+                          qFilter=bedHg38, tSizes=qSizesDanRer10,
+                          qSizes=qSizesHg38,
+                          window=c(50,50,50), identity=c(45, 48, 49))
 save(CNEDanRer10Hg38, file="~/CNEDanRer10Hg38.rda")
 
 ## Prepare danRer10CNE.sqlite
