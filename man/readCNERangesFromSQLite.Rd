@@ -31,16 +31,16 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
   }
   \item{whichAssembly}{
     \code{character}(1):
-    the genome to fetch is in the "first" columns or "last" 
-    columns of the table.
+    The coordinates to fetch CNEs are based on "first" genome or "last" genome.
   }
   \item{minLength}{
     \code{integer}(1): the minimal length for selected CNEs.
+    The pair of CNEs both must be longer than this \code{minLength}.
   }
 }
 
 \value{
-  A object of \code{GRanges} is returned.
+  A object of \code{GRangePairs} is returned.
 }
 
 \author{

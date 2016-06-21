@@ -46,9 +46,14 @@ CNEDensity <- function(dbName, tableName, chr, start, end,
   #  context_start = 1
   #context_end = CNEend + 
   #  as.integer(((win_nr_steps-1)*step_size)/2+step_size+0.5)
-  ranges <- readCNERangesFromSQLite(dbName, tableName, chr,
+  rangesPair <- readCNERangesFromSQLite(dbName, tableName, chr,
                                     context_start, context_end, 
                                     whichAssembly, minLength)
+  if(whichAssembly == "first"){
+    ranges <- first(rangesPair)
+  }else if(whichAssembly == "last"){
+    ranges <- last(rangesPair)
+  }
   # Implement get_cne_ranges_in_region_partitioned_by_other_chr later!!!
   ranges <- reduce(ranges)
   covAll <- coverage(ranges, width=context_end)

@@ -151,24 +151,27 @@ readCNERangesFromSQLite <- function(dbName, tableName,
   
   if(is.null(chr) && is.null(start) & is.null(end)){
     # 1. fetch all the CNEs: chr=NULL, start=NULL, end=NULl
-    sqlCmd <- switch(whichAssembly,
-      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
-                                   tableName),
-      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
-                                  tableName)
-                     )
+    #sqlCmd <- switch(whichAssembly,
+    #  "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
+    #                tableName),
+    #  "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
+    #               tableName),
+    #  "all"=paste("SELECT [first.seqnames],[first.start],[first.end]",
+    #              "[last.seqnames],[last.start],[last.end] from",
+    #              tableName)
+    #  )
+    sqlCmd <- paste("SELECT [first.seqnames],[first.start],[first.end],[last.seqnames],[last.start],[last.end] from",
+                    tableName)
   }else if(!is.null(chr) && is.null(start) && is.null(end)){
     # 2. fetch all CNEs on chromosomes chr
     sqlCmd <- switch(whichAssembly,
-      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
-                                   tableName,
-                                   "WHERE [first.seqnames] IN (",
-                                   paste(paste0("'", chr, "'"), collapse=","),
+      "first"=paste("SELECT [first.seqnames],[first.start],[first.end],[last.seqnames],[last.start],[last.end] from",
+                    tableName, "WHERE [first.seqnames] IN (",
+                    paste(paste0("'", chr, "'"), collapse=","),
                     ")"),
-      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
-                                  tableName,
-                                  "WHERE [last.seqnames] IN (",
-                                  paste(paste0("'", chr, "'"), collapse=","),
+      "last"=paste("SELECT [first.seqnames],[first.start],[first.end],[last.seqnames],[last.start],[last.end] from",
+                   tableName, "WHERE [last.seqnames] IN (",
+                   paste(paste0("'", chr, "'"), collapse=","),
                    ")")
     )
   }else if(!is.null(chr) && !is.null(start) && !is.null(end)){
@@ -176,26 +179,24 @@ readCNERangesFromSQLite <- function(dbName, tableName,
     CNEstart <- as.integer(start)
     CNEend <- as.integer(end)
     sqlCmd <- switch(whichAssembly,
-      "first"=paste("SELECT [first.seqnames],[first.start],[first.end] from",
-                                   tableName,
-                                   "WHERE", paste("([first.seqnames]=",
-                                   paste0("'", chr, "'"),
-                                   "AND [first.start] >=", CNEstart,
-                                   "AND [first.end] <=",
-                                   CNEend, "AND",
-                                   binRestrictionString(CNEstart, CNEend,
-                                                          "[first.bin]"),
-                                   ")", collapse=" OR ")),
-      "last"=paste("SELECT [last.seqnames],[last.start],[last.end] from",
-                                    tableName,
-                                    "WHERE", paste("([last.seqnames]=",
-                                    paste0("'", chr, "'"),
-                                    "AND [last.start] >=", CNEstart,
-                                    "AND [last.end] <=",
-                                    CNEend, "AND",
-                                    binRestrictionString(CNEstart, CNEend,
-                                                         "[last.bin]"),
-                                    ")", collapse=" OR "))
+      "first"=paste("SELECT [first.seqnames],[first.start],[first.end],[last.seqnames],[last.start],[last.end] from",
+                    tableName, "WHERE", paste("([first.seqnames]=",
+                                              paste0("'", chr, "'"),
+                                              "AND [first.start] >=", CNEstart,
+                                              "AND [first.end] <=",
+                                              CNEend, "AND",
+                      binRestrictionString(CNEstart, CNEend,
+                                           "[first.bin]"),
+                      ")", collapse=" OR ")),
+      "last"=paste("SELECT [first.seqnames],[first.start],[first.end],[last.seqnames],[last.start],[last.end] from",
+                   tableName, "WHERE", paste("([last.seqnames]=",
+                                             paste0("'", chr, "'"),
+                                             "AND [last.start] >=", CNEstart,
+                                             "AND [last.end] <=",
+                                             CNEend, "AND",
+                     binRestrictionString(CNEstart, CNEend,
+                                          "[last.bin]"),
+                     ")", collapse=" OR "))
       )
   }else{
     stop("Unsupported search criteria!")
@@ -204,11 +205,15 @@ readCNERangesFromSQLite <- function(dbName, tableName,
     sqlCmd <- paste(sqlCmd, "AND [first.end]-[first.start]+1 >=", minLength, 
                     "AND [last.end]-[last.start]+1 >=", minLength)
   fetchedCNE <- dbGetQuery(con, sqlCmd)
-  fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1],
-                        ranges=IRanges(start=fetchedCNE[ ,2],
-                                       end=fetchedCNE[, 3]),
-                        strand="*")
-  
+  firstGRanges <- GRanges(seqnames=fetchedCNE[ ,1],
+                          ranges=IRanges(start=fetchedCNE[ ,2],
+                                         end=fetchedCNE[,3]),
+                          strand="*")
+  lastGRanges <- GRanges(seqnames=fetchedCNE[ ,4],
+                         ranges=IRanges(start=fetchedCNE[ ,5],
+                                        end=fetchedCNE[ ,6]),
+                         strand="*")
+  ans <- GRangePairs(first=firstGRanges, last=lastGRanges)
   # if(nrGraphs == 1){
   #   sqlCmd <- switch(whichAssembly,
   #                    "first"=paste("SELECT [first.start],[first.end] from",
@@ -253,5 +258,5 @@ readCNERangesFromSQLite <- function(dbName, tableName,
   #                         ranges=IRanges(start=fetchedCNE[ ,2], 
   #                                        end=fetchedCNE[ ,3]))
   # }
-  return(fetchedCNE)
+  return(ans)
 }

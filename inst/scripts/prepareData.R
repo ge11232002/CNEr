@@ -10,15 +10,19 @@ axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38)
 qSize <- fetchChromSizes("hg38")
 qSize <- seqlengths(qSize["chr6"])
 ## subAxt
-danRer10.hg38.net.axt <- subAxt(axtDanRer10Hg38, chr="chr6", start=24000000, end=27000000, select="target")
+danRer10.hg38.net.axt <- subAxt(axtDanRer10Hg38, chr="chr6", 
+                                start=24000000, end=27000000, select="target")
 writeAxt(danRer10.hg38.net.axt, "~/danRer10.hg38.net.axt")
-hg38.danRer10.net.axt <- subAxt(axtHg38DanRer10, chr="chr6", start=24000000, end=27000000, select="query", qSize)
+hg38.danRer10.net.axt <- subAxt(axtHg38DanRer10, chr="chr6", 
+                                start=24000000, end=27000000, select="query", qSize)
 writeAxt(hg38.danRer10.net.axt, "~/hg38.danRer10.net.axt")
 
 # Prepare the filter bed files for the regions of barhl2 and sox14
 hg38Filter <- readBed("/Users/gtan/Repos/github/CNEr/inst/extdata/filter_regions.hg38.bed")
 danRer10Filter <- readBed("/Users/gtan/Repos/github/CNEr/inst/extdata/filter_regions.danRer10.bed")
-hits <- findOverlaps(hg38Filter, reduce(c(targetRanges(hg38.danRer10.net.axt), queryRanges(danRer10.hg38.net.axt))), ignore.strand=TRUE)
+hits <- findOverlaps(hg38Filter, reduce(c(targetRanges(hg38.danRer10.net.axt),
+                                          queryRanges(danRer10.hg38.net.axt))),
+                     ignore.strand=TRUE)
 hg38Filter <- hg38Filter[unique(queryHits(hits))]
 danRer10Filter <- danRer10Filter[seqnames(danRer10Filter) == "chr6" &
                                  start(danRer10Filter) >= 24000000 & 
