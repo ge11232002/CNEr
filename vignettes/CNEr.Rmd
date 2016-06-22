@@ -368,6 +368,14 @@ fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr,
 fetchedCNERanges
 ```
 
+## CNE length distribution
+```{r CNEWidthDistribution, eval=TRUE, echo=TRUE}
+dbName <- file.path(system.file("extdata", package="CNEr"),
+                    "danRer10CNE.sqlite")
+cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
+                                          tableName="danRer10_hg38_45_50")
+plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+```
 
 # CNEs visualisation
 To visualise the CNEs together with other gene annotations, 
