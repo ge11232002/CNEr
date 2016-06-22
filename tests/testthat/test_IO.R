@@ -95,3 +95,11 @@ test_that("test_read.rmMask.GRanges", {
   ## Check the number of repeats
   expect_identical(length(ans), 28L)
 })
+
+test_that("test_readCNERangesFromSQLite", {
+  dbName <- file.path(system.file("extdata", package="CNEr"),
+                      "danRer10CNE.sqlite")
+  cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
+                                            tableName="danRer10_hg38_45_50")
+  expect_equal(length(cneGRangePairs), 3209L)
+})

@@ -90,6 +90,19 @@ test_that("test_GRangePairs", {
   # grangesPairs3 <- GRangePairs(firstGRange, lastGRange)
   
   }
-          )
+  )
 
-
+test_that("test_GRangePairs", {
+  dbName <- file.path(system.file("extdata", package="CNEr"),
+                      "danRer10CNE.sqlite")
+  cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
+                                            tableName="danRer10_hg38_45_50")
+  ans <- plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+  
+  ## test the xmin and pars value
+  expect_equal(ans$first$xmin, 117)
+  expect_equal(ans$first$pars, 3.976482, tolerance=1e-5)
+  expect_equal(ans$last$xmin, 111)
+  expect_equal(ans$last$pars, 3.931556, tolerance=1e-5)
+}
+)

@@ -3,6 +3,8 @@ NEW FEATURES
     o Updated CNE class for storing all the information about 
       running the pipeline
     o Add read.rmMask.GRanges to read RepeatMasker .out file
+    o Add the distribution plot of axt alignment matches.
+    o Add the distribution plot of CNE length.
 
 CHANGES IN Bioc 3.3
 ------------------------

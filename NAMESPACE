@@ -48,6 +48,8 @@ importFrom(reshape2, melt)
 importFrom(ggplot2, ggplot, aes, aes_q, aes_string, geom_tile, theme_bw, 
     xlab, ylab, ggtitle,
     scale_fill_continuous, geom_text)
+importFrom(poweRlaw, bootstrap_p, estimate_pars, estimate_xmin)
+importFrom("graphics", "lines", "par", "plot", "text")
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -137,6 +139,9 @@ export(
   
   ## plot.R
   CNEDensity,
+  
+  # CNE-utils.R
+  plotCNEWidth,
   
   ## AssemblyStats.R
   N50, N90
