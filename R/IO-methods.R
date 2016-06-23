@@ -30,6 +30,8 @@ readAxt <- function(axtFiles){
   if(any(index_noexists)){
     stop("No such file ", paste(axtFiles[index_noexists], sep=" "))
   }
+  ## Extend the absolute paths of files
+  axtFiles <- normalizePath(axtFiles)
   myAxt <- .Call2("myReadAxt", axtFiles, PACKAGE="CNEr")
   axts <- Axt(targetRanges=GRanges(seqnames=myAxt[[1]],
                                    ranges=IRanges(start=myAxt[[2]],

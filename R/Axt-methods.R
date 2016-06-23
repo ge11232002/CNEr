@@ -65,3 +65,18 @@ setMethod("summary", signature=(object="Axt"),
             invisible(compResults)
           }
           )
+
+### -----------------------------------------------------------------
+### dotplot for synteny from Axt object
+###
+dotplotAxt <- function(axt, targetSeqinfo, querySeqinfo,
+                       targetChrs=NULL, queryChrs=NULL,
+                       col=c("blue", "red")){
+  if(!is.null(targetChrs) && !is.null(queryChrs)){
+    axt <- axt[as.character(seqnames(targetRanges(axt))) %in% targetChrs & 
+               as.character(seqnames(queryRanges(axt))) %in% queryChrs]
+  }
+  target <- targetRanges(axt)
+  query <- queryRanges(axt)
+  
+}
