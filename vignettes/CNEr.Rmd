@@ -127,7 +127,18 @@ matchDistribution(axtHg38DanRer10)
 matchDistribution(axtDanRer10Hg38)
 ```
 
-There are methods defined for `Axt` object, including subsetting, match/mistach summary and write back to axt files.
+```{r syntenyDotplot, eval=TRUE, echo=TRUE}
+## Example of chr4 on hg19 and galGal3
+## The synteny of human and zebrafish is not quite obvious on the dotplot.
+fn <- file.path(system.file("extdata", package="CNEr"),
+                "chr4.hg19.galGal3.net.axt.gz")
+axt <- readAxt(fn)
+dotplotAxt(axt, fetchChromSizes("hg19"), fetchChromSizes("galGal3"),
+           targetChrs=c("chr4"), queryChrs="chr4")
+
+```
+
+There are methods defined for `Axt` object, including subsetting, output to axt files.
 More details can be found in the man page.
 
 ## Filtering information

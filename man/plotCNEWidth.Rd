@@ -46,7 +46,7 @@
   Ge Tan
 }
 \note{
-  The power law distribution implementation is based on package \code{poweRlaw}.
+  The power law distribution implementation is based on package \pkg{poweRlaw}.
 }
 
 \examples{
