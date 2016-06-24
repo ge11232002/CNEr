@@ -4,9 +4,8 @@ author: "Ge Tan"
 date: "`r doc_date()`"
 package: "`r pkg_ver('CNEr')`"
 abstract: >
-  Identification of Conserved Nocoding Elements (CNEs) from _Axt_ alignment
-  and visualisation of CNE density in horizon plot.
-  
+  Comparative genomics has revealed noncoding DNA regions with extremely high conservation across large evolutionary distances. These regions have been termed conserved noncoding elements (CNEs). Despite of various resources of CNEs, there is no publicly available tool to identify these elements from scratch. We describe CNEr, an R package for large-scale identification and advanced visualisation of sets of CNEs from _Axt_ alignments. Given whole genome pairwise alignments of two species as input, our pipeline facilitates alignment screening, elements merging, calculation of CNE density and visualisation of CNEs in the form of horizon plots. Furthermore, it provides efficient scalable data structures for representing paired ranges on the genome, especially the support for pair alignments in addition to functions potentially useful for exploratory analysis of the identified elements. 
+
 vignette: >
   %\VignetteIndexEntry{CNE identification and visualisation}
   %\VignetteEngine{knitr::rmarkdown}
