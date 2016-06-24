@@ -4,9 +4,8 @@ author: "Ge Tan"
 date: "`r doc_date()`"
 package: "`r pkg_ver('CNEr')`"
 abstract: >
-  Identification of Conserved Nocoding Elements (CNEs) from _Axt_ alignment
-  and visualisation of CNE density in horizon plot.
-  
+  Comparative genomics has revealed noncoding DNA regions with extremely high conservation across large evolutionary distances. These regions have been termed conserved noncoding elements (CNEs). Despite of various resources of CNEs, there is no publicly available tool to identify these elements from scratch. We describe CNEr, an R package for large-scale identification and advanced visualisation of sets of CNEs from _Axt_ alignments. Given whole genome pairwise alignments of two species as input, our pipeline facilitates alignment screening, elements merging, calculation of CNE density and visualisation of CNEs in the form of horizon plots. Furthermore, it provides efficient scalable data structures for representing paired ranges on the genome, especially the support for pair alignments in addition to functions potentially useful for exploratory analysis of the identified elements. 
+
 vignette: >
   %\VignetteIndexEntry{CNE identification and visualisation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -28,7 +27,7 @@ knitr::opts_chunk$set(echo=!short, warning=debug, message=debug, error=FALSE,
 ```
 
 # Introduction
-Conserved noncoding elements (CNEs) are pervasive class of elements 
+Conserved noncoding elements (CNEs) are a pervasive class of elements 
 clustering around genes with roles in development and differentiation 
 in Metazoa  [@Woolfe:2004ur]. 
 While many have been shown to act as long-range developmental enhancers 
@@ -59,9 +58,9 @@ can be used to identify genes involved in developmental regulation,
 even for novel genes that are not annotated yet.
 
 # Workflow of the package
-This section will briefly demonstrate the pipeline of CNE identification 
+This section briefly demonstratea the pipeline of CNE identification 
 and visualisation.
-More detailed usage of each step will be described in following sections with a concreate example of CNE identification and visualisation for the region of genes "barhl2" and "sox14" (chr6:24,000,000..27,000,000) in Zebrafish (danRer10) genome against Human (hg38).
+More detailed usage of each step is described in following sections with a concrete example of CNE identification and visualisation for the region of genes "barhl2" and "sox14" (chr6:24,000,000..27,000,000) in Zebrafish (danRer10) genome against Human (hg38).
 
 ## CNE identification
 
@@ -81,17 +80,17 @@ net files.
 UCSC already provides a set of precomputed axt files on http://hgdownload.soe.ucsc.edu/downloads.html for most of popular genomes.
 In case the _axt_ net files are not available from UCSC, you can always generate the axt net files by following another vignette "Pairwise whole genome alignment" in this `r Biocpkg("CNEr")` package.
 
-Another essential information is the annotation of exons and repeats, which can retrieved from various resources.
+Another essential information is the annotation of exons and repeats, which could be retrieved from various resources.
 
 ## axt alignment file
 By the time I wrote this package, there was no suitable class to store the axt alignments in Bioconductor.
 Hence we created two new __S4__ class `Axt` and `GRangePairs` to easily manipulate the axt alignment files.
 
-`GRangePairs` is designed to hold a pair of `GRanges` objects, which have same length.
+`GRangePairs` is designed to hold a pair of `GRanges` objects, which have the same length.
 It builds on the `List` class from Bioconductor and inherits many useful methods from it.
 This `Axt` class inherits from `GRangePairs` with no extra slots to hold the content from _axt_ files, but many specific methods are created for `Axt`.
-The ranges of target organism, query organism are stored in two `GRanges` objects with alignment sequences as metadata columns.
-The Blastz scores and the widths of alignments are stored in metadata columns of `GRangePairs`.
+The ranges of the target and the query organism are stored in two `GRanges` objects with alignment sequences as metadata columns.
+The Blastz scores and the widths of the alignments are stored in metadata columns of `GRangePairs`.
 For more usage of these two classes, please refer to the documentation.
 
 To read axt file into R, 
@@ -175,7 +174,7 @@ precompiled Bioconductor annotation packages.
 A few examples are given here:
 
 ```{r UCSC, eval=FALSE, echo=TRUE}
-## To fetch rmak table from UCSC
+## To fetch rmsk table from UCSC
 library(rtracklayer)
 mySession <- browserSession("UCSC")
 genome(mySession) <- "hg38"
@@ -201,9 +200,9 @@ exonsRanges <- GRanges(seqnames=exons$chromosome_name,
                        strand=ifelse(exons$strand==1L, "+", "-")
                        )
 seqlevelsStyle(exonsRanges) <- "UCSC"
-## Use the existing Bioconductor annotation package
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
-exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg19.knownGene)
+## Use the existing Bioconductor annotation package for hg38
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg38.knownGene)
 ```
 
 The regions to filter out can also be provdied in a bed file.
@@ -380,6 +379,7 @@ fetchedCNERanges
 ```
 
 ## CNE length distribution
+As the lengths of CNEs [@Salerno:2006sc] and the distances between consecutive elements [@Polychronopoulos:2014pl] exhibit power-law distributions, we implemented a function that might be useful in showing interesting patterns of the identified elements.
 ```{r CNEWidthDistribution, eval=TRUE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
                     "danRer10CNE.sqlite")
@@ -556,7 +556,7 @@ the developmental gene PAX6 was surrounded by the density peaks of CNEs.
 
 # Conclusion
 With this package, we are able to identify CNEs efficiently 
-and handle the corresponding objects conveniently in R. 
+and handle the corresponding objects conveniently in R.  
 Horizon plot shows a superior dynamic range to the standard density plots, 
 simultaneously revealing CNE clusters characterized 
 by vastly different levels of sequence conservation. 
