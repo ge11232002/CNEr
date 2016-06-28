@@ -103,6 +103,11 @@ system2(command="maf-convert", args=c("psl",
                                       ">", psls))
 ```
 
+## YASS aligner
+Another alternative of alignment software is 
+[YASS](http://bioinfo.lifl.fr/yass/).
+It may be added into this pipeline after we test the performance.
+
 # Chaining:
 If two matching alignments next to each other are close enough, they are joined into one fragment.
 Then these _chain_ files are sorted and combined into one big file.
