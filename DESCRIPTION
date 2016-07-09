@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.9.12
-Date: 2016-06-24
+Version: 1.9.13
+Date: 2016-07-09
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -59,4 +59,4 @@ Collate:
         GRB.R
         WholeGenomeAlignment.R
         Ancora.R
-        CNE-utils.R
+        CNE-methods.R
