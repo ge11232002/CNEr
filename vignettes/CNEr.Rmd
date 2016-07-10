@@ -55,12 +55,12 @@ simultaneously revealing CNE clusters characterized
 by vastly different levels of sequence conservation. 
 Such CNE density plots generated using precise locations of CNEs 
 can be used to identify genes involved in developmental regulation, 
-even for novel genes that are not annotated yet.
+even novel genes that are not annotated yet.
 
 # Workflow of the package
-This section briefly demonstratea the pipeline of CNE identification 
+This section briefly demonstrates the pipeline of CNE identification 
 and visualisation.
-More detailed usage of each step is described in following sections with a concrete example of CNE identification and visualisation for the region of genes "barhl2" and "sox14" (chr6:24,000,000..27,000,000) in Zebrafish (danRer10) genome against Human (hg38).
+More detailed usage of each step is described in following sections with a concise example of CNE identification and visualisation for the "barhl2" and "sox14" (chr6:24,000,000..27,000,000) loci in Zebrafish (danRer10) genome against Human (hg38).
 
 ## CNE identification
 
@@ -83,20 +83,20 @@ In case the _axt_ net files are not available from UCSC, you can always generate
 Another essential information is the annotation of exons and repeats, which could be retrieved from various resources.
 
 ## axt alignment file
-By the time I wrote this package, there was no suitable class to store the axt alignments in Bioconductor.
+During the development of this package, there was no suitable class to store the axt alignments in Bioconductor.
 Hence we created two new __S4__ class `Axt` and `GRangePairs` to easily manipulate the axt alignment files.
 
 `GRangePairs` is designed to hold a pair of `GRanges` objects, which have the same length.
-It builds on the `List` class from Bioconductor and inherits many useful methods from it.
+It builds on the `List` class of Bioconductor and inherits many useful methods from it.
 This `Axt` class inherits from `GRangePairs` with no extra slots to hold the content from _axt_ files, but many specific methods are created for `Axt`.
 The ranges of the target and the query organism are stored in two `GRanges` objects with alignment sequences as metadata columns.
 The Blastz scores and the widths of the alignments are stored in metadata columns of `GRangePairs`.
-For more usage of these two classes, please refer to the documentation.
+For more information on the usage of these two classes, please refer to the documentation.
 
 To read axt file into R, 
 `r Biocpkg("CNEr")` provides `readAxt` function for highly efficient reading. 
 This function is built on a backend C code of Kent's utilities [@Kent:2002bw].
-The axt alignment files can be gzippped or in plain text file.
+The axt alignment files can be either gzippped or in plain text file.
 The alignments between two genomes can also be in one big file or in several files, such as "chr1.hg19.mm10.net.axt.gz", "chr2.hg19.mm10.net.axt.gz", etc.
 
 ```{r Axt, eval=TRUE, echo=TRUE}
@@ -126,7 +126,7 @@ matchDistribution(axtHg38DanRer10)
 matchDistribution(axtDanRer10Hg38)
 ```
 
-```{r syntenyDotplot, eval=TRUE, echo=TRUE}
+```{r syntenyDotplot, eval=FALSE, echo=TRUE}
 ## Example of chr4 on hg19 and galGal3
 ## The synteny of human and zebrafish is not quite obvious on the dotplot.
 fn <- file.path(system.file("extdata", package="CNEr"),
@@ -139,7 +139,7 @@ dotplotAxt(axt, seqlengths(fetchChromSizes("hg19")),
 
 ```
 
-There are methods defined for `Axt` object, including subsetting, output to axt files.
+There are methods defined for handling `Axt` objects, including subsetting, output to axt files.
 More details can be found in the man page.
 
 ## Filtering information
@@ -207,12 +207,12 @@ library(TxDb.Hsapiens.UCSC.hg38.knownGene)
 exonsRanges <- exons(TxDb.Hsapiens.UCSC.hg38.knownGene)
 ```
 
-The regions to filter out can also be provdied in a bed file.
+The regions to filter out can also be provided in a bed file.
 To import the bed file into `r Biocpkg("GRanges")` in `R`, 
 `r Biocpkg("rtracklayer")` provides a general function 
 `import.bed` to do that.
-Since only the chromosome names, start and end are used in `r Biocpkg("CNEr")`,
-we have a more efficient `readBed` function.
+Since only the chromosome names, start and end coordinates are used in `r Biocpkg("CNEr")`,
+we provide a more efficient `readBed` function.
 
 ```{r Bed, eval=TRUE, echo=TRUE}
 ## Prepared bed file for chr6:24,000,000..27,000,000 of Zebrafish danRer10
@@ -231,8 +231,8 @@ hg38Filter
 
 ## Creating a `CNE` class
 We designed a `CNE` class to store all metadata of running a set of CNEs between two species, including the intermediate and final results.
-`CNE` can be created by proving the paths of the twoBit files of two assemblies,
-the paths of axt files with each assembly as reference.
+`CNE` can be created by providing the paths of the twoBit files of two assemblies, and
+the paths of axt files, with each assembly as reference.
 
 ```{r CNE, eval=TRUE, echo=TRUE}
 ## Here we have the twoBit files from Bioconductor package
@@ -260,7 +260,7 @@ In this section, we will go through the details of CNE identification.
 
 ## Scan axt alignments
 Detecting CNEs highly relies on the whole-genome pairwise net alignments.
-To correct the bias of a chosen genome and 
+To correct the bias of a chosen genome (which bias?) and 
 capture the duplicated CNEs during genome evolution,
 we scan two sets of nets for each pairwise comparison,
 one as reference from each of the genomes.
@@ -280,7 +280,7 @@ cneListDanRer10Hg38 <- ceScan(x=cneDanRer10Hg38, tFilter=danRer10Filter,
                               window=windows, identity=identities)
 ```
 
-At this stage, a list of `CNE` is returned from `ceScan`, which contains the preliminary two sets of CNEs from two sets of axt alignments.
+At this stage, a list of `CNE` is returned from `ceScan`, which contains the preliminary two sets of CNEs from a pair of axt alignments.
 We can examine the intermediate CNEs by
 
 ```{r CNEScanHead, eval=TRUE, echo=TRUE}
@@ -291,15 +291,15 @@ CNE21(cneListDanRer10Hg38[["45_50"]])
 ```
 
 In the result table, even though the strand for query element can be negative,
-the coordiante for that query element is already on the positive strand.
+the coordinate for that query element is already on the positive strand.
 
 It is essential to scan two sets of pairwise net alignments with each assembly as reference, in order not to miss any duplicated elements in either lineage.
-This is particularly important for comparison between teleost fish and other vertebrates, because one (for instance, zebrafish) or two (ommon carp) extra whole genome duplications occured.
+This is particularly important for the comparison between teleost fishes and other vertebrates, because one (for instance, the case of zebrafish) or two (the case of common carp) extra whole genome duplications occured.
 
 ## Merge CNEs
-Because we do two rounds of CNE detections with each genome as reference,
-some conserved elements overlap on both genomes and are supposed to be removed.
-But elements that only overlap on one of the genomes are kept, 
+As we perform two rounds of CNE detection with each genome as reference,
+some conserved elements overlap on both genomes and should be removed.
+Elements, however, that overlap only on one of the genomes are kept, 
 so that duplicated elements remain distinct.
 
 ```{r CNEMerge, eval=TRUE, echo=TRUE}
@@ -310,11 +310,11 @@ cneMergedListDanRer10Hg38 <- lapply(cneListDanRer10Hg38, cneMerge)
 Some CNEs might be unannotated repeats.
 To remove them, currently we use __blat__ [@Kent:2002jd] to realign
 each sequence of CNEs against the respective genomes.
-When the number of matches exceed certain threshold, for instance, 8,
+When the number of matches exceeds a certain threshold, for instance, 8,
 that CNE will be discarded.
 
-This step can be very time-consuming when the number of CNEs are large.
-Other alignment method can also be added later, such as Bowtie2, BWA.
+This step can be very time-consuming when the number of CNEs is large.
+Other alignment method could also be considered, for example Bowtie2 or BWA.
 
 ```{r CNERealignment, eval=FALSE, echo=TRUE}
 cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
@@ -343,12 +343,11 @@ cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
 As the computation of CNEs from the whole pipeline and 
 the preparation of annotation package can be very time-consuming,
 for a smoother visualisation experience, 
-we decided to use a local SQLite database to store CNEs.
+we decided to use a local SQLite database in order to store CNEs.
 
-Since the CNEs `data.frame` is just a table and 
-can be imported into a SQL table naturally.
+Since the CNEs `data.frame` is a table, it can be imported into a SQL table.
 To speed up the query from the SQL database,
-the bin indexing system is acquired.
+the bin indexing system is adopted.
 For more information, please refer to the paper [@Kent:2002bw]
 and [genomewiki](http://genomewiki.ucsc.edu/index.php/Bin_indexing_system).
 
@@ -381,7 +380,7 @@ fetchedCNERanges
 ```
 
 ## CNE length distribution
-As the lengths of CNEs [@Salerno:2006sc] and the distances between consecutive elements [@Polychronopoulos:2014pl] exhibit power-law distributions, we implemented a function that might be useful in showing interesting patterns of the identified elements.
+As the lengths of CNEs [@Salerno:2006sc] and the distances between consecutive elements [@Polychronopoulos:2014pl] exhibit power-law distributions, we implemented a function that might be useful in showing interesting patterns in the distribution of the identified elements.
 ```{r CNEWidthDistribution, eval=TRUE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
                     "danRer10CNE.sqlite")
@@ -391,7 +390,7 @@ plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
 ```
 
 # CNEs visualisation
-To visualise the CNEs together with other gene annotations, 
+To visualise CNEs alongside other gene annotations, 
 we choose to use the Bioconductor package `r Biocpkg("Gviz")` in this vignette.
 `r Biocpkg("Gviz")`, based on the `r CRANpkg("grid")` graphics scheme, 
 is a very powerful package for plotting data and annotation information
@@ -417,7 +416,7 @@ is available from
 http://timelyportfolio.blogspot.co.uk/2012/08/horizon-on-ggplot2.html.
 
 ## Gene annotation visualisation
-For the example of hg38 vs danRer10 in this vignette, 
+For the example case of hg38 vs danRer10 in this vignette, 
 we choose danRer10 as the reference and 
 show the range of developmental gene __barhl2__ and __sox14__. 
 
@@ -553,8 +552,8 @@ plotTracks(list(axisTrack, cpgIslands, ht),
            from=24000000, to=27000000)
 ```
 
-From this horizon plot compared with Zebrafish with Human as reference genome, 
-the developmental gene PAX6 was surrounded by the density peaks of CNEs.
+From this horizon plot and when comparing Zebrafish with Human as a reference genome, 
+we notice that the developmental gene PAX6 is surrounded by the density peaks of CNEs.
 
 # Conclusion
 With this package, we are able to identify CNEs efficiently 
