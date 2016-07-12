@@ -12,7 +12,7 @@ NXX <- function(filepath, XX=50){
   if(grepl("\\.2bit$", filepath, ignore.case=TRUE)){
     lengths <- seqlengths(TwoBitFile(filepath))
   }else if(grepl("(\\.fa$|\\.fasta$)", filepath, ignore.case=TRUE)){
-    lengths <- fasta.info(filepath)
+    lengths <- fasta.seqlengths(filepath)
   }else{
     stop("The suffix can only be .2bit, .fa, .fasta!")
   }
