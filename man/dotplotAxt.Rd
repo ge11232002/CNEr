@@ -1,25 +1,31 @@
-\name{dotplotAxt}
-\alias{dotplotAxt}
+\name{syntenicDotplot-methods}
+\docType{methods}
+\alias{syntenicDotplot}
+\alias{syntenicDotplot,Axt-method}
+\alias{syntenicDotplot,GRangePairs-method}
+
 \title{
   Syntenic dotplot
 }
 \description{
-  Syntenic dotplot for \code{Axt} alignemnt object.
+  Syntenic dotplot for \code{Axt} alignemnt object or \code{GRangePairs}.
 }
 \usage{
-  dotplotAxt(axt, targetSeqlengths, querySeqlengths,
-             targetChrs = NULL, queryChrs = NULL,
-             col = c("blue", "red"))
+  syntenicDotplot(x, firstSeqlengths, lastSeqlengths,
+                  firstChrs=NULL, lastChrs=NULL,
+                  col=c("blue", "red"))
 }
 \arguments{
-  \item{axt}{
+  \item{x}{
     \code{Axt} object: the whole genome pairwise alignment of
-    two compared species.
+    two compared species or
+    \code{GRangePairs} object.
   }
-  \item{targetSeqlengths,querySeqlengths}{
-    \code{integer}(n): seqlengths for both the target and query genomes.
+  \item{firstSeqlengths,lastSeqlengths}{
+    \code{integer}(n): seqlengths for both the first(target) and 
+    last(query) genomes.
   }
-  \item{targetChrs,queryChrs}{
+  \item{firstChrs,lastChrs}{
     \code{character}(n): the chromosomes to compare.
   }
   \item{col}{
@@ -27,7 +33,11 @@
   }
 }
 \details{
-  This syntenic dotplot is a type of scatter plot.
+  This syntenic dotplot is a type of scatter plot for \code{Axt} object,
+  and line plot for \code{GRangePairs} object.
+  Because the possible massive number of \code{Axt} alignments, 
+  the line plots will make it invisible on large genome scale.
+  
   Each axis represents a concatenated selected chromosomes laid end-to-end, 
   and each dot in the scatter-plot represents a putative homologous match 
   between the two genomes.
@@ -45,13 +55,19 @@
 }
 \examples{
   library(GenomeInfoDb)
+  
+  ## dotplot for Axt object
   fn <- file.path(system.file("extdata", package="CNEr"),
                   "chr4.hg19.galGal3.net.axt.gz")
   axt <- readAxt(fn)
-  targetSeqlengths <- seqlengths(fetchChromSizes("hg19"))
-  querySeqlengths <- seqlengths(fetchChromSizes("galGal3"))
-  targetChrs <- c("chr4")
-  queryChrs <- c("chr4")
-  dotplotAxt(axt, targetSeqlengths, querySeqlengths,
-             targetChrs=targetChrs, queryChrs=queryChrs)
+  firstSeqlengths <- seqlengths(fetchChromSizes("hg19"))
+  lastSeqlengths <- seqlengths(fetchChromSizes("galGal3"))
+  firstChrs <- c("chr4")
+  lastChrs <- c("chr4")
+  syntenicDotplot(axt, firstSeqlengths, lastSeqlengths,
+                  firstChrs=firstChrs, lastChrs=lastChrs)
+  
+  ## dotplot for GRangePairs object
+  data(grangesPairsForDotplot)
+  syntenicDotplot(grangesPairsForDotplot)
 }

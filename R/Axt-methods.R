@@ -69,12 +69,20 @@ setMethod("summary", signature=(object="Axt"),
 ### -----------------------------------------------------------------
 ### dotplot for synteny from Axt object
 ### Exported!
-dotplotAxt <- function(axt, targetSeqlengths, querySeqlengths,
+setMethod("syntenicDotplot", signature=(x="Axt"),
+          function(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
+                   firstChrs=NULL, lastChrs=NULL,
+                   col=c("blue", "red")){
+            dotplotAxt(x, targetSeqlengths=firstSeqlengths, 
+                       querySeqlengths=lastSeqlengths,
+                       targetChrs=firstChrs,
+                       queryChrs=lastChrs,
+                       col=col)
+          })
+
+dotplotAxt <- function(axt, targetSeqlengths=NULL, querySeqlengths=NULL,
                        targetChrs=NULL, queryChrs=NULL,
                        col=c("blue", "red")){
-  if(!is(axt, "Axt")){
-    stop("axt must be a Axt object!")
-  }
   if(!is.null(targetChrs)){
     axt <- axt[as.character(seqnames(targetRanges(axt))) %in% targetChrs]
     targetSeqlengths <- targetSeqlengths[targetChrs]

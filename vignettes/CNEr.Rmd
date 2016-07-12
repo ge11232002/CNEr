@@ -133,9 +133,9 @@ fn <- file.path(system.file("extdata", package="CNEr"),
                 "chr4.hg19.galGal3.net.axt.gz")
 axt <- readAxt(fn)
 library(GenomeInfoDb)
-dotplotAxt(axt, seqlengths(fetchChromSizes("hg19")),
-           seqlengths(fetchChromSizes("galGal3")),
-           targetChrs=c("chr4"), queryChrs="chr4")
+syntenicDotplot(axt, seqlengths(fetchChromSizes("hg19")),
+                seqlengths(fetchChromSizes("galGal3")),
+                firstChrs=c("chr4"), lastChrs="chr4")
 
 ```
 
