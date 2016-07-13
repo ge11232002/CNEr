@@ -11,7 +11,7 @@
   Syntenic dotplot for \code{Axt} alignemnt object or \code{GRangePairs}.
 }
 \usage{
-  syntenicDotplot(x, firstSeqlengths, lastSeqlengths,
+  syntenicDotplot(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
                   firstChrs=NULL, lastChrs=NULL,
                   col=c("blue", "red"))
 }
@@ -24,6 +24,7 @@
   \item{firstSeqlengths,lastSeqlengths}{
     \code{integer}(n): seqlengths for both the first(target) and 
     last(query) genomes.
+    When NULL, the seqlengths must exist in x.
   }
   \item{firstChrs,lastChrs}{
     \code{character}(n): the chromosomes to compare.

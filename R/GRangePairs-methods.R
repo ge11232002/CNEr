@@ -21,10 +21,21 @@ syntenicPlotGRangePairs <- function(x, firstSeqlengths=NULL,
                                     col=c("blue", "red")){
   if(is.null(firstSeqlengths)){
     targetSeqlengths <- seqlengths(first(x))
+    if(any(is.na(targetSeqlengths))){
+      stop("When firstSeqlnths is NULL, the seqlengths must exist in x!")
+    }
+  }else{
+    targetSeqlengths <- firstSeqlengths
   }
   if(is.null(lastSeqlengths)){
     querySeqlengths <- seqlengths(last(x))
+    if(any(is.na(querySeqlengths))){
+      stop("When lastSeqlnths is NULL, the seqlengths must exist in x!")
+    }
+  }else{
+    querySeqlengths <- lastSeqlengths
   }
+  
   target <- first(x)
   query <- last(x)
   
