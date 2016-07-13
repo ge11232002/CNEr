@@ -1,7 +1,26 @@
 ### -----------------------------------------------------------------
-### read the bed file into GRanges.
+### seqinfoFn: get the Seqinfo object from fasta or twoBit file.
+### Not Exported!
+seqinfoFn <- function(fn){
+  fileType <- file_ext(fn)
+  genome <- sub("\\..*$", "", basename(fn))
+  if(fileType %in% c("fa", "fasta")){
+    # fasta file
+    seqlengths1 <- fasta.seqlengths(fn)
+    ans <- Seqinfo(seqnames=names(seqlengths1), seqlengths=seqlengths1, 
+                   genome=genome)
+  }else if(fileType == "2bit"){
+    # 2bit file
+    ans <- seqinfo(TwoBitFile(fn))
+  }
+  genome(ans) <- genome
+  return(ans)
+}
+
+### -----------------------------------------------------------------
+### readBed: read the bed file into GRanges.
 ### Exported!
-readBed <- function(bedFile){
+readBed <- function(bedFile, assemblyFn=NULL){
   ## GRanges: 1-based start
   ## bed file: 0-based start
   
@@ -14,10 +33,16 @@ readBed <- function(bedFile){
   }else{
     strands <- bed[[6]]
   }
-  bed <- GRanges(seqnames=Rle(bed[[1]]),
-                 ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
-                 strand=strands)
-  return(bed)
+  if(!is.null(assemblyFn)){
+    ans <- GRanges(seqnames=Rle(bed[[1]]),
+                   ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
+                   strand=strands, seqinfo=seqinfoFn(assemblyFn))
+  }else{
+    ans <- GRanges(seqnames=Rle(bed[[1]]),
+                   ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
+                   strand=strands)
+  }
+  return(ans)
 }
 
 ### -----------------------------------------------------------------
