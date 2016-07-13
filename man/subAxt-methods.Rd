@@ -41,8 +41,8 @@
     the subset criteria is for query alignments in \code{Axt}.
   }
   \item{qSize}{
-    When select is "query", qSize must be provided as the same length of 'chr'.
-    It holds the chromosome length of 'chr'.
+    When select is "query", qSize must be provided and 
+    holds the chromosome length of 'chr'.
   }
 }
 

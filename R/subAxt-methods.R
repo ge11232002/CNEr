@@ -23,10 +23,10 @@ setMethod("subAxt", signature(x="Axt", chr="GRanges",
                    qSize=NULL){
             select <- match.arg(select)
             if(select == "query"){
-              if(is.null(qSize) | length(qSize) != length(chr)){
+              if(is.null(qSize) | !all(as.character(seqnames(chr)) %in% 
+                                      names(qSize))){
                 stop("When selecting on query alignments,
-                     qSize must be provided and has the same length 
-                     as start.")
+                     qSize must be provided.")
               }
               if(!is(qSize, "integer")){
                 stop("qSize must be an integer object.")
@@ -81,12 +81,13 @@ setMethod("subAxt", signature(x="Axt", chr="character",
     start <- start(searchGRanges)
     end <- end(searchGRanges)
     # first search Axts on positive strand
-    searchGRangesPositive <- searchGRanges
-    strand(searchGRangesPositive) <- "+"
+    ## searchGRanges has posive strands inside.
     hitsPositiveAny <- findOverlaps(queryRanges(x),
-                                    searchGRangesPositive, type="any",
+                                    searchGRanges, type="any",
                                     select="all", ignore.strand=FALSE)
     indexPositiveAny <- queryHits(hitsPositiveAny)
+    
+    qSize <- qSize[as.character(seqnames(searchGRanges))]
     
     # then search Axts on negative strand.
     ## we need to prepare the searchGRanges on negative strand.
