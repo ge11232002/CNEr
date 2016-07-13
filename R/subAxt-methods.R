@@ -71,6 +71,7 @@ setMethod("subAxt", signature(x="Axt", chr="character",
 .subAxtWhole <- function(x, searchGRanges, select=c("target", "query"),
                          qSize=NULL){
   if(select == "target"){
+    # It's easy because the strand on target reference is always positive.
     hitsAny <- findOverlaps(targetRanges(x),
                             searchGRanges, type="any",
                             select="all", ignore.strand=TRUE)
@@ -79,13 +80,16 @@ setMethod("subAxt", signature(x="Axt", chr="character",
   }else if(select == "query"){
     start <- start(searchGRanges)
     end <- end(searchGRanges)
-    ## first search Axts on positive strand
+    # first search Axts on positive strand
+    searchGRangesPositive <- searchGRanges
+    strand(searchGRangesPositive) <- "+"
     hitsPositiveAny <- findOverlaps(queryRanges(x),
-                                    searchGRanges, type="any",
+                                    searchGRangesPositive, type="any",
                                     select="all", ignore.strand=FALSE)
     indexPositiveAny <- queryHits(hitsPositiveAny)
+    
     # then search Axts on negative strand.
-    # we need to prepare the searchGRanges on negative strand.
+    ## we need to prepare the searchGRanges on negative strand.
     searchGRangesNegative <- GRanges(seqnames=seqnames(searchGRanges),
                                      ranges=IRanges(start=qSize-end+1,
                                                     end=qSize-start+1),
@@ -93,7 +97,7 @@ setMethod("subAxt", signature(x="Axt", chr="character",
     searchGRangesNegative <- reduce(searchGRangesNegative)
     hitsNegativeAny <- findOverlaps(queryRanges(x),
                                     searchGRangesNegative, type="any",
-                                    select="all")
+                                    select="all", ignore.strand=FALSE)
     indexNegativeAny <- queryHits(hitsNegativeAny)
     ans <- x[c(indexPositiveAny, indexNegativeAny)]
   }

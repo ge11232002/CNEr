@@ -25,6 +25,7 @@
     A object of \code{character} containing the names of the sequences 
     in 'x' where to get the alignments from, or a \code{GRanges} object
     when 'start' and 'end' are missing.
+    In the case of \code{GRanges}, the strand information is ignored.
   }
   \item{start, end}{
     A object of \code{integer}() or missing.
