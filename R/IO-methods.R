@@ -7,8 +7,9 @@ seqinfoFn <- function(fn){
   if(fileType %in% c("fa", "fasta")){
     # fasta file
     seqlengths1 <- fasta.seqlengths(fn)
+    names(seqlengths1) <- sapply(strsplit(names(seqlengths1), " "), "[", 1)
     ## Only keep the first part of fasta lines.
-    ans <- Seqinfo(seqnames=sapply(strsplit(names(seqlengths1), " "), "[", 1),
+    ans <- Seqinfo(seqnames=names(seqlengths1),
                    seqlengths=seqlengths1,
                    genome=genome)
   }else if(fileType == "2bit"){
