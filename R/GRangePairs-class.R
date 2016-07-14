@@ -72,14 +72,26 @@ GRangePairs <- function(first=GRanges(), last=GRanges(), names=NULL){
 ### GRangePairs getters and setters
 ### Exported!
 setMethod("names", "GRangePairs", function(x) x@NAMES)
+setReplaceMethod("names", "GRangePairs",
+                 function(x, value)
+                 {
+                   if (!is.null(value))
+                     value <- as.character(value)
+                   x@NAMES <- value
+                   validObject(x)
+                   x
+                 }
+)
+
 setMethod("length", "GRangePairs", function(x) length(x@first))
+
 setMethod("first", "GRangePairs",
           function(x, real.strand=FALSE, invert.strand=FALSE)
           {
             ans <- setNames(x@first, names(x))
             ans
           }
-)
+          )
 
 setMethod("last", "GRangePairs",
           function(x, real.strand=FALSE, invert.strand=FALSE)
@@ -108,17 +120,6 @@ setMethod("strand", "GRangePairs",
 setMethod("seqinfo", "GRangePairs",
           function(x) list(seqinfoFirst=seqinfo(x@first),
                            seqinfoLast=seqinfo(x@last))
-)
-
-setReplaceMethod("names", "GRangePairs",
-                 function(x, value)
-                 {
-                   if (!is.null(value))
-                     value <- as.character(value)
-                   x@NAMES <- value
-                   validObject(x)
-                   x
-                 }
 )
 
 ### -----------------------------------------------------------------

@@ -103,7 +103,6 @@ toSeqSnippet <- function(x, width)
   }
 }
 
-
 .axt.show_frame_line <- function(x, i, iW, tNameW, tStartW, tEndW, 
                                  qNameW, qStartW, qEndW, scoreW){
   subsetTargetRanges <- targetRanges(x)[i]
@@ -204,3 +203,13 @@ setMethod("show", "Axt",
             }
           }
 )
+
+### -----------------------------------------------------------------
+### normaliseStrand: make the coordinates of negative query alignments
+###   fit the positive strands.
+### Export!
+setGeneric("normaliseStrand", function(x) standardGeneric("normaliseStrand"))
+
+setMethod("normaliseStrand", "Axt", function(x){
+  
+})
