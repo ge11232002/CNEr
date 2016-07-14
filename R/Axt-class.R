@@ -106,16 +106,20 @@ toSeqSnippet <- function(x, width)
 
 .axt.show_frame_line <- function(x, i, iW, tNameW, tStartW, tEndW, 
                                  qNameW, qStartW, qEndW, scoreW){
+  subsetTargetRanges <- targetRanges(x)[i]
+  subsetQueryRanges <- queryRanges(x)[i]
+  
   cat(format(i, width=iW, justify="right"), " ",
-      format(as.character(seqnames(targetRanges(x)[i])), 
+      format(as.character(seqnames(subsetTargetRanges)), 
              width=tNameW, justify="right"), " ",
-      format(start(targetRanges(x)[i]), width=tStartW, justify="right"), " ",
-      format(end(targetRanges(x)[i]), width=tEndW, justify="right"), " ",
-      format(as.character(seqnames(queryRanges(x)[i])), 
+      format(start(subsetTargetRanges), width=tStartW, justify="right"), " ",
+      format(end(subsetTargetRanges), width=tEndW, justify="right"), " ",
+      
+      format(as.character(seqnames(subsetQueryRanges)), 
              width=qNameW, justify="right"), " ",
-      format(start(queryRanges(x)[i]), width=qStartW, justify="right"), " ",
-      format(end(queryRanges(x)[i]), width=qEndW, justify="right"), " ",
-      format(as.character(strand(queryRanges(x))[i]), 
+      format(start(subsetQueryRanges), width=qStartW, justify="right"), " ",
+      format(end(subsetQueryRanges), width=qEndW, justify="right"), " ",
+      format(as.character(strand(subsetQueryRanges)), 
              width=1, justify="right"), " ",
       format(score(x)[i], width=scoreW, justify="right"), " ",
       sep=""
@@ -136,31 +140,34 @@ showAxt <- function(x, margin="", half_nrow=5L){
     head_nrow = half_nrow
   if(is.null((tail_nrow = getOption("showTailLines"))))
     tail_nrow = half_nrow
-  iW = nchar(as.character(lx))
+  iW <- nchar(as.character(lx))
   if(lx < (2*half_nrow+1L) | (lx < (head_nrow+tail_nrow+1L))) {
-    tNameW <- max(nchar(as.character(seqnames(targetRanges(x)))))
-    tStartW <- max(nchar(as.character(start(targetRanges(x)))))
-    tEndW <- max(nchar(as.character(end(targetRanges(x)))))
-    qNameW <- max(nchar(as.character(seqnames(queryRanges(x)))))
-    qStartW <- max(nchar(as.character(start(queryRanges(x)))))
-    qEndW <- max(nchar(as.character(end(queryRanges(x)))))
+    subsetTargetRanges <- targetRanges(x)
+    subsetQueryRanges <- queryRanges(x)
+    
+    tNameW <- max(nchar(as.character(seqnames(subsetTargetRanges))))
+    tStartW <- max(nchar(as.character(start(subsetTargetRanges))))
+    tEndW <- max(nchar(as.character(end(subsetTargetRanges))))
+    
+    qNameW <- max(nchar(as.character(seqnames(subsetQueryRanges))))
+    qStartW <- max(nchar(as.character(start(subsetQueryRanges))))
+    qEndW <- max(nchar(as.character(end(subsetQueryRanges))))
+    
     scoreW <- max(nchar(as.character(score(x))))
     for(i in seq_len(lx))
       .axt.show_frame_line(x, i, iW, tNameW, tStartW, tEndW, 
                            qNameW, qStartW, qEndW, scoreW)
   }else{
-    tNameW <- max(nchar(as.character(seqnames(targetRanges(x)
-               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
-    tStartW <- max(nchar(as.character(start(targetRanges(x)
-                 [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
-    tEndW <- max(nchar(as.character(end(targetRanges(x)
-               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
-    qNameW <- max(nchar(as.character(seqnames(queryRanges(x)
-               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
-    qStartW <- max(nchar(as.character(start(queryRanges(x)
-                [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
-    qEndW <- max(nchar(as.character(end(queryRanges(x)
-               [c(1:head_nrow, (lx-tail_nrow+1L):lx)]))))
+    subsetTargetRanges <- targetRanges(x)[c(1:head_nrow, (lx-tail_nrow+1L):lx)]
+    subsetQueryRanges <- queryRanges(x)[c(1:head_nrow, (lx-tail_nrow+1L):lx)]
+    
+    tNameW <- max(nchar(as.character(seqnames(subsetTargetRanges))))
+    tStartW <- max(nchar(as.character(start(subsetTargetRanges))))
+    tEndW <- max(nchar(as.character(end(subsetTargetRanges))))
+    
+    qNameW <- max(nchar(as.character(seqnames(subsetQueryRanges))))
+    qStartW <- max(nchar(as.character(start(subsetQueryRanges))))
+    qEndW <- max(nchar(as.character(end(subsetQueryRanges))))
     scoreW <- max(nchar(as.character(score(x)
                                      [c(1:head_nrow, (lx-tail_nrow+1L):lx)])))
     if(head_nrow > 0){
