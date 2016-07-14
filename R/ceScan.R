@@ -1,14 +1,8 @@
 ### -----------------------------------------------------------------
 ### The main function for scanning the axts and get the CNEs
 ### Not exported!
-ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes=NULL,
-                    qSizes=NULL, 
+ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes, 
                     thresholds=c("49_50")){
-  if(is.null(qSizes) || !is(qSizes, "Seqinfo"))
-    stop("qSizes must exist and be a Seqinfo object when qFilter exists")
-  if(is.null(tSizes) || !is(tSizes, "Seqinfo"))
-    stop("tSizes must exist and be a Seqinfo object when qFilter exists")
-  
   winSize <- as.integer(sapply(strsplit(thresholds, "_"), "[", 2))
   minScore <- as.integer(sapply(strsplit(thresholds, "_"), "[", 1))
   resFiles <- tempfile(pattern=paste(minScore, winSize, "ceScan", sep="-"), 
@@ -155,18 +149,59 @@ setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL,
 ceScanAxt <- function(axts, tFilter=NULL, qFilter=NULL,
                       tSizes=NULL, qSizes=NULL,
                       window=50L, identity=50L){
-  if(!is.null(tFilter) && !is(tFilter, "GRanges")){
-    stop("tFilter must be NULL or a GRanges object!")
+  # Prepare tSizes
+  if(is.null(tSizes)){
+    ## tSizes is NULL
+    tSizes <- seqinfo(targetRanges(axts))
+    if(any(is.na(seqlengths(tSizes)))){
+      stop("tSizes must be provided or seqinfo is available in Axt object!")
+    }
+  }else if(!is(tSizes, "Seqinfo")){
+    ## tSizes is integer vector
+    tSizes <- Seqinfo(seqnames=names(tSizes), seqlengths=tSizes)
   }
-  if(!is.null(qFilter) && !is(qFilter, "GRanges")){
-    stop("qFilter must be NULL or a GRanges object!")
+  ## Check tFilter, tFilter's seqnames must %in% tSizes
+  if(!is.null(tFilter)){
+    if(!is(tFilter, "GRanges")){
+      stop("tFilter must be NULL or a GRanges object!")
+    }else{
+      if(!all(seqnames(tFilter) %in% seqnames(tSizes))){
+        stop("All the chromosomes in tFilter must exist in tSizes!")
+      }
+    }
   }
-  if(!is.null(tSizes) && !is(tSizes, "Seqinfo")){
-    stop("tSizes must be NULL or a Seqinfo object!")
+  ## Check axts target chromosomes
+  if(!all(seqnames(targetRanges(axts)) %in% seqnames(tSizes))){
+    stop("All the chromosomes in targetRanges of Axt object must exist in tSizes!")
   }
-  if(!is.null(qSizes) && !is(qSizes, "Seqinfo")){
-    stop("qSizes must be NULL or a Seqinfo object!")
+  
+  # Prepare qSizes
+  if(is.null(qSizes)){
+    ## qSizes is NULL
+    qSizes <- seqinfo(queryRanges(axts))
+    if(any(is.na(seqlengths(qSizes)))){
+      stop("qSizes must be provided or seqinfo is available in Axt object!")
+    }
+  }else if(!is(qSizes, "Seqinfo")){
+    ## qSizes is integer vector
+    qSizes <- Seqinfo(seqnames=names(qSizes), seqlengths=qSizes)
   }
+  ## Check qFilter, qFilter's seqnames must %in% qSizes
+  if(!is.null(qFilter)){
+    if(!is(qFilter, "GRanges")){
+      stop("qFilter must be NULL or a GRanges object!")
+    }else{
+      if(!all(seqnames(qFilter) %in% seqnames(qSizes))){
+        stop("All the chromosomes in qFilter must exist in qSizes!")
+      }
+    }
+  }
+  ## Check axts query chromosomes
+  if(!all(seqnames(queryRanges(axts)) %in% seqnames(qSizes))){
+    stop("All the chromosomes in queryRanges of Axt object must exist in qSizes!")
+  }
+  
+  # Check identity and window size
   if(any(window < identity)){
     stop("The scanning window size must be equal or larger than identity!")
   }

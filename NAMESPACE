@@ -23,7 +23,7 @@ importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
                   showAsCell, extractROWS, mcols, "mcols<-", split, runValue,
-                  as.factor)
+                  as.factor, "%in%")
 importMethodsFrom(IRanges, slice, ranges)
 importMethodsFrom(GenomicAlignments, last)
 
