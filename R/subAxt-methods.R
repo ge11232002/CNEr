@@ -76,7 +76,7 @@ setMethod("subAxt", signature(x="Axt", chr="character",
                             searchGRanges, type="any",
                             select="all", ignore.strand=TRUE)
     indexAny <- queryHits(hitsAny)
-    ans <- x[indexAny]
+    ans <- x[unique(indexAny)]
   }else if(select == "query"){
     start <- start(searchGRanges)
     end <- end(searchGRanges)
@@ -100,7 +100,7 @@ setMethod("subAxt", signature(x="Axt", chr="character",
                                     searchGRangesNegative, type="any",
                                     select="all", ignore.strand=FALSE)
     indexNegativeAny <- queryHits(hitsNegativeAny)
-    ans <- x[c(indexPositiveAny, indexNegativeAny)]
+    ans <- x[unique(c(indexPositiveAny, indexNegativeAny))]
   }
   return(ans)
 }
