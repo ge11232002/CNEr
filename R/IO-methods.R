@@ -46,8 +46,7 @@ readBed <- function(bedFile, assemblyFn=NULL){
 ### -----------------------------------------------------------------
 ### read the axt files into an axt object.
 ### Exported!
-readAxt <- function(axtFiles, targetAssemblyFn=NULL,
-                    queryAssemblyFn=NULL){
+readAxt <- function(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL){
   # Read axt files into R axt object.
   # The coordinates are 1-based for start and end.
   index_noexists <- !file.exists(axtFiles)
@@ -57,12 +56,12 @@ readAxt <- function(axtFiles, targetAssemblyFn=NULL,
   
   # Prepare the seqinfo when available
   seqinfoTarget <- NULL
-  if(!is.null(targetAssemblyFn)){
-    seqinfoTarget <- seqinfoFn(targetAssemblyFn)
+  if(!is.null(tAssemblyFn)){
+    seqinfoTarget <- seqinfoFn(tAssemblyFn)
   }
   seqinfoQuery <- NULL
-  if(!is.null(queryAssemblyFn)){
-    seqinfoQuery <- seqinfoFn(queryAssemblyFn)
+  if(!is.null(qAssemblyFn)){
+    seqinfoQuery <- seqinfoFn(qAssemblyFn)
   }
   
   ## Extend the absolute paths of files
