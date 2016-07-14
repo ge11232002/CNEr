@@ -75,6 +75,15 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
       Get the alignment sequences of reference genome.}
 	 }
 }
+\details{
+  In \sQuote{axt} files and \code{Axt} object, the \sQuote{targetRanges}
+  also have the alignments on positive strands.
+  However, the \sQuote{queryRanges} can have alignments on negative strands,
+  and the coordinates are based on negative strands, which is quite
+  different from the convention in Bioconductor.
+  To make the coordinates of negative alignments are also 
+  based on positive strands, \code{normaliseStrand}.
+}
 
 \author{
   Ge Tan
