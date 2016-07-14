@@ -32,7 +32,7 @@ setMethod("subAxt", signature(x="Axt", chr="GRanges",
                 stop("qSize must be an integer object.")
               }
             }
-            strand(searchGRanges) <- "+"
+            strand(chr) <- "+"
             searchGRanges <- reduce(chr)
             .subAxtWhole(x, searchGRanges, select=select, qSize=qSize)
           }
