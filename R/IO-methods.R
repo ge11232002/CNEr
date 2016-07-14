@@ -33,40 +33,52 @@ readBed <- function(bedFile, assemblyFn=NULL){
   }else{
     strands <- bed[[6]]
   }
+  seqinfoBed <- NULL
   if(!is.null(assemblyFn)){
-    ans <- GRanges(seqnames=Rle(bed[[1]]),
-                   ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
-                   strand=strands, seqinfo=seqinfoFn(assemblyFn))
-  }else{
-    ans <- GRanges(seqnames=Rle(bed[[1]]),
-                   ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
-                   strand=strands)
+    seqinfoBed <- seqinfoFn(assemblyFn)
   }
+  ans <- GRanges(seqnames=Rle(bed[[1]]),
+                 ranges=IRanges(start=bed[[2]]+1L, end=bed[[3]]),
+                 strand=strands, seqinfo=seqinfoBed)
   return(ans)
 }
 
 ### -----------------------------------------------------------------
 ### read the axt files into an axt object.
 ### Exported!
-readAxt <- function(axtFiles){
+readAxt <- function(axtFiles, targetAssemblyFn=NULL,
+                    queryAssemblyFn=NULL){
   # Read axt files into R axt object.
   # The coordinates are 1-based for start and end.
   index_noexists <- !file.exists(axtFiles)
   if(any(index_noexists)){
     stop("No such file ", paste(axtFiles[index_noexists], sep=" "))
   }
+  
+  # Prepare the seqinfo when available
+  seqinfoTarget <- NULL
+  if(!is.null(targetAssemblyFn)){
+    seqinfoTarget <- seqinfoFn(targetAssemblyFn)
+  }
+  seqinfoQuery <- NULL
+  if(!is.null(queryAssemblyFn)){
+    seqinfoQuery <- seqinfoFn(queryAssemblyFn)
+  }
+  
   ## Extend the absolute paths of files
   axtFiles <- normalizePath(axtFiles)
   myAxt <- .Call2("myReadAxt", axtFiles, PACKAGE="CNEr")
   axts <- Axt(targetRanges=GRanges(seqnames=myAxt[[1]],
                                    ranges=IRanges(start=myAxt[[2]],
                                                   end=myAxt[[3]]),
-                                   strand=myAxt[[4]]),
+                                   strand=myAxt[[4]],
+                                   seqinfo=seqinfoTarget),
               targetSeqs=DNAStringSet(myAxt[[5]]),
               queryRanges=GRanges(seqnames=myAxt[[6]],
                                   ranges=IRanges(start=myAxt[[7]],
                                                  end=myAxt[[8]]),
-                                  strand=myAxt[[9]]),
+                                  strand=myAxt[[9]],
+                                  seqinfo=seqinfoQuery),
               querySeqs=DNAStringSet(myAxt[[10]]),
               score=myAxt[[11]],
               symCount=myAxt[[12]]

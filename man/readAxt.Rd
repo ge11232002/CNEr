@@ -1,25 +1,33 @@
 \name{readAxt}
 \alias{readAxt}
 \title{
-  readAxt
+  Read \sQuote{Axt} file
 }
 \description{
-  This function reads the \emph{axt} files into a \code{\link{Axt}} object.
+  This function reads the \sQuote{Axt} files into a \code{\link{Axt}} object.
 }
 \usage{
-  readAxt(axtFiles)
+  readAxt(axtFiles, targetAssemblyFn=NULL, queryAssemblyFn=NULL)
 }
 \arguments{
   \item{axtFiles}{
-    \code{character}(n): file names of the \emph{axt} files to read.
+    \code{character}(n): filenames of the \sQuote{Axt} files to read.
+  }
+  \item{targetAssemblyFn,queryAssemblyFn}{
+    \code{character}(1): filename of the \sQuote{twoBit} or \sQuote{fasta} 
+    file for the target and query genome.
   }
 }
 
 \details{
-  This function reads the \emph{axt} files of two assemblies.
-  It can be a single big \emph{axt} file or several small \emph{axt} files.
-  Different from the start coordinate in \emph{axt} file, 
+  This function reads the \sQuote{Axt} files of two assemblies.
+  It can be a single big \sQuote{Axt} file or several small \sQuote{Axt} files.
+  Different from the start coordinate in \sQuote{Axt} file, 
   the start coordinate in \code{Axt} object is 1-based.
+  
+  When \sQuote{targetAssemblyFn} and \sQuote{queryAssemblyFn} are 
+  not \code{NULL}, the corresponding \code{Seqinfo}
+  will be added into the returned \code{Axt} object.
 }
 
 \value{
@@ -37,5 +45,11 @@
 \examples{
   axtFile <- file.path(system.file("extdata", package="CNEr"), 
                        "hg38.danRer10.net.axt")
-  axt <- readAxt(axtFile)
+  targetAssemblyFn <- file.path(system.file("extdata",
+                                package="BSgenome.Hsapiens.UCSC.hg38"),
+                                "single_sequences.2bit")
+  queryAssemblyFn <- file.path(system.file("extdata",
+                               package="BSgenome.Drerio.UCSC.danRer10"),
+                               "single_sequences.2bit")
+  axt <- readAxt(axtFile, targetAssemblyFn, queryAssemblyFn)
 }
