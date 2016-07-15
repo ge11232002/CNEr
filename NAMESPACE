@@ -24,7 +24,7 @@ importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
                   showAsCell, extractROWS, mcols, "mcols<-", split, runValue,
                   as.factor, "%in%", second, "first<-", "second<-")
-importMethodsFrom(IRanges, slice, ranges)
+importMethodsFrom(IRanges, slice, ranges, "ranges<-")
 importMethodsFrom(GenomicAlignments, last)
 
 ### -----------------------------------------------------------------
@@ -168,7 +168,7 @@ exportMethods(
   subAxt,
 
   ## Axt-methods.R
-  matchDistribution,
+  matchDistribution, fixCoordinates,
   
   # CNE-class.R
   CNE12, CNE21,

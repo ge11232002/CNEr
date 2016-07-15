@@ -109,7 +109,7 @@ dotplotAxt <- function(axt, targetSeqlengths=NULL, querySeqlengths=NULL,
   startQuery <- start(query)
   startQuery[indexNegative] <- 
     querySeqlengths[as.character(seqnames(query[indexNegative]))] - 
-    start(query[indexNegative]) + 1
+    end(query[indexNegative]) + 1
   startQuery <- startQuery + 
     shiftCoordinatesQuery[as.character(seqnames(query))]
 

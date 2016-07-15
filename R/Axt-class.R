@@ -72,8 +72,8 @@ setGeneric("subAxt", function(x, chr, start, end,
 ### Exported!
 setMethod("targetRanges", "Axt", function(x) first(x))
 setMethod("targetSeqs", "Axt", function(x) first(x)$seqs)
-setMethod("queryRanges", "Axt", function(x) last(x))
-setMethod("querySeqs", "Axt", function(x) last(x)$seqs)
+setMethod("queryRanges", "Axt", function(x) second(x))
+setMethod("querySeqs", "Axt", function(x) second(x)$seqs)
 setMethod("score", "Axt", function(x) mcols(x)$score)
 setMethod("symCount", "Axt", function(x) mcols(x)$symCount)
 setMethod("length", "Axt", function(x) length(targetRanges(x)))
@@ -208,8 +208,26 @@ setMethod("show", "Axt",
 ### normaliseStrand: make the coordinates of negative query alignments
 ###   fit the positive strands.
 ### Export!
-setGeneric("normaliseStrand", function(x) standardGeneric("normaliseStrand"))
+setGeneric("fixCoordinates", function(x) standardGeneric("fixCoordinates"))
 
-setMethod("normaliseStrand", "Axt", function(x){
+setMethod("fixCoordinates", "Axt", function(x){
+  secondRanges <- queryRanges(x)
+  querySeqlengths <- seqlengths(secondRanges)
   
+  if(any(is.na(querySeqlengths))){
+    stop("The seqlengths must exist in `x` for this operation!")
+  }
+  
+  indexNegative <- as.logical(strand(secondRanges)=="-")
+  newStart <- start(secondRanges)
+  newEnd <- end(secondRanges)
+  newStart[indexNegative] <- querySeqlengths[as.character(seqnames(secondRanges[indexNegative]))] - 
+    end(secondRanges[indexNegative]) + 1
+  newEnd[indexNegative] <- querySeqlengths[as.character(seqnames(secondRanges[indexNegative]))] - 
+    start(secondRanges[indexNegative]) + 1
+  
+  ranges(secondRanges) <- IRanges(start=newStart,
+                                  end=newEnd)
+  second(x) <- secondRanges
+  return(x)
 })

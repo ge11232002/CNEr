@@ -100,3 +100,27 @@ test_that("test_summaryAxt", {
                                       1606L, 3078L))
 }
 )
+
+test_that("test_fixCoordinates", {
+  axtFnDanRer10Hg38 <- file.path(system.file("extdata", package="CNEr"),
+                                 "danRer10.hg38.net.axt")
+  qAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  tAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
+  axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38, tAssemblyFn=tAssemblyFn,
+                             qAssemblyFn=qAssemblyFn)
+  fixedAxt <- fixCoordinates(axtDanRer10Hg38)
+  # Test that targetRanges are intact
+  expect_identical(targetRanges(fixedAxt), targetRanges(axtDanRer10Hg38))
+  # Test the fixed queryRanges coordinates.
+  queryRangesTest <- queryRanges(fixedAxt)[1:3]
+  expect_identical(ranges(queryRangesTest), IRanges(start=c(12578221, 121302901,
+                                                            12577855),
+                                                    end=c(12578959, 121303067,
+                                                          12578037))
+                   )
+}
+)

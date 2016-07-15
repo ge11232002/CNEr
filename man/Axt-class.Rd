@@ -93,6 +93,7 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   \code{\link{readAxt}}
   \code{\link{writeAxt}}
   \code{\link{subAxt}}
+  \code{\link{fixCoordinates}}
 }
 
 \examples{
