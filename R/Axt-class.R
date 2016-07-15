@@ -47,7 +47,7 @@ Axt <- function(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   first$seqs <- targetSeqs
   last <- queryRanges
   last$seqs <- querySeqs
-  new("Axt", NAMES=names, first=first, last=last,
+  new("Axt", first=first, second=last, NAMES=names,
       elementMetadata=DataFrame(score=as.integer(score), 
                                 symCount=as.integer(symCount)))
 }

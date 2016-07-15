@@ -496,13 +496,13 @@ cneDanRer10Hg38_49_50 <-
 cneDanRer10AstMex102_48_50 <-
   CNEDensity(dbName=dbName, 
              tableName="AstMex102_danRer10_48_50",
-             whichAssembly="last", chr=chr, start=start,
+             whichAssembly="second", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
 cneDanRer10CteIde1_75_75 <-
   CNEDensity(dbName=dbName, 
              tableName="cteIde1_danRer10_75_75", 
-             whichAssembly="last", chr=chr, start=start,
+             whichAssembly="second", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)
 ```

@@ -82,14 +82,14 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes,
                                                             end=res$tEnd),
                                              strand="+",
                                              seqinfo=tSizes),
-                                     last=GRanges(seqnames=res$qName,
-                                            ranges=IRanges(start=res$qStart,
-                                                           end=res$qEnd),
-                                            strand=res$strand,
-                                            seqinfo=qSizes)
+                                     second=GRanges(seqnames=res$qName,
+                                              ranges=IRanges(start=res$qStart,
+                                                             end=res$qEnd),
+                                              strand=res$strand,
+                                              seqinfo=qSizes),
+                                     score=res$score,
+                                     cigar=res$cigar
                                      )
-                  ans@elementMetadata <- DataFrame(score=res$score,
-                                                   cigar=res$cigar)
                   return(ans)
                   }
                 )
@@ -234,9 +234,9 @@ cneMergeGRangePairs <- function(cne12, cne21){
   if(!is(cne12, "GRangePairs") || !is(cne21, "GRangePairs")){
     stop("cne12 and cne21 must be a GRangePairs object!")
   }
-  strand(cne12@first) <- strand(cne12@last) <- strand(cne21@first) <- 
-    strand(cne21@last) <- "+"
-  cne <- c(cne12, swap(cne21), ignore.mcols=TRUE)
+  strand(cne12@first) <- strand(cne12@second) <- strand(cne21@first) <- 
+    strand(cne21@second) <- "+"
+  cne <- c(cne12, swap(cne21))
   
   # 1. using reduce: the problem: it won't deal with {1,2,3}, {1,2} case
   # firstReduce <- reduce(first(cne), with.revmap=TRUE)
@@ -263,7 +263,7 @@ cneMergeGRangePairs <- function(cne12, cne21){
   # 2. using the findOverlaps:
   firstHits <- findOverlaps(first(cne), type="within",
                             drop.self=TRUE, drop.redundant=TRUE)
-  lastHist <- findOverlaps(last(cne), type="within",
+  lastHist <- findOverlaps(second(cne), type="within",
                            drop.self=TRUE, drop.redundant=TRUE)
   redundance <- IRanges::intersect(firstHits, lastHist)
   ans <- cne[-queryHits(redundance)]
@@ -321,10 +321,10 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
     }else{
       assemblyTwobit <- cne@assembly2Fn
       cneDataFrame <- paste0(assemblyTwobit, ":", 
-                    as.character(seqnames(last(cne@CNEMerged))), 
-                    ":", format(start(last(cne@CNEMerged))-1,
+                    as.character(seqnames(second(cne@CNEMerged))), 
+                    ":", format(start(second(cne@CNEMerged))-1,
                                 trim=TRUE, scientific=FALSE),
-                    "-", format(end(last(cne@CNEMerged)),
+                    "-", format(end(second(cne@CNEMerged)),
                                 trim=TRUE, scientific=FALSE))
     }
     cneDataFrame <- unique(cneDataFrame)
@@ -363,10 +363,10 @@ blatCNE <- function(cne, blatOptions=NULL, cutIdentity=90){
                           )
   CNEtNameIndex[is.na(CNEtNameIndex)] <- 0
   CNEqNameIndex <- unname(psl2[paste0(as.character(
-                                        seqnames(last(cne@CNEMerged))), 
-                                      ":", format(start(last(cne@CNEMerged))-1,
+                                        seqnames(second(cne@CNEMerged))), 
+                                      ":", format(start(second(cne@CNEMerged))-1,
                                                   trim=TRUE, scientific=FALSE),
-                                      "-", format(end(last(cne@CNEMerged)),
+                                      "-", format(end(second(cne@CNEMerged)),
                                                   trim=TRUE, scientific=FALSE))
                                ]
                           )

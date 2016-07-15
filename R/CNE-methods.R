@@ -7,7 +7,7 @@ plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
     stop("x must be a GRangePairs object!")
   }
   firstGRanges <- first(x)
-  lastGRanges <- last(x)
+  lastGRanges <- second(x)
   
   firstWidths <- width(firstGRanges)
   lastWidths <- width(lastGRanges)
@@ -47,9 +47,9 @@ plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
   poweRlaw::plot(firstFit, xlab="CNE width", ylab="CDF", main="first", pch=1, ...)
   poweRlaw::lines(firstFit, col=2, lwd=2)
   text(max(firstFit$dat), 0.7, firstText, adj = c( 1, 1 ))
-  poweRlaw::plot(lastFit, xlab="CNE width", ylab="CDF", main="last", pch=1, ...)
+  poweRlaw::plot(lastFit, xlab="CNE width", ylab="CDF", main="second", pch=1, ...)
   poweRlaw::lines(lastFit, col=2, lwd=2)
   text(max(lastFit$dat), 0.7, lastText, adj = c( 1, 1 ))
   
-  invisible(list(first=firstFit, last=lastFit))
+  invisible(list(first=firstFit, second=lastFit))
 }

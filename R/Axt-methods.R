@@ -70,13 +70,13 @@ setMethod("summary", signature=(object="Axt"),
 ### dotplot for synteny from Axt object
 ### Exported!
 setMethod("syntenicDotplot", signature=(x="Axt"),
-          function(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
-                   firstChrs=NULL, lastChrs=NULL,
+          function(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
+                   firstChrs=NULL, secondChrs=NULL,
                    col=c("blue", "red")){
             dotplotAxt(x, targetSeqlengths=firstSeqlengths, 
-                       querySeqlengths=lastSeqlengths,
+                       querySeqlengths=secondSeqlengths,
                        targetChrs=firstChrs,
-                       queryChrs=lastChrs,
+                       queryChrs=secondChrs,
                        col=col)
           })
 

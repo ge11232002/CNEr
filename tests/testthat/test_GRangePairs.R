@@ -35,19 +35,20 @@ test_that("test_GRangePairs", {
   ## test length
   expect_identical(length(grangesPairs1), 4L)
   ## test first
-  expect_identical(first(grangesPairs1), setNames(first, namesGRangePairs))
+  expect_identical(first(grangesPairs1), first)
   expect_identical(first(grangesPairs2), first)
   ## test last
-  expect_identical(last(grangesPairs1), setNames(last, namesGRangePairs))
-  expect_identical(last(grangesPairs2), last)
+  expect_identical(second(grangesPairs1), last)
+  expect_identical(second(grangesPairs2), last)
+  
   ## test seqnames
   expect_equivalent(seqnames(grangesPairs1),
                    DataFrame(first=Rle(c("chr1", "chr1", "chr2", "chr3")),
-                             last=Rle(c("chr1", "chr10", "chr10", "chr20"))))
+                             second=Rle(c("chr1", "chr10", "chr10", "chr20"))))
   ## test strand
   expect_equivalent(strand(grangesPairs1),
                     DataFrame(first=Rle(rep("+", 4)),
-                              last=Rle(rep("+", 4))))
+                              second=Rle(rep("+", 4))))
   ## test seqinfo
   expect_identical(length(seqinfo(grangesPairs1)), 2L)
   
@@ -55,11 +56,6 @@ test_that("test_GRangePairs", {
   expect_identical(length(grangesPairs1[1:2]), 2L)
   
   # test List methods
-  expect_equivalent(suppressWarnings(grangesPairs1[[1]]),
-                    GRanges(seqnames=c("chr1", "chr1"),
-                            ranges=IRanges(start=c(1,1),
-                                           end=c(10,8)),
-                            strand="+"))
   expect_identical(length(suppressWarnings(unlist(grangesPairs1))), 8L)
   
   # test coersion
@@ -67,14 +63,14 @@ test_that("test_GRangePairs", {
   expect_identical(length(suppressWarnings(as(grangesPairs1, "GRangesList"))),
                    4L)
   expect_identical(length(suppressWarnings(as(grangesPairs1, "GRanges"))), 8L)
-  expect_identical(dim(as(grangesPairs1, "DataFrame")), c(4L, 2L))
-  expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 10L))
+  
+  expect_identical(dim(as.data.frame(grangesPairs1)), c(4L, 11L))
   
   # test combing
-  expect_identical(length(c(grangesPairs1, grangesPairs2)), 8L)
+  expect_identical(length(c(unname(grangesPairs1), grangesPairs2)), 8L)
   
   # test swapping
-  expect_identical(first(swap(grangesPairs1)), last(grangesPairs1))
+  expect_identical(first(swap(grangesPairs1)), second(grangesPairs1))
   
   # test unique
   expect_identical(unique(c(grangesPairs1, grangesPairs1)), grangesPairs1)
@@ -102,7 +98,7 @@ test_that("test_GRangePairs", {
   ## test the xmin and pars value
   expect_equal(ans$first$xmin, 117)
   expect_equal(ans$first$pars, 3.976482, tolerance=1e-5)
-  expect_equal(ans$last$xmin, 111)
-  expect_equal(ans$last$pars, 3.931556, tolerance=1e-5)
+  expect_equal(ans$second$xmin, 111)
+  expect_equal(ans$second$pars, 3.931556, tolerance=1e-5)
 }
 )

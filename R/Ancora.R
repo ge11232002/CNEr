@@ -30,7 +30,7 @@ readAncora <- function(fn, assembly=NULL){
                                    name=paste0(cne$X4, ":", 
                                                (cne$X5+1), "-", cne$X6),
                                    itemRgb=chr2colour(cne$X4)),
-                     last=GRanges(seqnames=cne$X4,
+                     second=GRanges(seqnames=cne$X4,
                                   ranges=IRanges(start=cne$X5+1,
                                                  end=cne$X6),
                                   strand="*",
@@ -46,7 +46,7 @@ readAncora <- function(fn, assembly=NULL){
     return(first(ans))
   }else if(assembly == assembly2){
     ## Read last assembly
-    return(last(ans))
+    return(second(ans))
   }else{
     stop("Wrongly specified assembly!")
   }

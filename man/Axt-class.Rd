@@ -130,7 +130,6 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   axt[1]
   
   ## List methods
-  axt[[1]]
   unlist(axt)
   
   ## Combining

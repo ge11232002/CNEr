@@ -12,7 +12,7 @@ For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
 readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
-                        whichAssembly=c("first","last"), minLength=NULL)
+                        whichAssembly=c("first","second"), minLength=NULL)
 }
 
 \arguments{
@@ -31,7 +31,8 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
   }
   \item{whichAssembly}{
     \code{character}(1):
-    The coordinates to fetch CNEs are based on "first" genome or "last" genome.
+    The coordinates to fetch CNEs are based on \sQuote{first} genome or 
+    \sQuote{last} genome.
   }
   \item{minLength}{
     \code{integer}(1): the minimal length for selected CNEs.
@@ -44,12 +45,12 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
 }
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 \examples{
   dbName <- file.path(system.file("extdata", package="CNEr"),
-                      "cne.sqlite")
+                    "danRer10CNE.sqlite")
   tableName <- "danRer10_hg38_45_50"
   
   ## single chr, start, end
@@ -67,12 +68,12 @@ Ge Tan
   end=c(90730300, 137523190)
   fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
                                               start, end, 
-                                              whichAssembly="last",
+                                              whichAssembly="second",
                                               minLength=minLength)
   
   ## chr, NULL, NULL
   fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
                                               start=NULL, end=NULL,
-                                              whichAssembly="last",
+                                              whichAssembly="second",
                                               minLength=minLength)
 }

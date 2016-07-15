@@ -58,7 +58,7 @@ save(CNEDanRer10Hg38, file="~/CNEDanRer10Hg38.rda")
 
 ## Prepare danRer10CNE.sqlite
 library(CNEr)
-cneFns <- file.path("/mnt/biggles/data/CNEs/blatFiltered_19-07-2013/",
+cneFns <- file.path("~/Downloads",
                     c("cne2wBf_AstMex102_danRer10_48_50",
                       "cne2wBf_cteIde1_danRer10_75_75",
                       "cne2wBf_danRer10_hg38_21_30",

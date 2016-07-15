@@ -1,54 +1,52 @@
 setGeneric("syntenicDotplot", 
-           function(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
-                    firstChrs=NULL, lastChrs=NULL,
+           function(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
+                    firstChrs=NULL, secondChrs=NULL,
                     col=c("blue", "red"))
   standardGeneric("syntenicDotplot"))
 
 setMethod("syntenicDotplot", signature=(x="GRangePairs"),
-          function(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
-                   firstChrs=NULL, lastChrs=NULL,
+          function(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
+                   firstChrs=NULL, secondChrs=NULL,
                    col=c("blue", "red")){
             syntenicPlotGRangePairs(x, firstSeqlengths=firstSeqlengths, 
-                                    lastSeqlengths=lastSeqlengths,
+                                    secondSeqlengths=secondSeqlengths,
                                     firstChrs=firstChrs,
-                                    lastChrs=lastChrs,
+                                    secondChrs=secondChrs,
                                     col=col)
           })
 
 syntenicPlotGRangePairs <- function(x, firstSeqlengths=NULL, 
-                                    lastSeqlengths=NULL,
-                                    firstChrs=NULL, lastChrs=NULL,
+                                    secondSeqlengths=NULL,
+                                    firstChrs=NULL, secondChrs=NULL,
                                     col=c("blue", "red")){
   if(is.null(firstSeqlengths)){
     targetSeqlengths <- seqlengths(first(x))
     if(any(is.na(targetSeqlengths))){
-      stop("When firstSeqlnths is NULL, the seqlengths must exist in x!")
+      stop("When firstSeqlengths is NULL, the seqlengths must exist in x!")
     }
   }else{
     targetSeqlengths <- firstSeqlengths
   }
-  if(is.null(lastSeqlengths)){
-    querySeqlengths <- seqlengths(last(x))
+  
+  if(is.null(secondSeqlengths)){
+    querySeqlengths <- seqlengths(second(x))
     if(any(is.na(querySeqlengths))){
-      stop("When lastSeqlnths is NULL, the seqlengths must exist in x!")
+      stop("When secondSeqlengths is NULL, the seqlengths must exist in x!")
     }
   }else{
-    querySeqlengths <- lastSeqlengths
+    querySeqlengths <- secondSeqlengths
   }
-  
-  target <- first(x)
-  query <- last(x)
   
   if(!is.null(firstChrs)){
     x <- x[as.character(seqnames(first(x))) %in% firstChrs]
     targetSeqlengths <- targetSeqlengths[firstChrs]
   }
-  if(!is.null(lastChrs)){
-    x <- x[as.character(seqnames(last(x))) %in% lastChrs]
-    querySeqlengths <- querySeqlengths[lastChrs]
+  if(!is.null(secondChrs)){
+    x <- x[as.character(seqnames(second(x))) %in% secondChrs]
+    querySeqlengths <- querySeqlengths[secondChrs]
   }
   target <- first(x)
-  query <- last(x)
+  query <- second(x)
   
   ## If we want to put all the segments of syntent in one plot
   ## We need to shift the coordiantes from second chromosomes in seqlengths
@@ -75,7 +73,7 @@ syntenicPlotGRangePairs <- function(x, firstSeqlengths=NULL,
   p <- ggplot(data=toPlot, aes_string(x="x",y="y", xend="xEnd", yend="yEnd")) +
     geom_segment(aes(colour=strand)) + theme_bw() +
     scale_colour_manual(values=col) +
-    xlab("First") + ylab("Last") + ggtitle("Syntenic dotplot") +
+    xlab("First") + ylab("Second") + ggtitle("Syntenic dotplot") +
     scale_x_continuous(breaks=c(0,
                                 cumsum(as.numeric(targetSeqlengths))),
                        limits=c(0, sum(as.numeric(targetSeqlengths))),

@@ -7,11 +7,8 @@
 \alias{GRangePairs}
 
 % Accessors:
-\alias{names,GRangePairs-method}
-\alias{names<-,GRangePairs-method}
-\alias{length,GRangePairs-method}
-\alias{first}
 \alias{first,GRangePairs-method}
+\alias{second,GRangePairs-method}
 \alias{last}
 \alias{last,GRangePairs-method}
 \alias{seqnames,GRangePairs-method}
@@ -19,7 +16,7 @@
 \alias{seqinfo,GRangePairs-method}
 
 % List methods:
-\alias{[[,GRangePairs,ANY,ANY-method}
+%\alias{[[,GRangePairs,ANY,ANY-method}
 \alias{unlist,GRangePairs-method}
 
 % Coercion:
@@ -33,14 +30,15 @@
 % Swaping:
 \alias{swap}
 \alias{swap,GRangePairs-method}
+
 % unique:
 \alias{unique,GRangePairs-method}
 
 % "show" method:
-\alias{show,GRangePairs-method}
+%\alias{show,GRangePairs-method}
 
 \title{
-GRangePairs objects
+  GRangePairs objects
 }
 
 \description{
@@ -58,7 +56,8 @@ GRangePairs objects
 \section{Constructor}{
   \describe{
     \item{}{
-      \code{GRangePairs(first=GRanges(), last=GRanges(), names=NULL)}:
+      \code{GRangePairs(first=GRanges(), second=GRanges(), ..., names=NULL,
+                        hits=NULL)}:
         GRangePairs constructor.
     }
   }
@@ -77,8 +76,18 @@ GRangePairs objects
     }
     \item{}{
       \code{first(x)},
-      \code{last(x)}:
-      Get the "first" or "last" GRange for each grange pair in
+      \code{last(x)},
+      \code{second(x)}:
+      Get the \sQuote{first} or \sQuote{last}/\sQuote{second} GRange 
+      for each grange pair in
+      \code{x}. The result is a \link{GRanges} object of the same length
+      as \code{x}.
+    }
+    \item{}{
+      \code{first(x)<-},
+      \code{second(x)<-}:
+      Set the \sQuote{first} or \sQuote{second} GRange 
+      for each grange pair in
       \code{x}. The result is a \link{GRanges} object of the same length
       as \code{x}.
     }
@@ -115,12 +124,6 @@ GRangePairs objects
   In the code snippets below, \code{x} is a GRangePairs object.
 
   \describe{
-    \item{}{
-      \code{x[[i]]}:
-      Extract the i-th alignment pair as a \link{GRangePairs} object
-      of length 2. As expected \code{x[[i]][1]} and \code{x[[i]][2]} are
-      respectively the "first" and "last" granges in the pair.
-    }
     \item{}{
       \code{unlist(x, use.names=TRUE)}:
       Return the \link{GRangePairs} object conceptually defined
@@ -207,23 +210,25 @@ GRangePairs objects
   grangesPairs1 <- GRangePairs(first, last, names=namesGRangePairs)
   grangesPairs2 <- GRangePairs(first, last)
   
-  ## getters
+  ## getters and setters
   names(grangesPairs1)
-  length(grangesPairs1)
+  names(grangesPairs2) <- namesGRangePairs
+  
   first(grangesPairs1)
-  last(grangesPairs1)
+  first(grangesPairs1) <- second(grangesPairs1)
+  
+  second(grangesPairs1)
+  second(grangesPairs1) <- first(grangesPairs1)
+  
+  length(grangesPairs1)
   seqnames(grangesPairs1)
   strand(grangesPairs1)
   seqinfo(grangesPairs1)
-  
-  ## setters
-  names(grangesPairs2) <- namesGRangePairs
   
   ## Vector methods
   grangesPairs1[1]
   
   ## List methods
-  grangesPairs1[[1]]
   unlist(grangesPairs1)
   
   ## Coersion

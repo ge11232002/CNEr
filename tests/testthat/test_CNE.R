@@ -6,12 +6,12 @@ test_that("test_CNE", {
                                                     end=c(71727224, 150679400,
                                                           146653221)),
                                      strand="+"),
-                       last=GRanges(seqnames=c("chr1"),
-                                    ranges=IRanges(start=c(29854162, 23432387,
-                                                           35711077),
-                                                   end=c(29854248, 23432444,
-                                                         35711134)),
-                                    strand="+")
+                       second=GRanges(seqnames=c("chr1"),
+                                      ranges=IRanges(start=c(29854162, 23432387,
+                                                             35711077),
+                                                     end=c(29854248, 23432444,
+                                                           35711134)),
+                                      strand="+")
   )
   CNE21 <- GRangePairs(first=GRanges(seqnames=c("chr1"),
                                      ranges=IRanges(start=c(29854162, 23432387,
@@ -19,12 +19,12 @@ test_that("test_CNE", {
                                                     end=c(29854248, 23432444,
                                                           35711134)),
                                      strand="+"),
-                       last=GRanges(seqnames=c("chr13", "chr4", "chr4"),
-                                    ranges=IRanges(start=c(71727138,150679343,
-                                                           146653164),
-                                                   end=c(71727224, 150679400,
-                                                         146653221)),
-                                    strand="+")
+                       second=GRanges(seqnames=c("chr13", "chr4", "chr4"),
+                                      ranges=IRanges(start=c(71727138,150679343,
+                                                             146653164),
+                                                     end=c(71727224, 150679400,
+                                                           146653221)),
+                                      strand="+")
   )
   
   # Test the validity

@@ -5,7 +5,7 @@ import(BiocGenerics)
 ### Import S4 classes defined in other packages
 ###
 importClassesFrom(methods, ANY, character, integer, missing)
-importClassesFrom(S4Vectors, List, characterORNULL, DataFrame)
+importClassesFrom(S4Vectors, List, characterORNULL, DataFrame, Pairs)
 importClassesFrom(GenomicRanges, GRanges)
 importClassesFrom(Biostrings, DNAStringSet)
 
@@ -23,7 +23,7 @@ importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
                   showAsCell, extractROWS, mcols, "mcols<-", split, runValue,
-                  as.factor, "%in%")
+                  as.factor, "%in%", second, "first<-", "second<-")
 importMethodsFrom(IRanges, slice, ranges)
 importMethodsFrom(GenomicAlignments, last)
 
@@ -41,7 +41,7 @@ importFrom(readr, read_tsv)
 importFrom(IRanges, IRanges, IntegerList, RleViewsList)
 importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
            normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript,
-           isTRUEorFALSE, isSingleString)
+           isTRUEorFALSE, isSingleString, queryLength, subjectLength)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
 importFrom(utils, download.file, read.table, write.table)
@@ -65,16 +65,15 @@ exportClasses(Axt,
 ### Export S4 methods for generics not defined in CNEr
 ###
 exportMethods(
-  "[", 
-  c,
+#"[", 
+ c,
   
   ## AllClasses.r
-  length,
   score,
-  names, seqnames, "names<-", strand,
+  seqnames, strand,
   
   ## GRangePairs-class.R
-  first, last, grglist, seqinfo, unique,
+  first, last, second, grglist, seqinfo, unique,
   
   ## GRangePairs-methods.R
   syntenicDotplot,

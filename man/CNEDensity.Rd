@@ -15,7 +15,7 @@
 
 \usage{
 CNEDensity(dbName, tableName, chr, start, end, 
-           whichAssembly=c("first", "last"),
+           whichAssembly=c("first", "second"),
            windowSize=300, minLength=NULL)
 }
 
@@ -35,7 +35,7 @@ CNEDensity(dbName, tableName, chr, start, end,
   }
   \item{whichAssembly}{
     \code{character}(1):
-    the genome to fetch is in the "first" columns or "last" 
+    the genome to fetch is in the \sQuote{first} columns or \sQuote{second}
     columns of the table.
   }
   \item{windowSize}{
@@ -49,27 +49,28 @@ CNEDensity(dbName, tableName, chr, start, end,
 \section{Methods}{
 \describe{
 
-\item{\code{signature(tableName = "character", assembly1 = "character", assembly2 = "missing", threshold = "missing")}}{
+\item{\code{signature(tableName = "character",
+                      assembly1 = "character", assembly2 = "missing",
+                      threshold = "missing")}}{
 }
 
-\item{\code{signature(tableName = "missing", assembly1 = "character", assembly2 = "character", threshold = "character")}}{
+\item{\code{signature(tableName = "missing", assembly1 = "character",
+                      assembly2 = "character", threshold = "character")}}{
 }
 }}
 
 \value{
-  A \code{matrix} is returned. 
-  The first column is the coordinates and the second column 
-  is the density values.
+  A \code{GRanges} object with density value is returned. 
 }
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 
 \examples{
 dbName <- file.path(system.file("extdata", package="CNEr"),
-                    "cne.sqlite")
+                    "danRer10CNE.sqlite")
 genome <- "danRer10"
 chr <- "chr6"
 start <- 24000000L
@@ -79,12 +80,6 @@ minLength <- 50L
 cneDanRer10Hg38_45_50 <- 
   CNEDensity(dbName=dbName, 
              tableName="danRer10_hg38_45_50", 
-             whichAssembly="first", chr=chr, start=start,
-             end=end, windowSize=windowSize, 
-             minLength=minLength)
-cneDanRer10Hg38_48_50 <-
-  CNEDensity(dbName=dbName, 
-             tableName="danRer10_hg38_48_50", 
              whichAssembly="first", chr=chr, start=start,
              end=end, windowSize=windowSize, 
              minLength=minLength)

@@ -11,8 +11,8 @@
   Syntenic dotplot for \code{Axt} alignemnt object or \code{GRangePairs}.
 }
 \usage{
-  syntenicDotplot(x, firstSeqlengths=NULL, lastSeqlengths=NULL,
-                  firstChrs=NULL, lastChrs=NULL,
+  syntenicDotplot(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
+                  firstChrs=NULL, secondChrs=NULL,
                   col=c("blue", "red"))
 }
 \arguments{
@@ -21,12 +21,12 @@
     two compared species or
     \code{GRangePairs} object.
   }
-  \item{firstSeqlengths,lastSeqlengths}{
+  \item{firstSeqlengths,secondSeqlengths}{
     \code{integer}(n): seqlengths for both the first(target) and 
-    last(query) genomes.
+    second(query) genomes.
     When NULL, the seqlengths must exist in x.
   }
-  \item{firstChrs,lastChrs}{
+  \item{firstChrs,secondChrs}{
     \code{character}(n): the chromosomes to compare.
   }
   \item{col}{
@@ -62,11 +62,11 @@
                   "chr4.hg19.galGal3.net.axt.gz")
   axt <- readAxt(fn)
   firstSeqlengths <- seqlengths(fetchChromSizes("hg19"))
-  lastSeqlengths <- seqlengths(fetchChromSizes("galGal3"))
+  secondSeqlengths <- seqlengths(fetchChromSizes("galGal3"))
   firstChrs <- c("chr4")
-  lastChrs <- c("chr4")
-  syntenicDotplot(axt, firstSeqlengths, lastSeqlengths,
-                  firstChrs=firstChrs, lastChrs=lastChrs)
+  secondChrs <- c("chr4")
+  syntenicDotplot(axt, firstSeqlengths, secondSeqlengths,
+                  firstChrs=firstChrs, secondChrs=secondChrs)
   
   ## dotplot for GRangePairs object
   data(grangesPairsForDotplot)
