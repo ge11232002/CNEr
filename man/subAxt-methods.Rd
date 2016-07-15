@@ -9,7 +9,7 @@
 
 \title{Subset an \code{Axt} object}
 \description{
-  A 'subAxt' method for extracting a set of alignments from
+  A \sQuote{subAxt} method for extracting a set of alignments from
   an \code{Axt} object.
 }
 
@@ -35,14 +35,14 @@
     selected.
   }
   \item{select}{
-    When select is "target", 
+    When select is \sQuote{target},
     the subset criteria is for target alignments in \code{Axt}.
-    When select is "query", 
+    When select is \sQuote{query}, 
     the subset criteria is for query alignments in \code{Axt}.
   }
   \item{qSize}{
-    When select is "query", qSize must be provided and 
-    holds the chromosome length of 'chr'.
+    \code{integer}(n): When select is \sQuote{query}, qSize must exist in 
+      \sQuote{x} or is provided as vector of chromosome lengths.
   }
 }
 
@@ -50,14 +50,14 @@
   Usually when we want to subset some axts from a \code{Axt} object,
   we care about all the axts within certain range.
   The axts can come from the axt file with chr as reference 
-  (i.e., target sequence),
+  (\emph{i.e.}, target sequence),
   or the axt file with chr as query sequence.
   When the chr is query sequence, it can be on the negative strand.
   Hence, the size of chromosome is necessary to 
   convert the search range to a range on negative strand coordinate.
 
   When one Axt alignment is partially overlapped with the range, 
-  the full length of the Axt alignment will be extracted.
+  the whole Axt alignment will be extracted.
 }
 
 \value{
