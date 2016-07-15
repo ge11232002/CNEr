@@ -44,5 +44,9 @@
                            "single_sequences.2bit")
   axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38, tAssemblyFn=tAssemblyFn,
                              qAssemblyFn=qAssemblyFn)
+  ## Fix the coordinates
   fixCoordinates(axtDanRer10Hg38)
+  
+  ## Restore it
+  fixCoordinates(fixCoordinates(axtDanRer10Hg38))
 }

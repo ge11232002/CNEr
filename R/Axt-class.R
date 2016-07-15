@@ -205,9 +205,9 @@ setMethod("show", "Axt",
 )
 
 ### -----------------------------------------------------------------
-### normaliseStrand: make the coordinates of negative query alignments
+### fixCoordinates: make the coordinates of negative query alignments
 ###   fit the positive strands.
-### Export!
+### Exported!
 setGeneric("fixCoordinates", function(x) standardGeneric("fixCoordinates"))
 
 setMethod("fixCoordinates", "Axt", function(x){

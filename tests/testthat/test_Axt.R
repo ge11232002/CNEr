@@ -113,6 +113,8 @@ test_that("test_fixCoordinates", {
   axtDanRer10Hg38 <- readAxt(axtFnDanRer10Hg38, tAssemblyFn=tAssemblyFn,
                              qAssemblyFn=qAssemblyFn)
   fixedAxt <- fixCoordinates(axtDanRer10Hg38)
+  # Test the restore
+  expect_identical(fixCoordinates(fixedAxt), axtDanRer10Hg38)
   # Test that targetRanges are intact
   expect_identical(targetRanges(fixedAxt), targetRanges(axtDanRer10Hg38))
   # Test the fixed queryRanges coordinates.
