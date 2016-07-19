@@ -41,8 +41,9 @@
     the subset criteria is for query alignments in \code{Axt}.
   }
   \item{qSize}{
-    \code{integer}(n): When select is \sQuote{query}, qSize must exist in 
-      \sQuote{x} or is provided as vector of chromosome lengths.
+    \code{integer}(n): When select is \sQuote{query}, 
+    \sQuote{qSize} must exist in 
+    \sQuote{x} or is provided as vector of chromosome lengths.
   }
 }
 
@@ -71,10 +72,17 @@
 \examples{
   library(GenomicRanges)
   library(rtracklayer)
+  
   ## Prepare the axt object
+  tAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  qAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
   axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"), 
                                   "hg38.danRer10.net.axt")
-  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
+  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10, tAssemblyFn, qAssemblyFn)
   
   ## "character", "integer", "integer" on "target" sequence
   subAxt(axtHg38DanRer10, chr="chr1", start=148165963L, end=222131835L,
@@ -96,13 +104,9 @@
   subAxt(axtHg38DanRer10, chr="chr1", select="target")
   
   ## GRanges on "query" sequence
-  danRer10Seqlengths <- seqlengths(TwoBitFile(file.path(system.file("extdata",
-                                   package="BSgenome.Drerio.UCSC.danRer10"),
-                                   "single_sequences.2bit")))
   searchGRanges <- GRanges(seqnames="chr6",
                            ranges=IRanges(start=25825774,
                                           end=26745499),
                            strand="+")
-  subAxt(axtHg38DanRer10, searchGRanges, select="query", 
-         qSize=danRer10Seqlengths["chr6"])
+  subAxt(axtHg38DanRer10, searchGRanges, select="query")
 }

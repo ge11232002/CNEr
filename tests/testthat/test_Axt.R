@@ -69,9 +69,15 @@ test_that("test_Axt", {
 test_that("test_subAxt", {
   library(GenomicRanges)
   library(rtracklayer)
+  tAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  qAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
   axtFilesHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"),
                                     "hg38.danRer10.net.axt")
-  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10)
+  axtHg38DanRer10 <- readAxt(axtFilesHg38DanRer10, tAssemblyFn, qAssemblyFn)
 
   ## Test selection on target sequence
   axt <- subAxt(axtHg38DanRer10, chr="chr1", start=148165963L, end=222131835L,
@@ -79,15 +85,11 @@ test_that("test_subAxt", {
   expect_identical(length(axt), 2L)
   
   ## Test selection on query sequence
-  danRer10Seqlengths <- seqlengths(TwoBitFile(file.path(system.file("extdata",
-                          package="BSgenome.Drerio.UCSC.danRer10"),
-                          "single_sequences.2bit")))
   searchGRanges <- GRanges(seqnames="chr6",
                            ranges=IRanges(start=25825774,
                                           end=26745499),
                            strand="+")
-  axt <- subAxt(axtHg38DanRer10, searchGRanges, select="query", 
-                qSize=danRer10Seqlengths["chr6"])
+  axt <- subAxt(axtHg38DanRer10, searchGRanges, select="query")
   expect_identical(length(axt), 9L)
 })
 

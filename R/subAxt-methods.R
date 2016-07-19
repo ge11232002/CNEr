@@ -22,20 +22,21 @@ setMethod("subAxt", signature(x="Axt", chr="GRanges",
           function(x, chr, start, end, select=c("target", "query"),
                    qSize=NULL){
             select <- match.arg(select)
-            if(select == "query"){
-              if(is.null(qSize)){
-                qSize <- seqlengths(queryRanges(x))
-              }
-              if(!is(qSize, "integer")){
-                stop("qSize must be an integer object.")
-              }
-              if(!all(as.character(seqnames(chr)) %in% names(qSize))){
-                stop("All the chromosomes in `x` must exist in `qSize`.")
-              }
+            if(!is.null(qSize)){
+              # If qSize is provided, use it to set the seqlengths of 
+              # queryRanges
+              seqlengths(second(x)) <- qSize[names(seqlengths(second(x)))]
             }
+            # Fix the coordinates of queryRanges
+            x <- fixCoordinates(x)
+            
             strand(chr) <- "+"
             searchGRanges <- reduce(chr)
-            .subAxtWhole(x, searchGRanges, select=select, qSize=qSize)
+            ans <- .subAxtWhole(x, searchGRanges, select=select)
+            
+            # Restore the coordinates of queryRanges
+            ans <- fixCoordinates(ans)
+            return(ans)
           }
           )
 
@@ -69,39 +70,18 @@ setMethod("subAxt", signature(x="Axt", chr="character",
 ### -----------------------------------------------------------------
 ### .subAxtWhole: get the full axt alignment with searchGRanges
 ### Not exported!
-.subAxtWhole <- function(x, searchGRanges, select=c("target", "query"),
-                         qSize=NULL){
+.subAxtWhole <- function(x, searchGRanges, select=c("target", "query")){
+  ## Here x is the Axt object with fixed coordinates.
   if(select == "target"){
-    # It's easy because the strand on target reference is always positive.
     hitsAny <- findOverlaps(targetRanges(x),
                             searchGRanges, type="any",
                             select="all", ignore.strand=TRUE)
-    indexAny <- queryHits(hitsAny)
-    ans <- x[unique(indexAny)]
   }else if(select == "query"){
-    start <- start(searchGRanges)
-    end <- end(searchGRanges)
-    # first search Axts on positive strand
-    ## searchGRanges has posive strands inside.
-    hitsPositiveAny <- findOverlaps(queryRanges(x),
-                                    searchGRanges, type="any",
-                                    select="all", ignore.strand=FALSE)
-    indexPositiveAny <- queryHits(hitsPositiveAny)
-    
-    qSize <- qSize[as.character(seqnames(searchGRanges))]
-    
-    # then search Axts on negative strand.
-    ## we need to prepare the searchGRanges on negative strand.
-    searchGRangesNegative <- GRanges(seqnames=seqnames(searchGRanges),
-                                     ranges=IRanges(start=qSize-end+1,
-                                                    end=qSize-start+1),
-                                     strand="-")
-    searchGRangesNegative <- reduce(searchGRangesNegative)
-    hitsNegativeAny <- findOverlaps(queryRanges(x),
-                                    searchGRangesNegative, type="any",
-                                    select="all", ignore.strand=FALSE)
-    indexNegativeAny <- queryHits(hitsNegativeAny)
-    ans <- x[unique(c(indexPositiveAny, indexNegativeAny))]
+    hitsAny <- findOverlaps(queryRanges(x),
+                            searchGRanges, type="any",
+                            select="all", ignore.strand=TRUE)
   }
+  indexAny <- queryHits(hitsAny)
+  ans <- x[unique(indexAny)]
   return(ans)
 }
