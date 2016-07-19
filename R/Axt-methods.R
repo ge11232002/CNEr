@@ -72,60 +72,21 @@ setMethod("summary", signature=(object="Axt"),
 setMethod("syntenicDotplot", signature=(x="Axt"),
           function(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
                    firstChrs=NULL, secondChrs=NULL,
-                   col=c("blue", "red")){
-            dotplotAxt(x, targetSeqlengths=firstSeqlengths, 
-                       querySeqlengths=secondSeqlengths,
-                       targetChrs=firstChrs,
-                       queryChrs=secondChrs,
-                       col=col)
+                   col=c("blue", "red"),
+                   type=c("line", "dot")){
+            if(!is.null(firstSeqlengths)){
+              seqlengths(first(x)) <- 
+                firstSeqlengths[names(seqlengths(first(x)))]
+            }
+            if(!is.null(secondSeqlengths)){
+              seqlengths(second(x)) <- 
+                secondSeqlengths[names(seqlengths(second(x)))]
+            }
+            axt <- fixCoordinates(x)
+            class(axt) <- "GRangePairs"
+            syntenicPlotGRangePairs(axt, firstSeqlengths=NULL,
+                                    secondSeqlengths=NULL,
+                                    firstChrs=firstChrs,
+                                    secondChrs=secondChrs,
+                                    col=col, type=type)
           })
-
-dotplotAxt <- function(axt, targetSeqlengths=NULL, querySeqlengths=NULL,
-                       targetChrs=NULL, queryChrs=NULL,
-                       col=c("blue", "red")){
-  if(!is.null(targetChrs)){
-    axt <- axt[as.character(seqnames(targetRanges(axt))) %in% targetChrs]
-    targetSeqlengths <- targetSeqlengths[targetChrs]
-  }
-  if(!is.null(queryChrs)){
-    axt <- axt[as.character(seqnames(queryRanges(axt))) %in% queryChrs]
-    querySeqlengths <- querySeqlengths[queryChrs]
-  }
-  target <- targetRanges(axt)
-  query <- queryRanges(axt)
-  
-  ## If we want to put all the segments of syntent in one plot
-  ## We need to shift the coordiantes from second chromosomes in seqlengths
-  shiftCoordinatesTarget <- c(0, cumsum(as.numeric(targetSeqlengths))[-length(targetSeqlengths)])
-  names(shiftCoordinatesTarget) <- names(targetSeqlengths)
-  shiftCoordinatesQuery <- c(0, cumsum(as.numeric(querySeqlengths))[-length(querySeqlengths)])
-  names(shiftCoordinatesQuery) <- names(querySeqlengths)
-  
-  startTarget <- start(target) +
-    shiftCoordinatesTarget[as.character(seqnames(target))]
-  ## query is kind of difficult. Because when on "-" strand,
-  ## the coordinates is based on "-" strand.
-  indexNegative <- as.logical(strand(query)=="-")
-  startQuery <- start(query)
-  startQuery[indexNegative] <- 
-    querySeqlengths[as.character(seqnames(query[indexNegative]))] - 
-    end(query[indexNegative]) + 1
-  startQuery <- startQuery + 
-    shiftCoordinatesQuery[as.character(seqnames(query))]
-
-  toPlot <- data.frame(x=startTarget, y=startQuery,
-                       strand=as.factor(strand(query)))
-  p <- ggplot(data=toPlot, aes_string(x="x",y="y")) +
-    geom_point(aes(colour=strand), size=0.5) + theme_bw() +
-    scale_colour_manual(values=col) +
-    xlab("Target") + ylab("Query") + ggtitle("Syntenic dotplot") +
-    scale_x_continuous(breaks=c(0,
-                                cumsum(as.numeric(targetSeqlengths))),
-      limits=c(0, sum(as.numeric(targetSeqlengths))),
-      labels=c("start", names(targetSeqlengths))) +
-    scale_y_continuous(breaks=c(0,
-                                cumsum(as.numeric(querySeqlengths))),
-                       limits=c(0, sum(as.numeric(querySeqlengths))),
-                       labels=c("start", names(querySeqlengths)))
-  p
-}

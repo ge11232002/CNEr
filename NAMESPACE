@@ -14,7 +14,7 @@ importClassesFrom(Biostrings, DNAStringSet)
 ###
 importMethodsFrom(rtracklayer, import.bed)
 importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame,
-                  genome, "genome<-")
+                  genome, "genome<-", "seqlengths<-")
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
                                  findOverlaps, coverage, grglist)
 importMethodsFrom(XVector, subseq)

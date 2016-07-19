@@ -126,7 +126,7 @@ matchDistribution(axtHg38DanRer10)
 matchDistribution(axtDanRer10Hg38)
 ```
 
-```{r syntenyDotplot, eval=FALSE, echo=TRUE}
+```{r syntenyDotplot, eval=TRUE, echo=TRUE}
 ## Example of chr4 on hg19 and galGal3
 ## The synteny of human and zebrafish is not quite obvious on the dotplot.
 fn <- file.path(system.file("extdata", package="CNEr"),
@@ -135,7 +135,8 @@ axt <- readAxt(fn)
 library(GenomeInfoDb)
 syntenicDotplot(axt, seqlengths(fetchChromSizes("hg19")),
                 seqlengths(fetchChromSizes("galGal3")),
-                firstChrs=c("chr4"), lastChrs="chr4")
+                firstChrs=c("chr4"), secondChrs="chr4",
+                type="dot")
 
 ```
 

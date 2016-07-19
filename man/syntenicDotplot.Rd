@@ -13,7 +13,7 @@
 \usage{
   syntenicDotplot(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
                   firstChrs=NULL, secondChrs=NULL,
-                  col=c("blue", "red"))
+                  col=c("blue", "red"), type=c("line", "dot"))
 }
 \arguments{
   \item{x}{
@@ -31,6 +31,11 @@
   }
   \item{col}{
     \code{character}(2): the colours for positive and negative strands.
+  }
+  \item{type}{
+    \dQuote{line} or \dQuote{dot} plot type: When plotting massive number of
+    ranges, \dQuote{dot} should be used. 
+    Otherwise, \dQuote{line} should be used.
   }
 }
 \details{
@@ -66,9 +71,10 @@
   firstChrs <- c("chr4")
   secondChrs <- c("chr4")
   syntenicDotplot(axt, firstSeqlengths, secondSeqlengths,
-                  firstChrs=firstChrs, secondChrs=secondChrs)
+                  firstChrs=firstChrs, secondChrs=secondChrs,
+                  type="dot")
   
   ## dotplot for GRangePairs object
   data(grangesPairsForDotplot)
-  syntenicDotplot(grangesPairsForDotplot)
+  syntenicDotplot(grangesPairsForDotplot, type="line")
 }
