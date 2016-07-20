@@ -24,6 +24,9 @@
   By default, if there are more than 10,000 alignments, 
   for the consideration of speed,
   10,000 alignments will be sampled and calculated for the distribution.
+  
+  Only the four bases (A, C, G, T), gap (-) and any (N) are displayed. 
+  Other ambiguous bases are not considere.
 }
 \value{
   A ggplot2 object will be returned.
