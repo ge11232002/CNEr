@@ -103,6 +103,9 @@ export(
   ## Axt-methods.R
   #dotplotAxt,
   
+  ## subAxt-methods.R
+  psubAxt,
+  
   ## CNE-class.R
   CNE,
   ## GRangePairs-class.R

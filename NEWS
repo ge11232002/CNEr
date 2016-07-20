@@ -9,6 +9,7 @@ NEW FEATURES
     o When readAxt and readBed, seqinfo is kept when available.
     o New fixCoordinates function makes the coordinates of Axt alignments
       always relative to positive strands.
+    o Add parallel subAxt for Axt alignment.
 
 CHANGES IN Bioc 3.3
 ------------------------

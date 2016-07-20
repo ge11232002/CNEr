@@ -128,3 +128,29 @@ test_that("test_fixCoordinates", {
                    )
 }
 )
+
+test_that("test_subAxt", {
+  tAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
+  qAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  axtFn <- file.path(system.file("extdata", package="CNEr"), 
+                     "danRer10.hg38.net.axt")
+  axt <- readAxt(axtFn, tAssemblyFn, qAssemblyFn)
+  
+  targetSearch <- GRanges(seqnames=c("chr6"),
+                          ranges=IRanges(start=c(24000000, 26900000),
+                                         end=c(24060000, 26905000)),
+                          strand="+"
+  )
+  querySearch <- GRanges(seqnames=c("chr7", "chr2"),
+                         ranges=IRanges(start=c(12577000, 241262700),
+                                        end=c(12579000, 241268600)),
+                         strand="+"
+  )
+  ans <- psubAxt(axt, targetSearch, querySearch)
+  expect_identical(ans, axt[c(1,3,347:350)])
+}
+)

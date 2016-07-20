@@ -69,6 +69,10 @@
   Ge Tan
 }
 
+\seealso{
+  \code{\link{psubAxt}}
+}
+
 \examples{
   library(GenomicRanges)
   library(rtracklayer)

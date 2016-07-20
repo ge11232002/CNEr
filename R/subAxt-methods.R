@@ -85,3 +85,26 @@ setMethod("subAxt", signature(x="Axt", chr="character",
   ans <- x[unique(indexAny)]
   return(ans)
 }
+
+### -----------------------------------------------------------------
+### parallel subset of Axt alignment
+### Exported!
+psubAxt <- function(x, targetSearch, querySearch){
+  stopifnot(is(x, "Axt"))
+  if(!is(targetSearch, "GRanges") || !is(querySearch, "GRanges")){
+    stop("targetSearch and querySearch must be `GRanges` object!")
+  }
+  if(length(targetSearch) != length(querySearch)){
+    stop("targetSearch and querySearch must have same lengths.")
+  }
+  x <- fixCoordinates(x)
+  
+  hitsTarget <- findOverlaps(targetRanges(x), targetSearch, type="any",
+                             select="all", ignore.strand=TRUE)
+  hitsQuery <- findOverlaps(queryRanges(x), querySearch, type="any",
+                            select="all", ignore.strand=TRUE)
+  hits <- intersect(hitsTarget, hitsQuery)
+  ans <- x[unique(queryHits(hits))]
+  ans <- fixCoordinates(ans)
+  return(ans)
+}
