@@ -41,11 +41,11 @@ syntenicPlotGRangePairs <- function(x, firstSeqlengths=NULL,
   }
   
   if(!is.null(firstChrs)){
-    x <- x[as.character(seqnames(first(x))) %in% firstChrs]
+    x <- x[seqnames(first(x)) %in% firstChrs]
     targetSeqlengths <- targetSeqlengths[firstChrs]
   }
   if(!is.null(secondChrs)){
-    x <- x[as.character(seqnames(second(x))) %in% secondChrs]
+    x <- x[seqnames(second(x)) %in% secondChrs]
     querySeqlengths <- querySeqlengths[secondChrs]
   }
   target <- first(x)

@@ -53,3 +53,32 @@ plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
   
   invisible(list(first=firstFit, second=lastFit))
 }
+
+### -----------------------------------------------------------------
+### CNE distribution:
+### exported!
+plotCNEDistribution <- function(x, chrs=NULL, chrScale=1e6){
+  ## x is a GRanges
+  if(!is(x, "GRanges")){
+    stop("`x` must be a `GRanges` object!")
+  }
+  
+  if(any(is.na(seqlengths(x)))){
+    stop("seqlengths must be provided in `x`!")
+  }
+  
+  if(is.null(chrs)){
+    ## Select the largest 5 chromosomes/scaffolds
+    chrs <- names(sort(seqlengths(x), decreasing = TRUE))[1:6]
+  }
+  x <- x[seqnames(x) %in% chrs]
+  x <- sort(x)
+  dataToPlot <- data.frame(seqnames=seqnames(x),
+                           x=round((start(x) + end(x))/2)/chrScale,
+                           y=unlist(sapply(runLength(seqnames(x)), seq)))
+  p <- ggplot(data=dataToPlot, aes_string(x="x",y="y")) +
+    geom_point() + theme_bw() +
+    facet_wrap(~seqnames, scales = "free") +
+    xlab("Genomic location") + ylab("CNEs")
+  p
+}

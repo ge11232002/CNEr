@@ -2,7 +2,7 @@
 \alias{plotCNEWidth}
 
 \title{
-  Plot the CNE width distribution.
+  Plot the CNE width distribution
 }
 \description{
   CNE widths can follow heavy tailed distribution.

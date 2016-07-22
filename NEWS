@@ -10,6 +10,7 @@ NEW FEATURES
     o New fixCoordinates function makes the coordinates of Axt alignments
       always relative to positive strands.
     o Add parallel subAxt for Axt alignment.
+    o Add the plot of genomic distribution of CNE.
 
 CHANGES IN Bioc 3.3
 ------------------------

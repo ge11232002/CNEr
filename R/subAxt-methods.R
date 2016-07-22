@@ -59,9 +59,9 @@ setMethod("subAxt", signature(x="Axt", chr="character",
                    qSize=NULL){
             select <- match.arg(select)
             if(select == "target"){
-              ans <- x[as.character(seqnames(targetRanges(x))) %in% chr]
+              ans <- x[seqnames(targetRanges(x)) %in% chr]
             }else{
-              ans <- x[as.character(seqnames(queryRanges(x))) %in% chr]
+              ans <- x[seqnames(queryRanges(x)) %in% chr]
             }
             return(ans)
           }
