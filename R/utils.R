@@ -200,4 +200,20 @@ fetchChromSizes <- function(assembly){
   return(NULL)
 }
 
-
+### -----------------------------------------------------------------
+### seqlengthsNA: check if any seqlength is NA, then TRUE; otherwise FALSE.
+### not exported!
+seqlengthsNA <- function(x){
+  if(is(x, "GRanges")){
+    if(any(is.na(seqlengths(x))))
+      return(TRUE)
+  }else if(is(x, "GRangePairs")){
+    if(any(is.na(seqlengths(first(x)))))
+      return(TRUE)
+    if(any(is.na(seqlengths(second(x)))))
+      return(TRUE)
+  }else{
+    stop("`x`  must be a `GRanges` or `GRangePairs` object!")
+  }
+  return(FALSE)
+}

@@ -63,7 +63,7 @@ plotCNEDistribution <- function(x, chrs=NULL, chrScale=1e6){
     stop("`x` must be a `GRanges` object!")
   }
   
-  if(any(is.na(seqlengths(x)))){
+  if(seqlengthsNA(x)){
     stop("seqlengths must be provided in `x`!")
   }
   

@@ -385,8 +385,16 @@ As the lengths of CNEs [@Salerno:2006sc] and the distances between consecutive e
 ```{r CNEWidthDistribution, eval=TRUE, echo=TRUE}
 dbName <- file.path(system.file("extdata", package="CNEr"),
                     "danRer10CNE.sqlite")
+tAssemblyFn <- file.path(system.file("extdata",
+                         package="BSgenome.Drerio.UCSC.danRer10"),
+                         "single_sequences.2bit")
+qAssemblyFn <- file.path(system.file("extdata",
+                         package="BSgenome.Hsapiens.UCSC.hg38"),
+                         "single_sequences.2bit")
 cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
-                                          tableName="danRer10_hg38_45_50")
+                                          tableName="danRer10_hg38_45_50",
+                                          tAssemblyFn=tAssemblyFn,
+                                          qAssemblyFn=qAssemblyFn)
 plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
 ```
 
@@ -395,13 +403,7 @@ CNEs tend to form clusters. A quick check of the genomic distribution of CNEs
 is available.
 
 ```{r plotCNEDistribution, eval=TRUE, echo=TRUE}
-library(rtracklayer)
-twoBitFn <- file.path(system.file("extdata",
-                                    package="BSgenome.Drerio.UCSC.danRer10"),
-                        "single_sequences.2bit")
-firstCNEs <- first(cneGRangePairs)
-seqlengths(firstCNEs) <- seqlengths(TwoBitFile(twoBitFn))[names(seqlengths(firstCNEs))]
-plotCNEDistribution(firstCNEs) 
+plotCNEDistribution(first(cneGRangePairs)) 
 ```
 
 # CNEs visualisation

@@ -42,15 +42,17 @@
   \code{\link{plotCNEWidth}}
 }
 \examples{
-  library(rtracklayer)
   dbName <- file.path(system.file("extdata", package="CNEr"),
                       "danRer10CNE.sqlite")
+  qAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  tAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
   cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
-                                            tableName="danRer10_hg38_45_50")
-  twoBitFn <- file.path(system.file("extdata",
-                                    package="BSgenome.Drerio.UCSC.danRer10"),
-                        "single_sequences.2bit")
-  x <- first(cneGRangePairs)
-  seqlengths(x) <- seqlengths(TwoBitFile(twoBitFn))[names(seqlengths(x))]
-  plotCNEDistribution(x) 
+                                            tableName="danRer10_hg38_45_50",
+                                            tAssemblyFn=tAssemblyFn,
+                                            qAssemblyFn=qAssemblyFn)
+  plotCNEDistribution(first(cneGRangePairs))
 }

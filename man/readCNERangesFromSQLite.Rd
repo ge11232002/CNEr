@@ -12,7 +12,8 @@ For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
 readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
-                        whichAssembly=c("first","second"), minLength=NULL)
+                        whichAssembly=c("first","second"), minLength=NULL,
+                        tAssemblyFn=NULL, qAssemblyFn=NULL)
 }
 
 \arguments{
@@ -38,6 +39,10 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
     \code{integer}(1): the minimal length for selected CNEs.
     The pair of CNEs both must be longer than this \code{minLength}.
   }
+  \item{tAssemblyFn,qAssemblyFn}{
+    \code{character}(1): filename of the \sQuote{twoBit} or \sQuote{fasta} 
+    file for the target and query genome.
+  }
 }
 
 \value{
@@ -53,6 +58,13 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
                     "danRer10CNE.sqlite")
   tableName <- "danRer10_hg38_45_50"
   
+  qAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  tAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
+                           
   ## single chr, start, end
   chr <- "chr6"
   start <- 24000000L
@@ -61,7 +73,9 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
   fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
                                               start, end, 
                                               whichAssembly="first",
-                                              minLength=minLength)
+                                              minLength=minLength,
+                                              tAssemblyFn=tAssemblyFn,
+                                              qAssemblyFn=qAssemblyFn)
   ## multiple chr, start, end
   chr=c("chr1", "chr3")
   start=c(90730248, 137523122)

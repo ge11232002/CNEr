@@ -188,7 +188,8 @@ saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
 readCNERangesFromSQLite <- function(dbName, tableName,
                                     chr=NULL, start=NULL, end=NULL,
                                     whichAssembly=c("first", "second"),
-                                    minLength=NULL){
+                                    minLength=NULL,
+                                    tAssemblyFn=NULL, qAssemblyFn=NULL){
   nrGraphs <- 1
   ## Let's make nrGraphs=1, make all the cnes together.
   whichAssembly <- match.arg(whichAssembly)
@@ -242,14 +243,25 @@ readCNERangesFromSQLite <- function(dbName, tableName,
     sqlCmd <- paste(sqlCmd, "AND [first.end]-[first.start]+1 >=", minLength, 
                     "AND [second.end]-[second.start]+1 >=", minLength)
   fetchedCNE <- dbGetQuery(con, sqlCmd)
+  
+  # Prepare the seqinfo when available
+  seqinfoTarget <- NULL
+  if(!is.null(tAssemblyFn)){
+    seqinfoTarget <- seqinfoFn(tAssemblyFn)
+  }
+  seqinfoQuery <- NULL
+  if(!is.null(qAssemblyFn)){
+    seqinfoQuery <- seqinfoFn(qAssemblyFn)
+  }
+  
   firstGRanges <- GRanges(seqnames=fetchedCNE[ ,1],
                           ranges=IRanges(start=fetchedCNE[ ,2],
                                          end=fetchedCNE[,3]),
-                          strand="*")
+                          strand="*", seqinfo=seqinfoTarget)
   lastGRanges <- GRanges(seqnames=fetchedCNE[ ,4],
                          ranges=IRanges(start=fetchedCNE[ ,5],
                                         end=fetchedCNE[ ,6]),
-                         strand="*")
+                         strand="*", seqinfo=seqinfoQuery)
   ans <- GRangePairs(first=firstGRanges, second=lastGRanges)
   return(ans)
 }
