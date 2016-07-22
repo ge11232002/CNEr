@@ -390,6 +390,20 @@ cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName,
 plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
 ```
 
+## Genomic distribution of CNEs along the chromosome
+CNEs tend to form clusters. A quick check of the genomic distribution of CNEs
+is available.
+
+```{r plotCNEDistribution, eval=TRUE, echo=TRUE}
+library(rtracklayer)
+twoBitFn <- file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit")
+firstCNEs <- first(cneGRangePairs)
+seqlengths(firstCNEs) <- seqlengths(TwoBitFile(twoBitFn))[names(seqlengths(firstCNEs))]
+plotCNEDistribution(firstCNEs) 
+```
+
 # CNEs visualisation
 To visualise CNEs alongside other gene annotations, 
 we choose to use the Bioconductor package `r Biocpkg("Gviz")` in this vignette.
