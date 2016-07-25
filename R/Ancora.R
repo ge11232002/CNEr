@@ -67,3 +67,53 @@ readAncoraIntoSQLite <- function(cneFns, dbName, overwrite=FALSE){
   }
   invisible(tableNames)
 }
+
+### -----------------------------------------------------------------
+### makeBedWiggle: make the Ancora downloads-like bed files and wiggle files
+###   from a GrangePairs of CNEs.
+### 
+makeBedWiggle <- function(x, outputDir=".",
+                          firstGenome="first", secondGenome="second",
+                          threshold="50_50"){
+  if(!is(x, "GRangePairs")){
+    stop("`x` must be a GRangePairs object!")
+  }
+  if(seqlengthsNA(x)){
+    stop("seqlengths must be provided in `x`!")
+  }
+  
+  ## make the bed files
+  bedFirst <- first(x)
+  bedSecond <- second(x)
+  mcols(bedFirst) <- DataFrame(name=as.character(bedSecond),
+                               score=0,
+                               itemRgb=chr2colour(as.character(
+                                 seqnames(bedSecond)))
+                               )
+  mcols(bedSecond) <- DataFrame(name=as.character(bedFirst),
+                                score=0,
+                                itemRgb=chr2colour(as.character(
+                                  seqnames(bedFirst)))
+                                )
+  firstTrackLine <- new("BasicTrackLine", itemRgb=TRUE,
+                        name=paste(firstGenome, "CNEs", threshold),
+                        description=paste(firstGenome, "CNEs", threshold)
+                        )
+  secondTrackLine <- new("BasicTrackLine", itemRgb=TRUE,
+                         name=paste(secondGenome, "CNEs", threshold),
+                         description=paste(secondGenome, "CNEs", threshold)
+                         )
+  export.bed(bedFirst, con=file.path(outputDir, 
+                                     paste0("CNE_", firstGenome, "_",
+                                            secondGenome, "_",
+                                            threshold, ".bed")),
+             trackLine=firstTrackLine)
+  export.bed(bedSecond, con=file.path(outputDir, 
+                                      paste0("CNE_", secondGenome, "_",
+                                             firstGenome, "_",
+                                             threshold, ".bed")),
+             trackLine=secondTrackLine)
+  
+  # Make the wiggle files
+  
+}
