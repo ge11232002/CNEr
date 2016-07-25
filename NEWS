@@ -11,6 +11,7 @@ NEW FEATURES
       always relative to positive strands.
     o Add parallel subAxt for Axt alignment.
     o Add the plot of genomic distribution of CNE.
+    o Add the function to make bed and bigwig files of CNEs.
 
 CHANGES IN Bioc 3.3
 ------------------------

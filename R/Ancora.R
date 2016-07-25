@@ -69,12 +69,15 @@ readAncoraIntoSQLite <- function(cneFns, dbName, overwrite=FALSE){
 }
 
 ### -----------------------------------------------------------------
-### makeBedWiggle: make the Ancora downloads-like bed files and wiggle files
+### makeBedBigWig: make the Ancora downloads-like bed files and bigwig files
 ###   from a GrangePairs of CNEs.
-### 
-makeBedWiggle <- function(x, outputDir=".",
-                          firstGenome="first", secondGenome="second",
-                          threshold="50_50"){
+### Exported!
+makeBedBigWig <- function(x, outputDir=".",
+                          genomeFirst="first", genomeSecond="second",
+                          threshold="50_50",
+                          windowSizeFirst=300, ## kb
+                          windowSizeSecond=300 ## kb
+                          ){
   if(!is(x, "GRangePairs")){
     stop("`x` must be a GRangePairs object!")
   }
@@ -96,24 +99,47 @@ makeBedWiggle <- function(x, outputDir=".",
                                   seqnames(bedFirst)))
                                 )
   firstTrackLine <- new("BasicTrackLine", itemRgb=TRUE,
-                        name=paste(firstGenome, "CNEs", threshold),
-                        description=paste(firstGenome, "CNEs", threshold)
+                        name=paste(genomeFirst, "CNEs", threshold),
+                        description=paste(genomeFirst, "CNEs", threshold)
                         )
   secondTrackLine <- new("BasicTrackLine", itemRgb=TRUE,
-                         name=paste(secondGenome, "CNEs", threshold),
-                         description=paste(secondGenome, "CNEs", threshold)
+                         name=paste(genomeSecond, "CNEs", threshold),
+                         description=paste(genomeSecond, "CNEs", threshold)
                          )
-  export.bed(bedFirst, con=file.path(outputDir, 
-                                     paste0("CNE_", firstGenome, "_",
-                                            secondGenome, "_",
-                                            threshold, ".bed")),
+  bedFnFirst <- file.path(outputDir, 
+                          paste0("CNE_", genomeFirst, "_",
+                                 genomeSecond, "_",
+                                 threshold, ".bed"))
+  export.bed(bedFirst, con=bedFnFirst,
              trackLine=firstTrackLine)
-  export.bed(bedSecond, con=file.path(outputDir, 
-                                      paste0("CNE_", secondGenome, "_",
-                                             firstGenome, "_",
-                                             threshold, ".bed")),
+  bedFnSecond <- file.path(outputDir, 
+                           paste0("CNE_", genomeSecond, "_",
+                                  genomeFirst, "_",
+                                  threshold, ".bed"))
+  
+  export.bed(bedSecond, con=bedFnSecond,
              trackLine=secondTrackLine)
   
-  # Make the wiggle files
+  # Make the bigwig files
+  bedFirst <- reduce(bedFirst, ignore.strand=TRUE)
+  covFirst <- coverage(bedFirst)
+  densityFirst <- runmean(covFirst, k=windowSizeFirst*1000, 
+                          endrule = "constant") * 100
   
+  bedSecond <- reduce(bedSecond, ignore.strand=TRUE)
+  covSecond <- coverage(bedSecond)
+  densitySecond <- runmean(covSecond, k=windowSizeSecond*1000,
+                           endrule = "constant") * 100
+ 
+  bwFnFirst <- file.path(outputDir, 
+                         paste0("CNE_density", genomeFirst, "_",
+                                genomeSecond, "_",
+                                threshold, ".bw"))
+  export.bw(densityFirst, con=bwFnFirst)
+  bwFnSecond <- file.path(outputDir, 
+                          paste0("CNE_density", genomeSecond, "_",
+                                 genomeFirst, "_",
+                                 threshold, ".bw"))
+  export.bw(densitySecond, con=bwFnSecond)
+  invisible(c(bedFnFirst, bedFnSecond, bwFnFirst, bwFnSecond))
 }
