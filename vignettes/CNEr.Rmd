@@ -406,6 +406,13 @@ is available.
 plotCNEDistribution(first(cneGRangePairs)) 
 ```
 
+## Output of Bed and BigWig files
+For visualisation in other Genome Browser, we provide functions to generate the CNE in bed files and CNE density in BigWig files.
+
+```{r outputBedBW, eval=TRUE, echo=TRUE}
+makeBedBigWig(cneGRangePairs[1:1000])
+```
+
 # CNEs visualisation
 To visualise CNEs alongside other gene annotations, 
 we choose to use the Bioconductor package `r Biocpkg("Gviz")` in this vignette.
