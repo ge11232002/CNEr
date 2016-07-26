@@ -78,7 +78,7 @@ plotCNEDistribution <- function(x, chrs=NULL, chrScale=c("Mb", "Kb")){
     chrs <- names(sort(seqlengths(x), decreasing = TRUE))[1:6]
   }
   x <- x[seqnames(x) %in% chrs]
-  x <- sort(x)
+  x <- sort(x, ignore.strand=TRUE)
   dataToPlot <- data.frame(seqnames=seqnames(x),
                            x=round((start(x) + end(x))/2)/chrScaleN,
                            y=unlist(sapply(runLength(seqnames(x)), seq)))
