@@ -1,5 +1,5 @@
-\name{makeBedBigWig}
-\alias{makeBedBigWig}
+\name{makeCNEDensity}
+\alias{makeCNEDensity}
 
 \title{
   Make \sQuote{Bed} and \sQuote{BigWig} files
@@ -9,10 +9,10 @@
   display in other Genome Browser.
 }
 \usage{
-  makeBedBigWig(x, outputDir = ".", 
-                genomeFirst = "first", genomeSecond = "second",
-                threshold = "50_50", 
-                windowSizeFirst = 300L, windowSizeSecond = 300L)
+  makeCNEDensity(x, outputDir = ".", 
+                 genomeFirst = "first", genomeSecond = "second",
+                 threshold = "50_50", 
+                 windowSizeFirst = 300L, windowSizeSecond = 300L)
 }
 \arguments{
   \item{x}{
@@ -61,5 +61,5 @@
                                             tableName="danRer10_hg38_45_50",
                                             tAssemblyFn=tAssemblyFn,
                                             qAssemblyFn=qAssemblyFn)
-  makeBedBigWig(cneGRangePairs[1:1000])
+  makeCNEDensity(cneGRangePairs[1:1000])
 }

@@ -406,11 +406,11 @@ is available.
 plotCNEDistribution(first(cneGRangePairs)) 
 ```
 
-## Output of Bed and BigWig files
-For visualisation in other Genome Browser, we provide functions to generate the CNE in bed files and CNE density in BigWig files.
+## Output of bed and bedGraph files
+For visualisation in other Genome Browser, we provide functions to generate the CNE in bed files and CNE density in bedGraph files.
 
 ```{r outputBedBW, eval=TRUE, echo=TRUE}
-makeBedBigWig(cneGRangePairs[1:1000])
+makeCNEDensity(cneGRangePairs[1:1000])
 ```
 
 # CNEs visualisation

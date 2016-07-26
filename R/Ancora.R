@@ -69,14 +69,14 @@ readAncoraIntoSQLite <- function(cneFns, dbName, overwrite=FALSE){
 }
 
 ### -----------------------------------------------------------------
-### makeBedBigWig: make the Ancora downloads-like bed files and bigwig files
+### makeCNEDensity: make the Ancora downloads-like bed files and bigwig files
 ###   from a GrangePairs of CNEs.
 ### Exported!
-makeBedBigWig <- function(x, outputDir=".",
-                          genomeFirst="first", genomeSecond="second",
-                          threshold="50_50",
-                          windowSizeFirst=300, ## kb
-                          windowSizeSecond=300 ## kb
+makeCNEDensity <- function(x, outputDir=".",
+                           genomeFirst="first", genomeSecond="second",
+                           threshold="50_50",
+                           windowSizeFirst=300, ## kb
+                           windowSizeSecond=300 ## kb
                           ){
   if(!is(x, "GRangePairs")){
     stop("`x` must be a GRangePairs object!")
@@ -133,15 +133,29 @@ makeBedBigWig <- function(x, outputDir=".",
   densitySecond <- runmean(covSecond, k=windowSizeSecond*1000,
                            endrule = "constant") * 100
  
+  firstTrackLine <- new("GraphTrackLine",
+                        name=paste(genomeFirst, "CNEs density", threshold),
+                        description=paste(genomeFirst, "CNEs density", 
+                                          threshold),
+                        visibility="full", type="bedGraph", autoScale=TRUE
+                        )
+  secondTrackLine <- new("GraphTrackLine",
+                        name=paste(genomeSecond, "CNEs density", threshold),
+                        description=paste(genomeSecond, "CNEs density", 
+                                          threshold),
+                        visibility="full", type="bedGraph", autoScale=TRUE
+  )
   bwFnFirst <- file.path(outputDir, 
                          paste0("CNE_density_", genomeFirst, "_",
                                 genomeSecond, "_",
-                                threshold, ".bw"))
-  export.bw(densityFirst, con=bwFnFirst)
-  bwFnSecond <- file.path(outputDir, 
+                                threshold, ".bedGraph"))
+  export.bedGraph(densityFirst, con=bwFnFirst, trackLine=firstTrackLine)
+  
+  bwFnSecond <- file.path(outputDir,
                           paste0("CNE_density_", genomeSecond, "_",
                                  genomeFirst, "_",
-                                 threshold, ".bw"))
-  export.bw(densitySecond, con=bwFnSecond)
+                                 threshold, ".bedGraph"))
+  export.bedGraph(densitySecond, con=bwFnSecond, trackLine=secondTrackLine)
+  
   invisible(c(bedFnFirst, bedFnSecond, bwFnFirst, bwFnSecond))
 }
