@@ -8,7 +8,7 @@
   It gives a overview whether the CNEs form clusters.
 }
 \usage{
-  plotCNEDistribution(x, chrs = NULL, chrScale = 1e+06)
+  plotCNEDistribution(x, chrs = NULL, chrScale = c("Mb", "Kb"))
 }
 
 \arguments{
@@ -20,8 +20,8 @@
     the largest 6 chromosomes/scaffolds are selected.
   }
   \item{chrScale}{
-    \code{numeric}(1): the chromosome/scaffold scale in the plot. By default,
-    it's \code{1e6} which is in \sQuote{Mb}.
+    \code{character}(1): the chromosome/scaffold scale of \sQuote{Mb}
+    or \sQuote{Kb} in the plot.
   }
 }
 \details{

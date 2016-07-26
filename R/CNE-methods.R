@@ -57,7 +57,13 @@ plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
 ### -----------------------------------------------------------------
 ### CNE distribution:
 ### exported!
-plotCNEDistribution <- function(x, chrs=NULL, chrScale=1e6){
+plotCNEDistribution <- function(x, chrs=NULL, chrScale=c("Mb", "Kb")){
+  chrScale <- match.arg(chrScale)
+  if(chrScale == "Mb"){
+    chrScaleN <- 1e6
+  }else{
+    chrScaleN <- 1e3
+  }
   ## x is a GRanges
   if(!is(x, "GRanges")){
     stop("`x` must be a `GRanges` object!")
@@ -68,17 +74,17 @@ plotCNEDistribution <- function(x, chrs=NULL, chrScale=1e6){
   }
   
   if(is.null(chrs)){
-    ## Select the largest 5 chromosomes/scaffolds
+    ## Select the largest 6 chromosomes/scaffolds
     chrs <- names(sort(seqlengths(x), decreasing = TRUE))[1:6]
   }
   x <- x[seqnames(x) %in% chrs]
   x <- sort(x)
   dataToPlot <- data.frame(seqnames=seqnames(x),
-                           x=round((start(x) + end(x))/2)/chrScale,
+                           x=round((start(x) + end(x))/2)/chrScaleN,
                            y=unlist(sapply(runLength(seqnames(x)), seq)))
   p <- ggplot(data=dataToPlot, aes_string(x="x",y="y")) +
     geom_point() + theme_bw() +
     facet_wrap(~seqnames, scales = "free") +
-    xlab("Genomic location") + ylab("CNEs")
+    xlab(paste0("Genomic location (", chrScale, ")")) + ylab("CNEs")
   p
 }
