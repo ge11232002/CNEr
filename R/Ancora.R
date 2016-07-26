@@ -86,6 +86,7 @@ makeBedBigWig <- function(x, outputDir=".",
   }
   
   ## make the bed files
+  message("Making bed files...")
   bedFirst <- first(x)
   bedSecond <- second(x)
   mcols(bedFirst) <- DataFrame(name=as.character(bedSecond),
@@ -121,6 +122,7 @@ makeBedBigWig <- function(x, outputDir=".",
              trackLine=secondTrackLine)
   
   # Make the bigwig files
+  message("Making bigwig files...")
   bedFirst <- reduce(bedFirst, ignore.strand=TRUE)
   covFirst <- coverage(bedFirst)
   densityFirst <- runmean(covFirst, k=windowSizeFirst*1000, 
@@ -132,12 +134,12 @@ makeBedBigWig <- function(x, outputDir=".",
                            endrule = "constant") * 100
  
   bwFnFirst <- file.path(outputDir, 
-                         paste0("CNE_density", genomeFirst, "_",
+                         paste0("CNE_density_", genomeFirst, "_",
                                 genomeSecond, "_",
                                 threshold, ".bw"))
   export.bw(densityFirst, con=bwFnFirst)
   bwFnSecond <- file.path(outputDir, 
-                          paste0("CNE_density", genomeSecond, "_",
+                          paste0("CNE_density_", genomeSecond, "_",
                                  genomeFirst, "_",
                                  threshold, ".bw"))
   export.bw(densitySecond, con=bwFnSecond)
