@@ -409,7 +409,7 @@ plotCNEDistribution(first(cneGRangePairs))
 ## Output of bed and bedGraph files
 For visualisation in other Genome Browser, we provide functions to generate the CNE in bed files and CNE density in bedGraph files.
 
-```{r outputBedBW, eval=TRUE, echo=TRUE}
+```{r outputBedBW, eval=FALSE, echo=TRUE}
 makeCNEDensity(cneGRangePairs[1:1000])
 ```
 

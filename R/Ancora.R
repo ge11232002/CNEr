@@ -121,8 +121,8 @@ makeCNEDensity <- function(x, outputDir=".",
   export.bed(bedSecond, con=bedFnSecond,
              trackLine=secondTrackLine)
   
-  # Make the bigwig files
-  message("Making bigwig files...")
+  # Make the bedGraph files
+  message("Making bedGraph files...")
   bedFirst <- reduce(bedFirst, ignore.strand=TRUE)
   covFirst <- coverage(bedFirst)
   densityFirst <- runmean(covFirst, k=windowSizeFirst*1000, 
