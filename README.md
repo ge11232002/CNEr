@@ -15,3 +15,6 @@ biocLite("CNEr")
 ```R
 devtools::install_github("ge11232002/CNEr")
 ```
+
+## Vignette
+Latest vignette is available at http://rpubs.com/yang2/CNEr3
