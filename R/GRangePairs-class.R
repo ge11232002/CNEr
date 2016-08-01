@@ -1,4 +1,4 @@
-# This GRangePairs is purely based on the implementation of GAlignmentPairs
+# This GRangePairs directly extends `Pairs` class.
 ### -----------------------------------------------------------------
 ### GRangePairs: class
 ### Exported!
@@ -68,22 +68,6 @@ GRangePairs <- function(first=GRanges(), second=GRanges(), ..., names=NULL,
 ### -----------------------------------------------------------------
 ### GRangePairs getters and setters
 ### Exported!
-# setMethod("first", "GRangePairs",
-#           function(x)
-#           {
-#             ans <- setNames(x@first, names(x))
-#             ans
-#           }
-#           )
-# 
-# setMethod("second", "GRangePairs",
-#           function(x)
-#           {
-#             ans <- setNames(x@second, names(x))
-#             ans
-#           }
-# )
-
 setMethod("last", "GRangePairs",
           function(x)
           {

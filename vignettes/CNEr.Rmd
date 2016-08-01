@@ -87,7 +87,7 @@ During the development of this package, there was no suitable class to store the
 Hence we created two new __S4__ class `Axt` and `GRangePairs` to easily manipulate the axt alignment files.
 
 `GRangePairs` is designed to hold a pair of `GRanges` objects, which have the same length.
-It builds on the `List` class of Bioconductor and inherits many useful methods from it.
+It builds on the `Pairs` class of Bioconductor and inherits many useful methods from it.
 This `Axt` class inherits from `GRangePairs` with no extra slots to hold the content from _axt_ files, but many specific methods are created for `Axt`.
 The ranges of the target and the query organism are stored in two `GRanges` objects with alignment sequences as metadata columns.
 The Blastz scores and the widths of the alignments are stored in metadata columns of `GRangePairs`.
