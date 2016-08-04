@@ -12,7 +12,8 @@ importClassesFrom(Biostrings, DNAStringSet)
 ### -----------------------------------------------------------------
 ### Import S4 methods defined in other packages
 ###
-importMethodsFrom(rtracklayer, import.bed, export.bedGraph, export.bed)
+importMethodsFrom(rtracklayer, import.bed, export.bedGraph, export.bed,
+                  export.bw)
 importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame,
                   genome, "genome<-", "seqlengths<-")
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,

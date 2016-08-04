@@ -2,10 +2,11 @@
 \alias{makeCNEDensity}
 
 \title{
-  Make \sQuote{Bed} and \sQuote{BigWig} files
+  Make \sQuote{Bed}, \sQuote{bedGraph} and \sQuote{BigWig} files
 }
 \description{
-  Make \sQuote{Bed} and \sQuote{BigWig} files from \code{GRangePairs} for
+  Make \sQuote{Bed}, \sQuote{bedGraph}, \sQuote{BigWig} files 
+  from \code{GRangePairs} for
   display in other Genome Browser.
 }
 \usage{
@@ -38,7 +39,8 @@
   within the smoothing window.
 }
 \value{
-  The filenames of output \sQuote{Bed} and \sQuote{BigWig} files.
+  The filenames of output \sQuote{Bed}, \sQuote{bedGraph} and
+  \sQuote{BigWig} files.
 }
 
 \author{

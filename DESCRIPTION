@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.9.29
-Date: 2016-07-26
+Version: 1.9.30
+Date: 2016-08-04
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -31,7 +31,9 @@ Suggests: Gviz (>= 1.7.4),
           testthat,
           BSgenome.Drerio.UCSC.danRer10,
           BSgenome.Hsapiens.UCSC.hg38,
-          TxDb.Drerio.UCSC.danRer10.refGene
+          TxDb.Drerio.UCSC.danRer10.refGene,
+          BSgenome.Hsapiens.UCSC.hg19,
+          BSgenome.Ggallus.UCSC.galGal3
 LinkingTo: S4Vectors, IRanges, XVector
 VignetteBuilder: knitr
 License: GPL-2 | file LICENSE

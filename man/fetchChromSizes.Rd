@@ -24,15 +24,17 @@ This function utilises mysql query for UCSC assemblies.
 A object of \code{Seqinfo} is returned.
 }
 \author{
-Ge Tan
+  Ge Tan
 }
 \note{
-Currently the assemblies from UCSC are supported.
+  Currently the assemblies from UCSC are supported.
 }
 
 
 \examples{
-  fetchChromSizes("hg19")
-  fetchChromSizes("mm10")
+  \donttest{
+    fetchChromSizes("hg19")
+    fetchChromSizes("mm10")
+  }
 }
 
