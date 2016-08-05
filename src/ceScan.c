@@ -692,6 +692,7 @@ void freeSlThreshold(struct slThreshold **p_thresholds)
 struct hash *buildHashForBed(SEXP tNames, SEXP tStarts, SEXP tEnds){
 /* Given three vectors of names, starts and ends of the filter, 
  * return the hash table */
+  // tStarts are 1-based.
   PROTECT(tNames = AS_CHARACTER(tNames));
   PROTECT(tStarts = AS_INTEGER(tStarts));
   PROTECT(tEnds = AS_INTEGER(tEnds));
@@ -853,11 +854,13 @@ SEXP myCeScan(SEXP tFilterNames, SEXP tFilterStarts, SEXP tFilterEnds,
   struct axt *axt, *curAxt;
   tFilter = buildHashForBed(tFilterNames, tFilterStarts, tFilterEnds);
   qFilter = buildHashForBed(qFilterNames, qFilterStarts, qFilterEnds);
+  // starts are 1-based.
   qSizes = buildHashForSizeFile(sizeNames, sizeSizes); 
   qFilterRev = qFilter ? makeReversedFilter(qFilter, qSizes) : NULL;
   axt = buildAxt(axtqNames, axtqStart, axtqEnd, axtqStrand, 
       axtqSym, axttNames, axttStart, axttEnd, axttStrand, 
       axttSym, score, symCount);
+  // In axt, the starts are 0-based.
   struct slThreshold *thresholds, *tr;
   struct slCNE *CNE;
   int nrThresholds;

@@ -55,7 +55,10 @@ importFrom(ggplot2, ggplot, aes, aes_q, aes_string, geom_tile, theme_bw,
     geom_segment, facet_wrap)
 importFrom(poweRlaw, bootstrap_p, estimate_pars, estimate_xmin)
 importFrom("graphics", "lines", "par", "plot", "text")
-
+importFrom(annotate, getGOTerm)
+importFrom(GO.db, GOCCANCESTOR, GOCCOFFSPRING, GOCCCHILDREN,
+                  GOBPANCESTOR, GOBPOFFSPRING, GOBPCHILDREN,
+                  GOMFANCESTOR, GOMFOFFSPRING, GOMFCHILDREN)
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
 ###

@@ -1,6 +1,6 @@
 Package: CNEr 
-Version: 1.9.30
-Date: 2016-08-04
+Version: 1.9.31
+Date: 2016-08-05
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
@@ -22,7 +22,9 @@ Imports: Biostrings (>= 2.33.4),
          parallel,
          reshape2 (>= 1.4.1),
          ggplot2 (>= 2.1.0),
-         poweRlaw (>= 0.60.3)
+         poweRlaw (>= 0.60.3),
+         annotate (>= 1.50.0),
+         GO.db (>= 3.3.0)
 Depends: R (>= 3.2.2)
 Suggests: Gviz (>= 1.7.4),
           BiocStyle,
@@ -63,3 +65,4 @@ Collate:
         WholeGenomeAlignment.R
         Ancora.R
         CNE-methods.R
+        GO.R
