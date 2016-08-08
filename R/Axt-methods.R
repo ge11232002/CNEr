@@ -41,7 +41,7 @@ axtMatchDistribution <- function(x, size=10000, title=NULL){
                   title)) +
     scale_fill_continuous(low="deepskyblue4", high="gold") +
     geom_text(aes(fill=toPlot$percentage, 
-                  label=round(toPlot$percentage, 4)))
+                  label=round(toPlot$percentage, 1)))
 }
 
 ### -----------------------------------------------------------------
