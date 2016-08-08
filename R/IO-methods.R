@@ -28,7 +28,7 @@ readBed <- function(bedFile, assemblyFn=NULL){
   ## bed file: 0-based start
   
   #bed <- .Call2("myReadBed", bedFile, PACKAGE="CNEr")
-  bed <- read_tsv(bedFile, col_names=FALSE, comment="track")
+  bed <- suppressMessages(read_tsv(bedFile, col_names=FALSE, comment="track"))
   ## We only need the first three columns of the bed file, 
   ## but keep the strand information when available
   if(ncol(bed) == 3L){

@@ -16,7 +16,8 @@ getChildTerms <- function(x, subset, goRelatives, indent="", childEnvir){
   for (kid in kids){
     kidResult <- getChildTerms(kid, subset, goRelatives,
                                indent=indent, childEnvir)
-    subset <- setdiff(subset, kidResult) ## again the non-redundancy modification
+    subset <- setdiff(subset, kidResult) 
+    ## again the non-redundancy modification
     result <- c(result, kidResult)
   }
   result

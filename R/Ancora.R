@@ -23,7 +23,7 @@ readAncora <- function(fn, assembly=NULL,
                        tAssemblyFn=NULL, qAssemblyFn=NULL){
   assembly1 <- strsplit(basename(fn), split="_")[[1]][2]
   assembly2 <- strsplit(basename(fn), split="_")[[1]][3]
-  cne <- read_tsv(fn, col_names=FALSE)
+  cne <- suppressMessages(read_tsv(fn, col_names=FALSE))
   
   # Prepare the seqinfo when available
   seqinfoTarget <- NULL
