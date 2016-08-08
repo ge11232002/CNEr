@@ -217,3 +217,53 @@ seqlengthsNA <- function(x){
   }
   return(FALSE)
 }
+
+### -----------------------------------------------------------------
+### savefig: ‘savefig’ saves figures to files with minimal surrounding white
+### space, suitable for inclusion in books and reports. ‘savefig’ is
+### especially good for including plots in LaTeX. File formats
+### supported are eps, pdf and jpg. Default file format for ‘savefig’
+### is eps. The other functions are wrappers for saving specific file
+### formats.
+### Based on the unofficially released package "monash" from Rob J Hyndman
+### Not Exported!
+savefig <- function (filename, height=10, width = (1 + sqrt(5))/2*height,
+                     type=c("eps","pdf","jpg","png"), pointsize = 10,
+                     family = "Helvetica", sublines = 0, toplines = 0, 
+                     leftlines = 0, res=300,
+                     colormodel=c("srgb", "srgb+gray", "rgb", "rgb-nogray",
+                                  "gray", "grey", "cmyk"))
+{
+  type <- match.arg(type)
+  filename <- paste(filename, ".", type, sep = "")
+  if(type=="eps")
+  {
+    postscript(file = filename, horizontal = FALSE,
+               width = width/2.54, height = height/2.54, pointsize = pointsize,
+               family = family, onefile = FALSE, print.it = FALSE,
+               colormodel=colormodel)
+  }
+  else if(type=="pdf")
+  {
+    pdf(file = filename, width=width/2.54, height=height/2.54,
+        pointsize=pointsize,
+        family=family, onefile=TRUE, colormodel=colormodel)
+  }
+  else if(type=="jpg")
+  {
+    jpeg(filename=filename, width=width, height=height, res=res,quality=100,
+         units="cm")#, pointsize=pointsize*50)
+  }
+  else if(type=="png")
+  {
+    png(filename=filename, width=width, height=height, res=res, units="cm")
+    #, pointsize=pointsize*50)
+  }
+  else
+    stop("Unknown file type")
+  par(mgp = c(2.2, 0.45, 0), tcl = -0.4, 
+      mar = c(3.2 + sublines + 0.25 * (sublines > 0),
+              3.5 + leftlines, 1 + toplines, 1) + 0.1)
+  par(pch = 1)
+  invisible()
+}
