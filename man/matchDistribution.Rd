@@ -9,7 +9,7 @@
   each matched alignments.
 }
 \usage{
-  matchDistribution(x, size=10000)
+  matchDistribution(x, size=10000, title=NULL)
 }
 
 \arguments{
@@ -17,7 +17,10 @@
     \code{Axt} object.
   }
   \item{size}{
-    \code{integer}: the number of alignments to use. By default, it is 10000.
+    \code{integer}(1): the number of alignments to use. By default, it is 10000.
+  }
+  \item{title}{
+    \code{character}(1): the customised title for the plot.
   }
 }
 \details{

@@ -2,16 +2,16 @@
 ### match distribution plot for Axt alignment
 ### Expotred!
 ### This implementation is too slow for large Axt. Should implment in C.
-setGeneric("matchDistribution", function(x, size=10000)
+setGeneric("matchDistribution", function(x, size=10000, title=NULL)
   standardGeneric("matchDistribution"))
 
 setMethod("matchDistribution", signature(x="Axt"),
-          function(x, size=10000){
-            axtMatchDistribution(x, size=size)
+          function(x, size=10000, title=NULL){
+            axtMatchDistribution(x, size=size, title=title)
           }
           )
 
-axtMatchDistribution <- function(x, size=10000){
+axtMatchDistribution <- function(x, size=10000, title=NULL){
   if(length(x) > size){
     x <- x[sort(sample.int(length(x), size))]
   }
@@ -37,7 +37,8 @@ axtMatchDistribution <- function(x, size=10000){
                             fill="percentage")) +
     geom_tile() +
     theme_bw() + xlab("Target") + ylab("Query") +
-    ggtitle("Distribution of matched alignments") +
+    ggtitle(ifelse(is.null(title), "Distribution of matched bases",
+                  title)) +
     scale_fill_continuous(low="deepskyblue4", high="gold") +
     geom_text(aes(fill=toPlot$percentage, 
                   label=round(toPlot$percentage, 4)))
