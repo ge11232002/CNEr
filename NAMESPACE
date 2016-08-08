@@ -59,6 +59,8 @@ importFrom(annotate, getGOTerm)
 importFrom(GO.db, GOCCANCESTOR, GOCCOFFSPRING, GOCCCHILDREN,
                   GOBPANCESTOR, GOBPOFFSPRING, GOBPCHILDREN,
                   GOMFANCESTOR, GOMFOFFSPRING, GOMFCHILDREN)
+importFrom("grDevices", "jpeg", "pdf", "png", "postscript")
+
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
 ###

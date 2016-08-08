@@ -8,7 +8,7 @@
   Read the Ancora CNE file into a \code{GRanges} or \code{GRangePairs}.
 }
 \usage{
-  readAncora(fn, assembly=NULL)
+  readAncora(fn, assembly=NULL, tAssemblyFn=NULL, qAssemblyFn=NULL)
 }
 
 \arguments{
@@ -19,6 +19,10 @@
   \item{assembly}{
     \code{character}(1): the assembly to fetch. When it is NULL,
     CNE on both assemblies are returned.
+  }
+  \item{tAssemblyFn,qAssemblyFn}{
+    \code{character}(1): filename of the \sQuote{twoBit} or \sQuote{fasta} 
+    file for the target and query genome.
   }
 }
 \details{

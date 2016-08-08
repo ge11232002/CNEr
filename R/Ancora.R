@@ -19,24 +19,38 @@ chr2colour <- function(chromosomes){
 ### It reads the CNE file (filename format: cne2wBf_hg38_mm10_50_50)
 ### and return a GRanges.
 ### Exported!
-readAncora <- function(fn, assembly=NULL){
+readAncora <- function(fn, assembly=NULL,
+                       tAssemblyFn=NULL, qAssemblyFn=NULL){
   assembly1 <- strsplit(basename(fn), split="_")[[1]][2]
   assembly2 <- strsplit(basename(fn), split="_")[[1]][3]
   cne <- read_tsv(fn, col_names=FALSE)
+  
+  # Prepare the seqinfo when available
+  seqinfoTarget <- NULL
+  if(!is.null(tAssemblyFn)){
+    seqinfoTarget <- seqinfoFn(tAssemblyFn)
+  }
+  seqinfoQuery <- NULL
+  if(!is.null(qAssemblyFn)){
+    seqinfoQuery <- seqinfoFn(qAssemblyFn)
+  }
+  
   ans <- GRangePairs(first=GRanges(seqnames=cne$X1,
                                    ranges=IRanges(start=cne$X2+1,
                                                   end=cne$X3),
                                    strand="*",
                                    name=paste0(cne$X4, ":", 
                                                (cne$X5+1), "-", cne$X6),
-                                   itemRgb=chr2colour(cne$X4)),
+                                   itemRgb=chr2colour(cne$X4),
+                                   seqinfo=seqinfoTarget),
                      second=GRanges(seqnames=cne$X4,
                                   ranges=IRanges(start=cne$X5+1,
                                                  end=cne$X6),
                                   strand="*",
                                   name=paste0(cne$X1, ":", 
                                               (cne$X2+1), "-", cne$X3),
-                                  itemRgb=chr2colour(cne$X1))
+                                  itemRgb=chr2colour(cne$X1),
+                                  seqinfo=seqinfoQuery)
                      )
   if(is.null(assembly)){
     ## Real both assemblies
