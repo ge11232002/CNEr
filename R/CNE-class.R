@@ -14,9 +14,7 @@ setClass(Class="CNE",
                  CNEFinal="GRangePairs",
                  aligner="character",
                  cutoffs1="integer",
-                 cutoffs2="integer",
-                 smoothingWindow1="integer",
-                 smoothingWindow2="integer"
+                 cutoffs2="integer"
          ),
          prototype=list(assembly1Fn=character(1),
                         assembly2Fn=character(1),
@@ -30,9 +28,7 @@ setClass(Class="CNE",
                         CNEFinal=GRangePairs(),
                         aligner="blat",
                         cutoffs1=4L,
-                        cutoffs2=4L,
-                        smoothingWindow1=300L,
-                        smoothingWindow2=300L
+                        cutoffs2=4L
                         )
 )
 
@@ -46,10 +42,6 @@ setValidity("CNE",
                 return("The aligner must be length 1!")
               if(object@identity > object@window)
                 return("The identity must be equal to smaller than window")
-              if(object@smoothingWindow1 > 1000 || object@smoothingWindow1 < 10)
-                return("The smoothingWindow1 must be between 10 and 1000")
-              if(object@smoothingWindow2 > 1000 || object@smoothingWindow2 < 10)
-                return("The smoothingWindow2 must be between 10 and 1000")
               return(TRUE)
             }
 )
@@ -91,15 +83,11 @@ CNE <- function(assembly1Fn=character(1), assembly2Fn=character(1),
                 CNE12=GRangePairs(), CNE21=GRangePairs(),
                 CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
                 aligner="blat",
-                cutoffs1=4L, cutoffs2=4L,
-                smoothingWindow1=300L,
-                smoothingWindow2=300L
+                cutoffs1=4L, cutoffs2=4L
 ){
   new("CNE", assembly1Fn=assembly1Fn, assembly2Fn=assembly2Fn,
       axt12Fn=axt12Fn, axt21Fn=axt21Fn,
       window=window, identity=identity, CNE12=CNE12, CNE21=CNE21,
       CNEMerged=CNEMerged, CNEFinal=CNEFinal,
-      aligner=aligner, cutoffs1=cutoffs1, cutoffs2=cutoffs2,
-      smoothingWindow1=smoothingWindow1, 
-      smoothingWindow2=smoothingWindow2)
+      aligner=aligner, cutoffs1=cutoffs1, cutoffs2=cutoffs2)
 }

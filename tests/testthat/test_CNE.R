@@ -32,41 +32,26 @@ test_that("test_CNE", {
   expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit", 
                    window=49L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat",
-                   smoothingWindow1=300L, smoothingWindow2=300L))
+                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
   ## test number of assembly, aligner >= 2
   expect_error(CNE(assembly1Fn=c("hg38.2bit", "galGal4.2bit"), 
                    assembly2Fn="danRer10.2bit", window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat",
-                   smoothingWindow1=300L, smoothingWindow2=300L))
+                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
   expect_error(CNE(assembly1Fn="hg38.2bit",
                    assembly2Fn=c("danRer10.2bit", "tetNig2.bit"), window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat",
-                   smoothingWindow1=300L, smoothingWindow2=300L))
+                   CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
   expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
                    window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner=c("blat", "bwa"),
-                   smoothingWindow1=300L, smoothingWindow2=300L))
-  ## test smoothing window
-  expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
-                   window=50L,
-                   identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner=c("blat"),
-                   smoothingWindow1=5L, smoothingWindow2=300L))
-  expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
-                   window=50L,
-                   identity=50L, CNE12=CNE12, CNE21=CNE21,
-                   CNEMerged=CNE12, CNEFinal=CNE12, aligner=c("blat"),
-                   smoothingWindow1=2000L, smoothingWindow2=300L))
+                   CNEMerged=CNE12, CNEFinal=CNE12, aligner=c("blat", "bwa")))
   
   # Test the getter
   cne <- CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
              window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
-             aligner="blat", smoothingWindow1=300L, smoothingWindow2=300L)
+             aligner="blat")
   #expect_identical(assembly1(cne), "hg38.2bit")
   #expect_identical(assembly2(cne), "danRer10.2bit")
   expect_identical(CNE12(cne), CNE12)

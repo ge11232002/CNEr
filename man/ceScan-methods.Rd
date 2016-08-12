@@ -102,8 +102,7 @@
                                     package="BSgenome.Hsapiens.UCSC.hg38"),
                         "single_sequences.2bit"),
     axt12Fn=axtFnDanRer10Hg38, axt21Fn=axtFnHg38DanRer10,
-    cutoffs1=8L, cutoffs2=4L, 
-    smoothingWindow1=200L, smoothingWindow2=300L)
+    cutoffs1=8L, cutoffs2=4L)
   ## Here danRer10Filter is tFilter since danRer10 is assembly1
   cneListDanRer10Hg38 <- ceScan(x=cneDanRer10Hg38, tFilter=bedDanRer10,
                                 qFilter=bedHg38,

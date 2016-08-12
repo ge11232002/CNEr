@@ -27,8 +27,7 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
     window=50L, identity=50L,
     CNE12=GRangePairs(), CNE21=GRangePairs(),
     CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
-    aligner="blat", cutoffs1=4L, cutoffs2=4L,
-    smoothingWindow1=300L, smoothingWindow2=300L)
+    aligner="blat", cutoffs1=4L, cutoffs2=4L)
 
 ### Accessor-like methods:
 \S4method{thresholds}{CNE}(x)
@@ -66,12 +65,6 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
       are removed.}
     \item{x}{Object of class \code{"CNE"}:
       A \code{"CNE"} object.}
-    \item{smoothingWindow1}{Object of class \code{"integer"}:
-      The smoothing window for calculating the CNE density on assembly1.
-      It is in kb and ranging from 10 to 1000.}
-    \item{smoothingWindow2}{Object of class \code{"integer"}:
-      The smoothing window for calculating the CNE density on assembly2.
-      It is in kb and ranging from 10 to 1000.}
 }
 
 \section{Methods}{
@@ -125,8 +118,7 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
   cne <- CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
              window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
-             aligner="blat", cutoffs1=4L, cutoffs2=4L,
-             smoothingWindow1=300L, smoothingWindow2=300L)
+             aligner="blat", cutoffs1=4L, cutoffs2=4L)
              
   ## Accessor
   CNE12(cne)
@@ -135,5 +127,4 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
   CNEMerged(cne)
   CNEFinal(cne)
 }
-
 \keyword{classes}

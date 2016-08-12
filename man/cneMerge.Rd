@@ -60,7 +60,6 @@
   
   ## CNE, missing
   cne <- CNE(assembly1="hg38", assembly2="danRer10", window=50L, identity=50L,
-             CNE12=cne12, CNE21=cne21,
-             aligner="blat", smoothingWindow1=300L, smoothingWindow2=300L)
+             CNE12=cne12, CNE21=cne21, aligner="blat")
   cneMerge(cne)
 }

@@ -248,7 +248,7 @@ cneDanRer10Hg38 <- CNE(
                                     package="BSgenome.Hsapiens.UCSC.hg38"),
                         "single_sequences.2bit"),
   axt12Fn=axtFilesDanRer10Hg38, axt21Fn=axtFilesHg38DanRer10,
-  cutoffs1=8L, cutoffs2=4L, smoothingWindow1=200L, smoothingWindow2=300L)
+  cutoffs1=8L, cutoffs2=4L)
 cneDanRer10Hg38
 ```
 
