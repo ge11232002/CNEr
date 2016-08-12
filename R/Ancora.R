@@ -186,3 +186,41 @@ makeCNEDensity <- function(x, outputDir=".",
   invisible(c(bedFnFirst, bedFnSecond, bwFnFirst, bwFnSecond,
               bigwigFnFirst, bigwigFnSecond))
 }
+
+### -----------------------------------------------------------------
+### makeAncoraFiles: in the format of cne2wBf_GmorY1_dm6_21_30 for loading
+###   into Ancora.
+### Exported!!!
+makeAncoraFiles <- function(cne, outputDir=".",
+                            genomeFirst="first", genomeSecond="second",
+                            threshold="50_50"){
+  # cne is a GRangePairs object
+  Sys.setlocale("LC_COLLATE","C")
+  unsortedNames <- c(genomeFirst, genomeSecond)
+  sortedNames <- sort(c(genomeFirst, genomeSecond))
+  fileName <- paste("cne2wBf", paste(sortedNames, collapse="_"), 
+                    threshold, sep="_")
+  if(identical(sortedNames, unsortedNames)){
+    ## The order is right
+    ans <- data.frame(seqnames(first(cne)),
+                      start(first(cne))-1L, end(first(cne)),
+                      seqnames(second(cne)),
+                      start(second(cne))-1L, end(second(cne)),
+                      strand(second(cne)),
+                      mcols(cne)$score,
+                      mcols(cne)$cigar)
+  }else{
+    ## The order is not  
+    ans <- data.frame(seqnames(second(cne)),
+                      start(second(cne))-1L, end(second(cne)),
+                      seqnames(first(cne)),
+                      start(first(cne))-1L, end(first(cne)),
+                      strand(first(cne)),
+                      mcols(cne)$score,
+                      mcols(cne)$cigar)
+  }
+  write.table(ans, file=file.path(outputDir, fileName), 
+              sep="\t", quote=FALSE, row.names=FALSE,
+              col.names=FALSE)
+  invisible(file.path(outputDir, fileName))
+}

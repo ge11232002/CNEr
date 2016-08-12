@@ -154,7 +154,7 @@ export(
   makeGRBs,
   
   ## Ancora.R
-  readAncora, readAncoraIntoSQLite, makeCNEDensity,
+  readAncora, readAncoraIntoSQLite, makeCNEDensity, makeAncoraFiles,
   
   ## plot.R
   CNEDensity,

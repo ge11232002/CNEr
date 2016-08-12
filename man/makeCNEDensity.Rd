@@ -27,7 +27,8 @@
     \code{character}(1): the genome name of the first and second species.
   }
   \item{threshold}{
-    \code{character}(1): the threshold used to identify the CNEs.
+    \code{character}(1): the threshold used to identify the CNEs
+    in format of "50_50".
   }
   \item{windowSizeFirst,windowSizeSecond}{
     \code{integer}(1): the smoothing window size for generating the CNE density
@@ -47,6 +48,10 @@
   Ge Tan
 }
 
+\note{
+  This function is mainly for internal use in Lenhard group.
+}
+
 \seealso{
   \code{\link{readAncora}}
 }
@@ -57,7 +62,7 @@
                                        package="BSgenome.Hsapiens.UCSC.hg38"),
                            "single_sequences.2bit")
   tAssemblyFn <- file.path(system.file("extdata",
-                                       package="BSgenome.Drerio.UCSC.danRer10"),
+                             package="BSgenome.Drerio.UCSC.danRer10"),
                            "single_sequences.2bit")
   cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
                                             tableName="danRer10_hg38_45_50",
