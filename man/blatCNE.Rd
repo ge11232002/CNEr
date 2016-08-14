@@ -51,8 +51,12 @@
   \dontrun{
     data(CNEDanRer10Hg38)
     data(CNEHg38DanRer10)
-    cne <- CNE(assembly1="/Users/gtan/Downloads/CNEr-Data/2bit/danRer10.2bit",
-               assembly2="/Users/gtan/Downloads/CNEr-Data/2bit/hg38.2bit",
+    cne <- CNE(assembly1Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit"),
+               assembly2Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit"),
                window=50L, identity=45L, CNE12=CNEDanRer10Hg38[["45_50"]],
                CNE21=CNEHg38DanRer10[["45_50"]], aligner="blat")
     cne <- cneMerge(cne)

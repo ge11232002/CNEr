@@ -18,8 +18,8 @@ setClass(Class="CNE",
          ),
          prototype=list(assembly1Fn=character(1),
                         assembly2Fn=character(1),
-                        axt12Fn=character(1),
-                        axt21Fn=character(1),
+                        axt12Fn=character(),
+                        axt21Fn=character(),
                         window=50L,
                         identity=50L,
                         CNE12=GRangePairs(),
@@ -35,9 +35,17 @@ setClass(Class="CNE",
 setValidity("CNE",
             function(object){
               if(length(object@assembly1Fn) != 1L)
-                return("The filename of assembly1Fn must be length 1!")
+                return("The filename of `assembly1Fn` must be length 1!")
+              if(!file.exists(object@assembly1Fn))
+                return("The file `assembly1Fn` must exist!")
               if(length(object@assembly2Fn) != 1L)
-                return("The filename of assembly2Fn must be length 1!")
+                return("The filename of `assembly2Fn` must be length 1!")
+              if(!file.exists(object@assembly2Fn))
+                return("The file `assembly2Fn` must exist!")
+              if(!all(file.exists(object@axt12Fn)))
+                return("The file `axt12Fn` must exist!")
+              if(!all(file.exists(object@axt21Fn)))
+                return("The file `axt21Fn` must exist!")
               if(length(object@aligner) != 1L)
                 return("The aligner must be length 1!")
               if(object@identity > object@window)
@@ -78,7 +86,7 @@ setMethod("CNEFinal", "CNE", function(x) x@CNEFinal)
 ### CNE constructor.
 ### Exported!
 CNE <- function(assembly1Fn=character(1), assembly2Fn=character(1),
-                axt12Fn=character(1), axt21Fn=character(1),
+                axt12Fn=character(), axt21Fn=character(),
                 window=50L, identity=50L,
                 CNE12=GRangePairs(), CNE21=GRangePairs(),
                 CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),

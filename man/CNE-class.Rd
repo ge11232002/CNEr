@@ -23,7 +23,7 @@
 \usage{
 ### Constructors:
 CNE(assembly1Fn=character(1), assembly2Fn=character(1),
-    axt12Fn=character(1), axt21Fn=character(1),
+    axt12Fn=character(), axt21Fn=character(),
     window=50L, identity=50L,
     CNE12=GRangePairs(), CNE21=GRangePairs(),
     CNEMerged=GRangePairs(), CNEFinal=GRangePairs(),
@@ -115,7 +115,12 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
                                                            146653221)),
                                       strand="+")
                        )
-  cne <- CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
+  cne <- CNE(assembly1Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit"),
+             assembly2Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit"),
              window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
              aligner="blat", cutoffs1=4L, cutoffs2=4L)

@@ -26,34 +26,37 @@ test_that("test_CNE", {
                                                            146653221)),
                                       strand="+")
   )
-  
+  assembly1Fn <- file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit")
+  assembly2Fn <- file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit")
   # Test the validity
   ## test window < identity
-  expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit", 
+  expect_error(CNE(assembly1Fn=assembly1Fn, assembly2Fn=assembly2Fn, 
                    window=49L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
                    CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
   ## test number of assembly, aligner >= 2
-  expect_error(CNE(assembly1Fn=c("hg38.2bit", "galGal4.2bit"), 
-                   assembly2Fn="danRer10.2bit", window=50L,
+  expect_error(CNE(assembly1Fn=c(assembly1Fn, assembly2Fn), 
+                   assembly2Fn=assembly2Fn, window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
                    CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
-  expect_error(CNE(assembly1Fn="hg38.2bit",
-                   assembly2Fn=c("danRer10.2bit", "tetNig2.bit"), window=50L,
+  expect_error(CNE(assembly1Fn=assembly1Fn,
+                   assembly2Fn=c(assembly1Fn, assembly2Fn), window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
                    CNEMerged=CNE12, CNEFinal=CNE12, aligner="blat"))
-  expect_error(CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
+  expect_error(CNE(assembly1Fn=assembly1Fn, assembly2Fn=assembly2Fn,
                    window=50L,
                    identity=50L, CNE12=CNE12, CNE21=CNE21,
                    CNEMerged=CNE12, CNEFinal=CNE12, aligner=c("blat", "bwa")))
   
   # Test the getter
-  cne <- CNE(assembly1Fn="hg38.2bit", assembly2Fn="danRer10.2bit",
+  cne <- CNE(assembly1Fn=assembly1Fn, assembly2Fn=assembly2Fn,
              window=50L, identity=50L,
              CNE12=CNE12, CNE21=CNE21, CNEMerged=CNE12, CNEFinal=CNE12,
              aligner="blat")
-  #expect_identical(assembly1(cne), "hg38.2bit")
-  #expect_identical(assembly2(cne), "danRer10.2bit")
   expect_identical(CNE12(cne), CNE12)
   expect_identical(CNE21(cne), CNE21)
   expect_identical(thresholds(cne), "50_50")

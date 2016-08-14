@@ -59,7 +59,13 @@
   cneMerge(cne12, cne21)
   
   ## CNE, missing
-  cne <- CNE(assembly1="hg38", assembly2="danRer10", window=50L, identity=50L,
+  cne <- CNE(assembly1Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit"),
+             assembly2Fn=file.path(system.file("extdata",
+                                    package="BSgenome.Hsapiens.UCSC.hg38"),
+                        "single_sequences.2bit"), 
+             window=50L, identity=50L,
              CNE12=cne12, CNE21=cne21, aligner="blat")
   cneMerge(cne)
 }
