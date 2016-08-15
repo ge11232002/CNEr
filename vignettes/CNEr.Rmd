@@ -133,10 +133,10 @@ fn <- file.path(system.file("extdata", package="CNEr"),
                 "chr4.hg19.galGal3.net.axt.gz")
 axt <- readAxt(fn, 
                tAssemblyFn=file.path(system.file("extdata",
-                                       package="BSgenome.Hsapiens.UCSC.hg19"),
+                                     package="BSgenome.Hsapiens.UCSC.hg19"),
                                      "single_sequences.2bit"),
                qAssemblyFn=file.path(system.file("extdata",
-                                       package="BSgenome.Ggallus.UCSC.galGal3"),
+                                     package="BSgenome.Ggallus.UCSC.galGal3"),
                                      "single_sequences.2bit"))
 library(GenomeInfoDb)
 syntenicDotplot(axt, firstChrs=c("chr4"), secondChrs="chr4", type="dot")

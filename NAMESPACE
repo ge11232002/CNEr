@@ -60,6 +60,7 @@ importFrom(GO.db, GOCCANCESTOR, GOCCOFFSPRING, GOCCCHILDREN,
                   GOBPANCESTOR, GOBPOFFSPRING, GOBPCHILDREN,
                   GOMFANCESTOR, GOMFOFFSPRING, GOMFCHILDREN)
 importFrom("grDevices", "jpeg", "pdf", "png", "postscript")
+importFrom(R.utils, gunzip, gzip)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr

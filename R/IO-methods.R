@@ -57,6 +57,13 @@ readAxt <- function(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL){
     stop("No such file ", paste(axtFiles[index_noexists], sep=" "))
   }
   
+  if(.Platform$OS.type == "windows"){
+    ## The code on Windows platform cannot deal with gzipped axt file
+    ## We need to ungzip it first and gzip it back later
+    axtFiles <- sapply(axtFiles, gunzip)
+    on.exit(sapply(axtFiles, gzip))
+  }
+  
   # Prepare the seqinfo when available
   seqinfoTarget <- NULL
   if(!is.null(tAssemblyFn)){
