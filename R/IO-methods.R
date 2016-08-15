@@ -50,6 +50,9 @@ readBed <- function(bedFile, assemblyFn=NULL){
 ### read the axt files into an axt object.
 ### Exported!
 readAxt <- function(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL){
+  if(any(duplicated(file_ext(axtFiles))))
+    stop("`axtFiles` must have same extensions!")
+  
   # Read axt files into R axt object.
   # The coordinates are 1-based for start and end.
   index_noexists <- !file.exists(axtFiles)
@@ -60,8 +63,10 @@ readAxt <- function(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL){
   if(.Platform$OS.type == "windows"){
     ## The code on Windows platform cannot deal with gzipped axt file
     ## We need to ungzip it first and gzip it back later
-    axtFiles <- sapply(axtFiles, gunzip)
-    on.exit(sapply(axtFiles, gzip))
+    if(any(file_ext(axtFiles) == "gz")){
+      axtFiles <- sapply(axtFiles, gunzip)
+      on.exit(sapply(axtFiles, gzip))
+    }
   }
   
   # Prepare the seqinfo when available
