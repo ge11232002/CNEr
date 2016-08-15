@@ -9,14 +9,14 @@
   Calculate the N50, N90 values for a fasta or 2bit file.
 }
 \usage{
-N50(filepath)
-N90(filepath)
+N50(fn)
+N90(fn)
 }
 
 \arguments{
-  \item{filepath}{
-    The path name of a fasta or 2bit file.
-}
+  \item{fn}{
+    \code{character}(1): The path of a fasta or 2bit file.
+  }
 }
 \details{
   This function calculates the N50, N90 values for an assembly.
@@ -35,4 +35,9 @@ N90(filepath)
 \author{
   Ge Tan
 }
-
+\examples{
+  twoBitFn <- file.path(system.file("extdata",
+                                    package="BSgenome.Drerio.UCSC.danRer10"),
+                        "single_sequences.2bit")
+  N50(twoBitFn)
+}

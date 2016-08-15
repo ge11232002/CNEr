@@ -8,7 +8,8 @@
   Make Genomic Regulatory Blocks (GRBs) boundaries prediction from a set of CNEs.
 }
 \usage{
-  makeGRBs(x, winSize=NULL, genes=NULL, ratio=0.5)
+  makeGRBs(x, winSize=NULL, genes=NULL, ratio=1,
+           background=c("chromosome", "genome"))
 }
   
 \arguments{
@@ -26,9 +27,14 @@
     \code{NULL} or \code{GRanges} object: the protein-coding genes ranges.
   }
   \item{ratio}{
-    \code{numeric}(1) between 0 and 1: 
+    \code{numeric}(1): 
     the threshold to control the stringency of the GRBs.
     Higher value, shorter and fewer GRBs, and vice versa.
+  }
+  \item{background}{
+    \code{character}(1):
+    can be "chromosome" or "genome". When slice the CNE density,
+    the background is calculated based on per chromosome or the whole genome.
   }
 }
 \details{
@@ -36,10 +42,12 @@
   Then we segment the regions according to the value of CNE densities.
   The regions with CNE densities above the expected CNE densities * ratio are
   consider as putative GRBs.
-  As last step, the putative GRBs that do not encompass any gene are filtered out.
+  As last step, the putative GRBs that do not encompass any gene
+  are filtered out.
 }
 \value{
-  A \code{GRanges} object with GRB coordinates is returned.
+  A \code{GRanges} of GRB coordinates is returned, with the numebr of CNEs
+  within each GRB.
 }
 
 \author{
@@ -47,7 +55,19 @@
 }
 
 \examples{
-  \dontrun{
-    ## Add example CNEs to make an example.
-  }
+  library(TxDb.Drerio.UCSC.danRer10.refGene)
+  refGenesDanRer10 <- genes(TxDb.Drerio.UCSC.danRer10.refGene)
+  ancoraCNEsFns <- file.path(system.file("extdata", package="CNEr"), 
+                             c("cne2wBf_cypCar1_danRer10_100_100",
+                               "cne2wBf_cteIde1_danRer10_100_100",
+                               "cne2wBf_AstMex102_danRer10_48_50"))
+  cneList <- do.call(GRangesList, 
+                     lapply(ancoraCNEsFns, readAncora, assembly="danRer10"))
+  names(cneList) <- c("Common carp", "Grass carp", "Blind cave fish")
+  seqlengths(cneList) <- seqlengths(TxDb.Drerio.UCSC.danRer10.refGene)[
+                           names(seqlengths(cneList))]
+  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
+           background="genome")
+  makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
+           background="chromosome")
 }

@@ -54,13 +54,17 @@ Then we can run `lastz` function to generate the _lav_ files.
 ## lastz aligner
 assemblyDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit"
 axtDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/axt"
-assemblyTarget <- file.path(assemblyDir, "danRer10.2bit")
-assemblyQuery <- file.path(assemblyDir, "hg38.2bit")
+assemblyTarget <- file.path(system.file("extdata",
+                              package="BSgenome.Drerio.UCSC.danRer10"),
+                            "single_sequences.2bit")
+assemblyQuery <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
 lavs <- lastz(assemblyTarget, assemblyQuery, 
               outputDir=axtDir,
-	            chrsTarget=c("chr1", "chr2", "chr3"),
-	            chrsQuery=c("chr1", "chr2", "chr3"),
-	            distance="far", mc.cores=4)
+              chrsTarget=c("chr1", "chr2", "chr3"),
+              chrsQuery=c("chr1", "chr2", "chr3"),
+              distance="far", mc.cores=4)
 
 ## lav files to psl files conversion
 psls <- lavToPsl(lavs, removeLav=FALSE, binary="lavToPsl")
@@ -87,10 +91,10 @@ system2(command="lastdb", args=c("-c", file.path(assemblyDir, "danRer10"),
                                  file.path(assemblyDir, "danRer10.fa")))
 
 ## Run last aligner
-last(db=file.path(assemblyDir, "danRer10"),
-     queryFn=file.path(assemblyDir, "hg38.fa"),
-     outputFn=file.path(axtDir, "danRer10.hg38.maf"),
-     distance="far", binary="lastal", mc.cores=4L)
+lastal(db=file.path(assemblyDir, "danRer10"),
+       queryFn=file.path(assemblyDir, "hg38.fa"),
+       outputFn=file.path(axtDir, "danRer10.hg38.maf"),
+       distance="far", binary="lastal", mc.cores=4L)
 
 ## maf to psl 
 psls <- file.path(axtDir, "danRer10.hg38.psl")
@@ -98,6 +102,11 @@ system2(command="maf-convert", args=c("psl",
                                       file.path(axtDir, "danRer10.hg38.maf"),
                                       ">", psls))
 ```
+
+## YASS aligner
+Another alternative of alignment software is 
+[YASS](http://bioinfo.lifl.fr/yass/).
+It may be added into this pipeline after we test the performance.
 
 # Chaining:
 If two matching alignments next to each other are close enough, they are joined into one fragment.

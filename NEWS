@@ -1,10 +1,25 @@
+CHANGES IN Bioc 3.4
+NEW FEATURES
+    o Updated CNE class for storing all the information about 
+      running the pipeline
+    o Add read.rmMask.GRanges to read RepeatMasker .out file
+    o Add the distribution plot of axt alignment matches.
+    o Add the distribution plot of CNE length.
+    o Add the syntenicDotplot for axt alignment and GRangePairs.
+    o When readAxt and readBed, seqinfo is kept when available.
+    o New fixCoordinates function makes the coordinates of Axt alignments
+      always relative to positive strands.
+    o Add parallel subAxt for Axt alignment.
+    o Add the plot of genomic distribution of CNE.
+    o Add the function to make bed and bigwig files of CNEs.
+
 CHANGES IN Bioc 3.3
 ------------------------
 BUG FIXES
-    o Fix a bug caused by "format" in the blat step
+    o Fix a bug caused by "format" in the blat step.
 
 NEW FEATURES
     o Add the pairwise whole genome alignment pipeline
     o Add a new class "GRangePairs"
-
-
+    o "Axt" class is now based on "GRangePairs" class.
+    o readAncora for reading Ancora format CNE files.

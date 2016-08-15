@@ -11,7 +11,7 @@
 \usage{
   lastz(assemblyTarget, assemblyQuery, outputDir = ".",
         chrsTarget = NULL, chrsQuery = NULL,
-        distance = c("far", "medium", "close"), binary = "lastz", 
+        distance = c("far", "medium", "near"), binary = "lastz", 
         mc.cores = getOption("mc.cores", 2L), echoCommand = FALSE)
 }
 
@@ -34,7 +34,7 @@
     from the query assembly will be aligned.
   }
   \item{distance}{
-    It can be "far", "medium" or "close". It decides the score matrix used in
+    It can be "far", "medium" or "near". It decides the score matrix used in
     \emph{lastz} aligner. 
     See `?scoringMatrix` for more details.
 }

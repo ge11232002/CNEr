@@ -1,37 +1,44 @@
 \name{readBed}
 \alias{readBed}
 \title{
-  readBed
+  Read bed file
 }
 \description{
   Read the coordiantes information from a bed file.
 }
 \usage{
-  readBed(bedFile)
+  readBed(bedFile, assemblyFn=NULL)
 }
 \arguments{
   \item{bedFile}{
-    The \code{character}(1) file name of the 'bed' file to read.
+    \code{character}(1): filename of the \sQuote{bed} file to read.
+  }
+  \item{assemblyFn}{
+    \code{character}(1): filename of the twoBit or fasta file for the genome.
   }
 }
 \details{
   This function is designed to read the bed file for the 
   first three columns,
-  \emph{i.e.}, "chrom", "chromStart", "chromEnd".
+  \emph{i.e.}, \sQuote{chrom}, \sQuote{chromStart}, \sQuote{chromEnd}.
   The strand information is also stored when available.
   
-  In bed file, the "chromStart" is on 0-based coordinate 
-  while "chromEnd" is on 1-based coordinate.
+  In bed file, the \sQuote{chromStart} is on 0-based coordinate 
+  while \sQuote{chromEnd} is on 1-based coordinate.
   For example, the first 100 bases of a chromosome are 
-  defined as "chromStart"=0, "chromEnd"=100, 
+  defined as \sQuote{chromStart=0}, \sQuote{chromEnd=100}, 
   and span the bases numbered 0-99.
-  When it is read into GRanges, 
-  both the chromStart and chromEnd are on 1-based coordinate, \emph{i.e.},
-  "chromStart"=1 and "chromEnd"=100.
+  When it is read into \code{GRanges},
+  both the \sQuote{chromStart} and \sQuote{chromEnd} are on 1-based coordinate,
+  \emph{i.e.},
+  \sQuote{chromStart=1} and \sQuote{chromEnd=100}.
+  
+  When \sQuote{assemblyFn} is not \code{NULL}, the corresponding \code{Seqinfo}
+  will be added into the returned \code{GRanges}.
 }
 
 \value{
-  A \code{GRanges} is returned. 
+  A \code{GRanges} object is returned. 
   When no strand information is availabe in bed file,
   all the ranges are assumed to be on the positive strand.
 }
@@ -45,11 +52,14 @@
 }
 
 \seealso{
-\code{\link{import.bed}}
+  \code{\link{import.bed}}
 }
 
 \examples{
-  bedHg19Fn <- file.path(system.file("extdata", package="CNEr"), 
-                         "filter_regions.hg19.bed")
-  bedHg19 <- readBed(bedHg19Fn)
+  bedFn <- file.path(system.file("extdata", package="CNEr"), 
+                     "filter_regions.hg38.bed")
+  assemblyFn <- file.path(system.file("extdata",
+                          package="BSgenome.Hsapiens.UCSC.hg38"),
+                          "single_sequences.2bit")
+  bed <- readBed(bedFn, assemblyFn=assemblyFn)
 }

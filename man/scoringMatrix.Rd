@@ -8,7 +8,7 @@
   Generate the scoring matrix for \emph{lastz} aligner.
 }
 \usage{
-  scoringMatrix(distance = c("far", "medium", "close"))
+  scoringMatrix(distance = c("far", "medium", "near"))
 }
 
 \arguments{

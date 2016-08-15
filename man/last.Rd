@@ -13,7 +13,7 @@
          outputFn=sub("\\\.(fa|fasta)$", ".maf", 
                       paste(basename(db), basename(queryFn), sep = ","),
                       ignore.case = TRUE),
-         distance=c("far", "medium", "close"), binary="lastal",
+         distance=c("far", "medium", "near"), binary="lastal",
          mc.cores=getOption("mc.cores", 2L), echoCommand=FALSE)
 }
 
@@ -28,7 +28,7 @@
     \code{character}(1): the file name of the output \emph{maf} file.
   }
   \item{distance}{
-    It can be "far", "medium" or "close". It decides the score matrix used in
+    It can be "far", "medium" or "near". It decides the score matrix used in
     \emph{lastz} aligner. 
     See `?scoringMatrix` for more details.
   }

@@ -40,13 +40,6 @@ seqToAlignment <- function(DNAStringSet){
 ### rever the cigar string. i.e. 20M15I10D will be reversed to 10D15I20M.
 ### EXPORTED!
 reverseCigar <- function(cigar, ops=CIGAR_OPS){
-  #cigar = sapply(splitCigar(cigar), function(x){
-  #               paste0(rev(x[[2]]), rev(rawToChar(x[[1]], multiple=TRUE)), 
-  #                      collapse="")
-  #                       }
-  # splitCigar is deprecated...Before I am in the Bioconductor..
-  # some new cigar utilities functions.
-  #)
   cigarOps <- lapply(explodeCigarOps(cigar, ops=ops), rev)
   cigarOpsLengths <- lapply(explodeCigarOpLengths(cigar, ops=ops), rev)
   cigar <- mapply(paste0, cigarOpsLengths, cigarOps, collapse="")
@@ -73,6 +66,9 @@ my.system <- function(cmd, echo=TRUE, intern=FALSE, ...){
 ### a feature spanning the given range. * USE THIS WHEN CREATING A DB *
 ### Exported!
 .validateBinRanges <- function(starts, ends){
+  if(length(starts) != length(ends)){
+    stop("starts and ends must be same length!")
+  }
   if(any(ends <= 0 | starts <= 0)){
     stop("starts and ends must be positive integers!")
   }
@@ -110,24 +106,27 @@ binRangesFromCoordRange <- function(start, end){
 ### section of a SQL SELECT statement that is to 
 ### select features overlapping a certain range. * USE THIS WHEN QUERYING A DB *
 ### EXPORTED!
-binRestrictionString <- function(start, end, field="bin"){
+.singleBinRestrictionString <- function(start, end, field="bin"){
   binRanges <- binRangesFromCoordRange(start, end)
   cmdString <- mapply(function(x,y, field){
-                      if(x==y){
-                        paste(field, "=", x)
-                      }else{
-                        paste(field, ">=", x, "and", field, "<=", y)
-                      }
-                     }, binRanges[ ,1], binRanges[ ,2], field=field
-                     )
+    if(x==y){
+      paste(field, "=", x)
+    }else{
+      paste(field, ">=", x, "and", field, "<=", y)
+    }
+  }, binRanges[ ,1], binRanges[ ,2], field=field
+  )
   cmdString <- paste(cmdString, collapse=") or (")
   cmdString <- paste0("((", cmdString, "))")
   return(cmdString)
 }
 
-
-
-
+binRestrictionString <- function(start, end, field="bin"){
+  stopifnot(length(start) == length(end))
+  ans <- mapply(.singleBinRestrictionString, start, end,
+                MoreArgs=list(field=field), SIMPLIFY=TRUE)
+  return(ans)
+}
 
 #get_cne_ranges_in_region = function(CNE, whichAssembly=c(1,2), 
 #                                    chr, CNEstart, CNEend, min_length){
@@ -168,100 +167,6 @@ binRestrictionString <- function(start, end, field="bin"){
 #  return(res)
 #}
 
-### -----------------------------------------------------------------
-### save the CNE tables into a local SQLite database
-### Exported!!
-setMethod("saveCNEToSQLite",
-          signature(CNE="data.frame", tableName="character"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            ## tableName should be in the format "danRer7_hg19_49_50"
-            if(!grepl("^.+_.+_\\d+_\\d+$", tableName))
-              stop("The tableName should be in the format danRer7_hg19_49_50.")
-            CNE$bin1 <- binFromCoordRange(CNE$start1, CNE$end1)
-            CNE$bin2 <- binFromCoordRange(CNE$start2, CNE$end2)
-            # reorder it
-            CNE <- CNE[ ,c("bin1", "chr1", "start1", "end1", "bin2",
-                           "chr2", "start2", "end2", "strand", 
-                           "similarity", "cigar")]
-            con <- dbConnect(SQLite(), dbname=dbName)
-            on.exit(dbDisconnect(con))
-            dbWriteTable(con, tableName, CNE, row.names=FALSE, overwrite=overwrite)
-          }
-          )
-
-setMethod("saveCNEToSQLite",
-          signature(CNE="CNE", tableName="missing"),
-          function(CNE, dbName, tableName, overwrite=FALSE){
-            tableNames = names(CNE@CNERepeatsFiltered)
-            for(i in 1:length(CNE@CNERepeatsFiltered)){
-              saveCNEToSQLite(CNE@CNERepeatsFiltered[[i]],
-                              dbName=dbName, tableName=tableNames[i],
-                              overwrite=overwrite)
-            }
-          }
-          )
-          
-
-
-
-### -----------------------------------------------------------------
-### read CNE ranges from a local SQLite database.
-### Exported!
-readCNERangesFromSQLite <- function(dbName, tableName, chr, start, end, 
-                                    whichAssembly=c("L","R"), minLength=NULL){
-  nrGraphs <- 1
-  ## Let's make nrGraphs=1, make all the cnes together.
-  if(!is(start, "integer"))
-    stop("start must be an integer!")
-  if(!is(end, "integer"))
-    stop("end must be an integer!")
-  CNEstart <- start
-  CNEend <- end
-  whichAssembly <- match.arg(whichAssembly)
-  con <- dbConnect(SQLite(), dbname=dbName)
-  on.exit(dbDisconnect(con))
-  if(nrGraphs == 1){
-    sqlCmd <- switch(whichAssembly,
-                     "L"=paste("SELECT start1,end1 from", tableName, 
-                               "WHERE chr1=", paste0("'", chr, "'"), 
-                               "AND start1 >=", CNEstart, "AND end1 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin1")),
-                     "R"=paste("SELECT start2,end2 from", tableName, 
-                               "WHERE chr2=", paste0("'", chr, "'"), 
-                               "AND start2 >=", CNEstart, "AND end2 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin2"))
-                     )
-    if(!is.null(minLength))
-      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
-                      "AND end2-start2+1 >=", minLength)
-    fetchedCNE <- dbGetQuery(con, sqlCmd)
-    fetchedCNE <- IRanges(start=fetchedCNE[ ,1], end=fetchedCNE[, 2])
-  }else if(nrGraphs > 1){
-    sqlCmd <- switch(whichAssembly,
-                     "L"=paste("SELECT chr2,start1,end1 from", tableName, 
-                               "WHERE chr1=", paste0("'", chr, "'"), 
-                               "AND start1 >=", CNEstart, "AND end1 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin1")),
-                     "R"=paste("SELECT chr1,start2,end2 from", tableName, 
-                               "WHERE chr2=", paste0("'", chr, "'"), 
-                               "AND start2 >=", CNEstart, "AND end2 <=", 
-                               CNEend, "AND", 
-                               binRestrictionString(CNEstart, CNEend, "bin2"))
-                     )
-    if(!is.null(minLength))
-      sqlCmd <- paste(sqlCmd, "AND end1-start1+1 >=", minLength, 
-                      "AND end2-start2+1 >=", minLength)
-    fetchedCNE <- dbGetQuery(con, sqlCmd)
-    fetchedCNE <- GRanges(seqnames=fetchedCNE[ ,1], 
-                          ranges=IRanges(start=fetchedCNE[ ,2], 
-                                         end=fetchedCNE[ ,3]))
-  }
-  return(fetchedCNE)
-}
-
 queryAnnotationSQLite <- function(dbname, tablename, chr, start, end){
   con <- dbConnect(SQLite(), dbname=dbname)
   query <- paste("SELECT * from", tablename, "WHERE", 
@@ -279,7 +184,7 @@ queryAnnotationSQLite <- function(dbname, tablename, chr, start, end){
 fetchChromSizes <- function(assembly){
   # UCSC
   message("Trying UCSC...")
-  goldenPath <- "ftp://hgdownload.cse.ucsc.edu/goldenPath/"
+  goldenPath <- "http://hgdownload.cse.ucsc.edu/goldenPath/"
   targetURL <- paste0(goldenPath, assembly, "/database/chromInfo.txt.gz")
   targetFile <- tempfile(pattern = "chromSize", tmpdir = tempdir(), fileext = "")
   download <- try(download.file(url=targetURL, destfile=targetFile, 
@@ -293,25 +198,72 @@ fetchChromSizes <- function(assembly){
   }
   # other sources? Add later
   return(NULL)
-  ## MySQL way
-  ## UCSC
-  #message("Trying UCSC...")
-  #con <- try(dbConnect(MySQL(), user="genome", password="", 
-  #                     dbname=assembly, host="genome-mysql.cse.ucsc.edu"), 
-  #           silent=TRUE)
-  #if(class(con) != "try-error"){
-  #  on.exit(dbDisconnect(con))
-  #  sqlCmd <- "SELECT chrom,size FROM chromInfo ORDER BY size DESC"
-  #  ans <- try(dbGetQuery(con, sqlCmd))
-  #  if(class(ans) == "try-error"){
-  #    return(NULL)
-  #  }else{
-  #    ans <- Seqinfo(seqnames=ans$chrom, seqlengths=ans$size, genome=assembly)
-  #    return(ans)
-  #  }
-  #}
-  ## other sources? Add later
-  #return(NULL)
 }
 
+### -----------------------------------------------------------------
+### seqlengthsNA: check if any seqlength is NA, then TRUE; otherwise FALSE.
+### not exported!
+seqlengthsNA <- function(x){
+  if(is(x, "GRanges")){
+    if(any(is.na(seqlengths(x))))
+      return(TRUE)
+  }else if(is(x, "GRangePairs")){
+    if(any(is.na(seqlengths(first(x)))))
+      return(TRUE)
+    if(any(is.na(seqlengths(second(x)))))
+      return(TRUE)
+  }else{
+    stop("`x`  must be a `GRanges` or `GRangePairs` object!")
+  }
+  return(FALSE)
+}
 
+### -----------------------------------------------------------------
+### savefig: ‘savefig’ saves figures to files with minimal surrounding white
+### space, suitable for inclusion in books and reports. ‘savefig’ is
+### especially good for including plots in LaTeX. File formats
+### supported are eps, pdf and jpg. Default file format for ‘savefig’
+### is eps. The other functions are wrappers for saving specific file
+### formats.
+### Based on the unofficially released package "monash" from Rob J Hyndman
+### Not Exported!
+savefig <- function (filename, height=10, width = (1 + sqrt(5))/2*height,
+                     type=c("eps","pdf","jpg","png"), pointsize = 10,
+                     family = "Helvetica", sublines = 0, toplines = 0, 
+                     leftlines = 0, res=300,
+                     colormodel=c("srgb", "srgb+gray", "rgb", "rgb-nogray",
+                                  "gray", "grey", "cmyk"))
+{
+  type <- match.arg(type)
+  filename <- paste(filename, ".", type, sep = "")
+  if(type=="eps")
+  {
+    postscript(file = filename, horizontal = FALSE,
+               width = width/2.54, height = height/2.54, pointsize = pointsize,
+               family = family, onefile = FALSE, print.it = FALSE,
+               colormodel=colormodel)
+  }
+  else if(type=="pdf")
+  {
+    pdf(file = filename, width=width/2.54, height=height/2.54,
+        pointsize=pointsize,
+        family=family, onefile=TRUE, colormodel=colormodel)
+  }
+  else if(type=="jpg")
+  {
+    jpeg(filename=filename, width=width, height=height, res=res,quality=100,
+         units="cm")#, pointsize=pointsize*50)
+  }
+  else if(type=="png")
+  {
+    png(filename=filename, width=width, height=height, res=res, units="cm")
+    #, pointsize=pointsize*50)
+  }
+  else
+    stop("Unknown file type")
+  par(mgp = c(2.2, 0.45, 0), tcl = -0.4, 
+      mar = c(3.2 + sublines + 0.25 * (sublines > 0),
+              3.5 + leftlines, 1 + toplines, 1) + 0.1)
+  par(pch = 1)
+  invisible()
+}

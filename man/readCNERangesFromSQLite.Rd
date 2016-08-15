@@ -2,7 +2,7 @@
 \alias{readCNERangesFromSQLite}
 
 \title{
-readCNERangesFromSQLite function
+  readCNERangesFromSQLite function
 }
 \description{
 Query the SQLite database based on chromosome, 
@@ -11,8 +11,9 @@ Usually not to be used directly.
 For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
-readCNERangesFromSQLite(dbName, tableName, chr, start, end,
-                        whichAssembly=c("L","R"), minLength=NULL)
+readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
+                        whichAssembly=c("first","second"), minLength=NULL,
+                        tAssemblyFn=NULL, qAssemblyFn=NULL)
 }
 
 \arguments{
@@ -23,38 +24,70 @@ readCNERangesFromSQLite(dbName, tableName, chr, start, end,
     A object of \code{character}, the name of table for this CNE data table.
   }
   \item{chr}{
-    A object of \code{character}, the chromosome to query
+    \code{character}(n): the chromosomes to query.
+    When it's NULL, all CNEs will be returned.
   }
   \item{start, end}{
-    A object of \code{integer}, the start and end coordiante to fetch the CNEs.
+    \code{integer}(n): the start and end coordiantes to fetch the CNEs.
   }
   \item{whichAssembly}{
-    A object of \code{character}, 
-    the genome to fetch is in the "Left" columns or "Right" 
-    columns of the table.
+    \code{character}(1):
+    The coordinates to fetch CNEs are based on \sQuote{first} genome or 
+    \sQuote{last} genome.
   }
   \item{minLength}{
-    A object of \code{integer}, the minimal length for selected CNEs.
+    \code{integer}(1): the minimal length for selected CNEs.
+    The pair of CNEs both must be longer than this \code{minLength}.
+  }
+  \item{tAssemblyFn,qAssemblyFn}{
+    \code{character}(1): filename of the \sQuote{twoBit} or \sQuote{fasta} 
+    file for the target and query genome.
   }
 }
 
 \value{
-A object of \code{IRanges} is retu
+  A object of \code{GRangePairs} is returned.
 }
 
 \author{
-Ge Tan
+  Ge Tan
 }
 
 \examples{
-    dbName <- file.path(system.file("extdata", package="CNEr"),
-                       "cne.sqlite")
-    chr <- "chr11"
-    start <- 31000000L
-    end <-  33000000L
-    minLength <- 50L
-    tableName <- "danRer7_hg19_45_50"
-    fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
-                                               start, end, whichAssembly="L",
-                                               minLength=minLength)
+  dbName <- file.path(system.file("extdata", package="CNEr"),
+                    "danRer10CNE.sqlite")
+  tableName <- "danRer10_hg38_45_50"
+  
+  qAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  tAssemblyFn <- file.path(system.file("extdata",
+                           package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
+                           
+  ## single chr, start, end
+  chr <- "chr6"
+  start <- 24000000L
+  end <-  27000000
+  minLength <- 50L
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start, end, 
+                                              whichAssembly="first",
+                                              minLength=minLength,
+                                              tAssemblyFn=tAssemblyFn,
+                                              qAssemblyFn=qAssemblyFn)
+  ## multiple chr, start, end
+  chr=c("chr1", "chr3")
+  start=c(90730248, 137523122)
+  end=c(90730300, 137523190)
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start, end, 
+                                              whichAssembly="second",
+                                              minLength=minLength)
+  
+  ## chr, NULL, NULL
+  fetchedCNERanges <- readCNERangesFromSQLite(dbName, tableName, chr, 
+                                              start=NULL, end=NULL,
+                                              whichAssembly="second",
+                                              minLength=minLength)
 }

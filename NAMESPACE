@@ -1,27 +1,32 @@
 useDynLib(CNEr, .registration = TRUE)
 import(BiocGenerics)
+
 ### -----------------------------------------------------------------
 ### Import S4 classes defined in other packages
 ###
 importClassesFrom(methods, ANY, character, integer, missing)
-importClassesFrom(S4Vectors, List, characterORNULL, DataFrame)
+importClassesFrom(S4Vectors, List, characterORNULL, DataFrame, Pairs)
 importClassesFrom(GenomicRanges, GRanges)
 importClassesFrom(Biostrings, DNAStringSet)
 
 ### -----------------------------------------------------------------
 ### Import S4 methods defined in other packages
 ###
-importMethodsFrom(rtracklayer, import.bed)
-importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame)
+importMethodsFrom(rtracklayer, import.bed, export.bedGraph, export.bed,
+                  export.bw)
+importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame,
+                  genome, "genome<-", "seqlengths<-")
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
                                  findOverlaps, coverage, grglist)
 importMethodsFrom(XVector, subseq)
-importMethodsFrom(DBI, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
+importMethodsFrom(RSQLite, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
-importMethodsFrom(Biostrings, mismatchSummary)
+importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
-                  showAsCell, extractROWS, mcols, "mcols<-")
-importMethodsFrom(IRanges, slice, ranges)
+                  showAsCell, extractROWS, mcols, "mcols<-", split, runValue,
+                  as.factor, "%in%", second, "first<-", "second<-",
+                  runLength)
+importMethodsFrom(IRanges, slice, ranges, "ranges<-")
 importMethodsFrom(GenomicAlignments, last)
 
 ### -----------------------------------------------------------------
@@ -32,17 +37,30 @@ importFrom(GenomicRanges, GRanges)
 importFrom(GenomicAlignments, explodeCigarOps, CIGAR_OPS, explodeCigarOpLengths)
 importFrom(Biostrings, DNAStringSet, DNA_BASES, fasta.seqlengths)
 importFrom(RSQLite, SQLite)
-importFrom(methods, is, new)
+importFrom(methods, is, new, "as", "extends", "validObject")
 importFrom(rtracklayer, TwoBitFile)
 importFrom(readr, read_tsv)
-importFrom(IRanges, IRanges)
+importFrom(IRanges, IRanges, IntegerList, RleViewsList)
 importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
            normalizeSingleBracketSubscript, normalizeDoubleBracketSubscript,
-           isTRUEorFALSE, isSingleString)
+           isTRUEorFALSE, isSingleString, queryLength, subjectLength)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
 importFrom(utils, download.file, read.table, write.table)
 importFrom("stats", "setNames")
+importFrom(reshape2, melt)
+importFrom(ggplot2, ggplot, aes, aes_q, aes_string, geom_tile, theme_bw, 
+    xlab, ylab, ggtitle, geom_point, scale_colour_manual, 
+    scale_fill_continuous, geom_text, scale_x_continuous, scale_y_continuous,
+    geom_segment, facet_wrap)
+importFrom(poweRlaw, bootstrap_p, estimate_pars, estimate_xmin)
+importFrom("graphics", "lines", "par", "plot", "text")
+importFrom(annotate, getGOTerm)
+importFrom(GO.db, GOCCANCESTOR, GOCCOFFSPRING, GOCCCHILDREN,
+                  GOBPANCESTOR, GOBPOFFSPRING, GOBPCHILDREN,
+                  GOMFANCESTOR, GOMFOFFSPRING, GOMFCHILDREN)
+importFrom("grDevices", "jpeg", "pdf", "png", "postscript")
+importFrom(R.utils, gunzip, gzip)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
@@ -55,20 +73,22 @@ exportClasses(Axt,
 ### Export S4 methods for generics not defined in CNEr
 ###
 exportMethods(
-  "[", 
-  c,
+#"[", 
+ c,
   
   ## AllClasses.r
-  length,
   score,
-  nchar,
-  names, seqnames, "names<-", strand,
+  seqnames, strand,
   
   ## GRangePairs-class.R
-  first, last, grglist, seqinfo,
+  first, last, second, grglist, seqinfo, unique,
+  
+  ## GRangePairs-methods.R
+  syntenicDotplot,
 
   ## Axt-methods.R
-  mismatchSummary
+  #  mismatchSummary
+  summary
 )
 
 ### -----------------------------------------------------------------
@@ -85,22 +105,32 @@ export(
   #queryAnnotationSQLite,
   fetchChromSizes,
 
-  ## AllClasses.r
+  ## Axt-class.R
   Axt,
+  
+  ## Axt-methods.R
+  #dotplotAxt,
+  
+  ## subAxt-methods.R
+  psubAxt,
+  
+  ## CNE-class.R
   CNE,
+  ## GRangePairs-class.R
   GRangePairs,
 
-  # io.r
+  # IO-methods.R
   readBed,
   readAxt,
   axtInfo,
   writeAxt,
+  read.rmMask.GRanges,
+  saveCNEToSQLite,
 
-  ## ceScan.r
-  ceScan, 
-  cneMerge,
+  ## ceScan.R
+  
   blatCNE,
-  ceScanOneStep,
+  #ceScanOneStep,
 
   ## makeGeneDbFromUCSC.r
   #supportedUCSCtables,
@@ -124,9 +154,17 @@ export(
   ## GRB.R
   makeGRBs,
   
+  ## Ancora.R
+  readAncora, readAncoraIntoSQLite, makeCNEDensity, makeAncoraFiles,
+  
+  ## plot.R
+  CNEDensity,
+  
+  # CNE-utils.R
+  plotCNEWidth, plotCNEDistribution,
+  
   ## AssemblyStats.R
   N50, N90
-
 )
 
 ### -----------------------------------------------------------------
@@ -134,20 +172,24 @@ export(
 ###
 
 exportMethods(
-  ## AllClasses.r
+  ## Axt-class.R
   targetRanges, queryRanges,
   targetSeqs, querySeqs,
   symCount,
   subAxt,
-  assembly1, assembly2,
-  CNE1, CNE2,
-  thresholds,
-  CNEMerged, CNERepeatsFiltered,
+
+  ## Axt-methods.R
+  matchDistribution, fixCoordinates,
   
-  ## utils.r
-  saveCNEToSQLite,
-
-  ## plot.r
-  CNEDensity
+  # CNE-class.R
+  CNE12, CNE21,
+  thresholds,
+  CNEMerged, CNEFinal,
+  
+  # GRangePairs-class.R
+  swap,
+  
+  ## ceScan.R
+  ceScan, 
+  cneMerge
 )
-
