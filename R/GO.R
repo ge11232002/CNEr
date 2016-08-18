@@ -23,6 +23,10 @@ getChildTerms <- function(x, subset, goRelatives, indent="", childEnvir){
   result
 }
 
+### -----------------------------------------------------------------
+### make the nice table of GO
+### Need to library(GO.db) first
+### Not exported!
 hierarchicGOTable <- function(x, onto=c("BP", "CC", "MF"),
                               maxNumberOfTerms=100){
   onto <- match.arg(onto)
