@@ -84,7 +84,7 @@ Another essential information is the annotation of exons and repeats, which coul
 
 ## axt alignment file
 During the development of this package, there was no suitable class to store the axt alignments in Bioconductor.
-Hence we created two new __S4__ class `Axt` and `GRangePairs` to easily manipulate the axt alignment files.
+Hence, we created two new __S4__ classes, `Axt` and `GRangePairs`, to easily manipulate the axt alignment files.
 
 `GRangePairs` is designed to hold a pair of `GRanges` objects, which have the same length.
 It builds on the `Pairs` class of Bioconductor and inherits many useful methods from it.
@@ -121,7 +121,7 @@ axtDanRer10Hg38
 ```
 
 ```{r matchDistribution, eval=TRUE, echo=TRUE}
-## Distribution of matched alignments
+## Distribution of matched alignments; Given an Axt alignment, plot a heatmap with percentage of each matched alignment
 matchDistribution(axtHg38DanRer10)
 matchDistribution(axtDanRer10Hg38)
 ```
@@ -129,6 +129,8 @@ matchDistribution(axtDanRer10Hg38)
 ```{r syntenyDotplot, eval=TRUE, echo=TRUE}
 ## Example of chr4 on hg19 and galGal3
 ## The synteny of human and zebrafish is not quite obvious on the dotplot.
+library(BSgenome.Hsapiens.UCSC.hg19)
+library(BSgenome.Ggallus.UCSC.galGal3)
 fn <- file.path(system.file("extdata", package="CNEr"),
                 "chr4.hg19.galGal3.net.axt.gz")
 axt <- readAxt(fn, 
@@ -185,7 +187,7 @@ mySession <- browserSession("UCSC")
 genome(mySession) <- "hg38"
 hg38.rmsk <- getTable(ucscTableQuery(mySession, track="RepeatMasker",
                                      table="rmsk"))
-hg38.rmskGRanges <- GRanges(seqnames=hg19.rmsk$genoName,
+hg38.rmskGRanges <- GRanges(seqnames=hg38.rmsk$genoName,
                             ## The UCSC coordinate is 0-based.
                             ranges=IRanges(start=hg38.rmsk$genoStart+1,
                                            end=hg38.rmsk$genoEnd),
@@ -218,13 +220,13 @@ Since only the chromosome names, start and end coordinates are used in `r Biocpk
 we provide a more efficient `readBed` function.
 
 ```{r Bed, eval=TRUE, echo=TRUE}
-## Prepared bed file for chr6:24,000,000..27,000,000 of Zebrafish danRer10
+## Existing bed file for chr6:24,000,000..27,000,000 of Zebrafish danRer10
 bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"), 
                            "filter_regions.danRer10.bed")
 danRer10Filter <- readBed(bedDanRer10Fn)
 danRer10Filter
 
-## Prepared bed file for alignment region in Human hg38 against
+## Existing bed file for alignment region in Human hg38 against
 ## chr6:24,000,000..27,000,000 of danRer10
 bedHg38Fn <- file.path(system.file("extdata", package="CNEr"), 
                        "filter_regions.hg38.bed")
@@ -233,7 +235,7 @@ hg38Filter
 ```
 
 ## Creating a `CNE` class
-We designed a `CNE` class to store all metadata of running a set of CNEs between two species, including the intermediate and final results.
+We designed a `CNE` class to store all metadata of running the pipeline for identifying a set of CNEs between two species, including the intermediate and final results.
 `CNE` can be created by providing the paths of the twoBit files of two assemblies, and
 the paths of axt files, with each assembly as reference.
 
@@ -255,7 +257,7 @@ cneDanRer10Hg38
 __Note__: the order of assemblies when creating CNE object is important.
 Here we have danRer10 as assembly1 and hg38 as assembly2.
 Then the `axt12Fn` contains the axt alignment with assembly1 danRer10 as reference and `axt21Fn` contains the alignment with assembly2 hg38 as reference.
-The `cutoffs1` and `cutoffs2` are the maximal number of hits during the realignment in later step.
+The `cutoffs1` and `cutoffs2` are the maximal number of hits during the realignment in later steps.
 Because zebrafish has undergone additional whole genome duplication compared to human, the cutoffs of zebrafish also doubles the cutoffs of human.
 
 # CNE identification
@@ -313,11 +315,11 @@ cneMergedListDanRer10Hg38 <- lapply(cneListDanRer10Hg38, cneMerge)
 Some CNEs might be unannotated repeats.
 To remove them, currently we use __blat__ [@Kent:2002jd] to realign
 each sequence of CNEs against the respective genomes.
-When the number of matches exceeds a certain threshold, for instance, 8,
+When the number of matches exceeds a certain threshold, for instance 8,
 that CNE will be discarded.
 
 This step can be very time-consuming when the number of CNEs is large.
-Other alignment method could also be considered, for example Bowtie2 or BWA.
+Other alignment methods could also be considered, for example Bowtie2 or BWA (provided that they are installed on the user's machine)
 
 ```{r CNERealignment, eval=FALSE, echo=TRUE}
 cneFinalListDanRer10Hg38 <- lapply(cneMergedListDanRer10Hg38, blatCNE)
@@ -410,6 +412,7 @@ plotCNEDistribution(first(cneGRangePairs))
 
 ## Output of bed and bedGraph files
 For visualisation in other Genome Browser, we provide functions to generate the CNE in bed files and CNE density in bedGraph files.
+ For example, to get the first 1000 coordinates of CNEs:
 
 ```{r outputBedBW, eval=FALSE, echo=TRUE}
 makeCNEDensity(cneGRangePairs[1:1000])
@@ -566,11 +569,11 @@ dTrack5 <- DataTrack(range=cneDanRer10CteIde1_75_75,
                      name="grass carp 75/75", background.title="brown")
 ```
 
-```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=15, fig.width=7}
+```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=10, fig.width=8}
 ht <- HighlightTrack(trackList=list(refGenes, dTrack5, dTrack4, 
                                     dTrack1, dTrack2, dTrack3), 
-                     start=c(24300000, 25300000, 26300000), 
-                     end=c(25200000, 26100000, 26800000),
+                     start=c(24200000, 25200000, 26250000), 
+                     end=c(25100000, 26150000, 27000000),
                      chromosome =chr)
 plotTracks(list(axisTrack, cpgIslands, ht),
            collapseTranscripts=TRUE, shape="arrow",
@@ -579,11 +582,11 @@ plotTracks(list(axisTrack, cpgIslands, ht),
 ```
 
 From this horizon plot and when comparing Zebrafish with Human as a reference genome, 
-we notice that the developmental gene PAX6 is surrounded by the density peaks of CNEs.
+we notice that the genes barhl2, lmo4b and sox14 are surrounded by the density peaks of CNEs.
 
 # Conclusion
-With this package, we are able to identify CNEs efficiently 
-and handle the corresponding objects conveniently in R.  
+`r Biocpkg("CNEr")` efficiently identifies CNEs
+and handles the corresponding objects conveniently in R.  
 Horizon plot shows a superior dynamic range to the standard density plots, 
 simultaneously revealing CNE clusters characterized 
 by vastly different levels of sequence conservation. 
