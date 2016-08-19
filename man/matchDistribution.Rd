@@ -5,7 +5,7 @@
   Plot the distribution of matched alignments.
 }
 \description{
-  Given a \code{Axt} alignment, plot a heatmap with percentage of
+  Given a \code{Axt} alignment, plot a heatmap showing the percentage of
   each matched alignments.
 }
 \usage{
@@ -25,11 +25,11 @@
 }
 \details{
   By default, if there are more than 10,000 alignments, 
-  for the consideration of speed,
-  10,000 alignments will be sampled and calculated for the distribution.
+  10,000 alignments will be sampled and calculated for the distribution
+  for speed purposes.
   
   Only the four bases (A, C, G, T), gap (-) and any (N) are displayed. 
-  Other ambiguous bases are not considere.
+  Other ambiguous bases are not considered.
 }
 \value{
   A ggplot2 object will be returned.

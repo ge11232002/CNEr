@@ -7,7 +7,7 @@
 }
 
 \description{
-  This function save the CNE results into a local SQLite database.
+  This function saves the CNE results into a local SQLite database.
 }
 
 \usage{
@@ -24,8 +24,8 @@
   }
   \item{tableName}{
     \code{character}(1): the name of table for this CNE data table.
-    When it is NULL, the table name will be infered from the assembly filenames
-    and scanning window/identity, in a format of "danRer10_hg38_49_50".
+    When it is NULL, the table name will be inferred from the assembly filenames
+    and scanning window/identity, in the format of "danRer10_hg38_49_50".
   }
   \item{overwrite}{
     \code{boolean}(1):
@@ -34,7 +34,7 @@
 }
 
 \details{
-  before loading into a SQLite database, 
+  before loading into an SQLite database, 
   a bin indexing system is used to index the CNE range,
   which provides faster SQL query.
 }

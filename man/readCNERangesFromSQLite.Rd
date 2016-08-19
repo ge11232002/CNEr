@@ -6,8 +6,8 @@
 }
 \description{
 Query the SQLite database based on chromosome, 
-coordiantes and some other criterias.
-Usually not to be used directly.
+coordinates and some other criterias.
+Primarily not intended to be used directly.
 For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }
 \usage{
@@ -28,7 +28,7 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
     When it's NULL, all CNEs will be returned.
   }
   \item{start, end}{
-    \code{integer}(n): the start and end coordiantes to fetch the CNEs.
+    \code{integer}(n): the start and end coordinates to fetch the CNEs.
   }
   \item{whichAssembly}{
     \code{character}(1):
@@ -37,7 +37,7 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
   }
   \item{minLength}{
     \code{integer}(1): the minimal length for selected CNEs.
-    The pair of CNEs both must be longer than this \code{minLength}.
+    The pair of CNEs must be both longer than this \code{minLength}.
   }
   \item{tAssemblyFn,qAssemblyFn}{
     \code{character}(1): filename of the \sQuote{twoBit} or \sQuote{fasta} 
@@ -46,7 +46,7 @@ readCNERangesFromSQLite(dbName, tableName, chr=NULL, start=NULL, end=NULL,
 }
 
 \value{
-  A object of \code{GRangePairs} is returned.
+  An object of \code{GRangePairs} is returned.
 }
 
 \author{

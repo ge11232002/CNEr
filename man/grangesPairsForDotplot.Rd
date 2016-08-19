@@ -6,12 +6,12 @@
 }
 \description{
   Example of \code{GrangePairs} object from 
-  the collineary regions of \emph{Adineta vaga}.
+  the collinear regions of \emph{Adineta vaga}.
 }
 \usage{data("grangesPairsForDotplot")}
 
 \details{
-  The collineary regions from \dQuote{scaffold_1} and \dQuote{scaffold_5}.
+  The collinear regions from \dQuote{scaffold_1} and \dQuote{scaffold_5}.
 }
 
 \source{

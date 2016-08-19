@@ -6,9 +6,9 @@
 }
 \description{
   Wrapper function of \command{chainMergeSort}:
-  Combine sorted files into larger sorted file.
+  Combines sorted files into a larger sorted file.
   This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  support Linux and Unix platforms.
 }
 \usage{
   chainMergeSort(chains, assemblyTarget, assemblyQuery,

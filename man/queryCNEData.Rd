@@ -24,8 +24,8 @@
     The thresholds of CNEs to fetch on identity over winSize.
   }
   \item{type}{
-    Which set of CNEs are returned. When it is "all", 
-    the CNEs of target always on the left side of returned data.frame.
+    Determines the set of CNEs to be returned. When it is "all", 
+    the CNEs of target always on the left side of the data.frame are returned.
   }
 }
 \value{

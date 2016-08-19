@@ -572,7 +572,7 @@ dTrack5 <- DataTrack(range=cneDanRer10CteIde1_75_75,
 ```{r plotCNE, eval=TRUE, echo=TRUE, fig.height=10, fig.width=8}
 ht <- HighlightTrack(trackList=list(refGenes, dTrack5, dTrack4, 
                                     dTrack1, dTrack2, dTrack3), 
-                     start=c(24200000, 25200000, 26250000), 
+                     start=c(24200000, 25200000, 26200000), 
                      end=c(25100000, 26150000, 27000000),
                      chromosome =chr)
 plotTracks(list(axisTrack, cpgIslands, ht),

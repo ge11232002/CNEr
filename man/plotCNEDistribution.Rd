@@ -1,11 +1,11 @@
 \name{plotCNEDistribution}
 \alias{plotCNEDistribution}
 \title{
-  Plot the CNE genomic location
+  Plot sequential CNE number against CNE genomic location 
 }
 \description{
   Plot the CNE genomic location distribution.
-  It gives a overview whether the CNEs form clusters.
+  It gives an overview of the tendency of CNEs to form clusters.
 }
 \usage{
   plotCNEDistribution(x, chrs = NULL, chrScale = c("Mb", "Kb"))

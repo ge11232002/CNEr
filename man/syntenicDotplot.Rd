@@ -8,7 +8,7 @@
   Syntenic dotplot
 }
 \description{
-  Syntenic dotplot for \code{Axt} alignemnt object or \code{GRangePairs}.
+  Syntenic dotplot for \code{Axt} alignment object or \code{GRangePairs}.
 }
 \usage{
   syntenicDotplot(x, firstSeqlengths=NULL, secondSeqlengths=NULL,
@@ -18,12 +18,12 @@
 \arguments{
   \item{x}{
     \code{Axt} object: the whole genome pairwise alignment of
-    two compared species or
+    two species under comparison or
     \code{GRangePairs} object.
   }
   \item{firstSeqlengths,secondSeqlengths}{
-    \code{integer}(n): seqlengths for both the first(target) and 
-    second(query) genomes.
+    \code{integer}(n): seqlengths for both the first (target) and 
+    second (query) genomes.
     When NULL, the seqlengths must exist in x.
   }
   \item{firstChrs,secondChrs}{
@@ -41,10 +41,10 @@
 \details{
   This syntenic dotplot is a type of scatter plot for \code{Axt} object,
   and line plot for \code{GRangePairs} object.
-  Because the possible massive number of \code{Axt} alignments, 
-  the line plots will make it invisible on large genome scale.
+  In the case of possibly massive number of \code{Axt} alignments, 
+  the line plots will make it invisible at a large genome scale.
   
-  Each axis represents a concatenated selected chromosomes laid end-to-end, 
+  Each axis represents concatenated selected chromosomes laid end-to-end, 
   and each dot in the scatter-plot represents a putative homologous match 
   between the two genomes.
   These dotplots are used for whole genome comparisons within the same genome or

@@ -19,16 +19,16 @@
 
 \arguments{
   \item{x}{
-    A object of \code{Axt}.
+    An object of \code{Axt}.
   }
   \item{chr}{
-    A object of \code{character} containing the names of the sequences 
+    An object of \code{character} containing the names of the sequences 
     in 'x' where to get the alignments from, or a \code{GRanges} object
-    when 'start' and 'end' are missing.
+    where 'start' and 'end' are missing.
     In the case of \code{GRanges}, the strand information is ignored.
   }
   \item{start, end}{
-    A object of \code{integer}() or missing.
+    An object of \code{integer}() or missing.
     These ranges should be based on the positive strand.
     When select is "query",
     the reverse complement alignments which lay inside this range will also be 
@@ -36,20 +36,20 @@
   }
   \item{select}{
     When select is \sQuote{target},
-    the subset criteria is for target alignments in \code{Axt}.
+    the subset criteria are applied on target alignments in \code{Axt}.
     When select is \sQuote{query}, 
-    the subset criteria is for query alignments in \code{Axt}.
+    the subset criteria are applied on query alignments in \code{Axt}.
   }
   \item{qSize}{
     \code{integer}(n): When select is \sQuote{query}, 
     \sQuote{qSize} must exist in 
-    \sQuote{x} or is provided as vector of chromosome lengths.
+    \sQuote{x} or can be provided as a vector of chromosome lengths.
   }
 }
 
 \details{
   Usually when we want to subset some axts from a \code{Axt} object,
-  we care about all the axts within certain range.
+  we care about all the axts within a certain range.
   The axts can come from the axt file with chr as reference 
   (\emph{i.e.}, target sequence),
   or the axt file with chr as query sequence.
@@ -57,7 +57,7 @@
   Hence, the size of chromosome is necessary to 
   convert the search range to a range on negative strand coordinate.
 
-  When one Axt alignment is partially overlapped with the range, 
+  When one Axt alignment partially overlaps the range, 
   the whole Axt alignment will be extracted.
 }
 

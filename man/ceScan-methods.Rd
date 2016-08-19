@@ -42,17 +42,17 @@
 }
 
 \details{
-  ceScan scan the axts alignmnets and identify the CNEs.
-  ceScan can accept axts in \code{Axt} object and 
-  filter in \code{GRanges} object,
+  ceScan scan the axts alignments and identify the CNEs.
+  ceScan can accept axts in \code{Axt} object and regions to 
+  filter out as \code{GRanges} objects,
   or directly the \sQuote{axt} files and \sQuote{bed} files.
 
-  The details of algorithm is described in the vignette.
+  The details of the algorithm are described in the vignette.
 }
 
 \value{
   A \code{list} of \code{GRangePairs} or \code{CNE} object is returned. 
-  Each element of the list is for one threshold.
+  Each element of the list corresponds to one user-specified threshold for identifying CNEs.
 }
 
 \author{

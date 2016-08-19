@@ -4,7 +4,7 @@
   Read \sQuote{Axt} file
 }
 \description{
-  This function reads the \sQuote{Axt} files into a \code{\link{Axt}} object.
+  This function reads the \sQuote{Axt} files into an \code{\link{Axt}} object.
 }
 \usage{
   readAxt(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL)
@@ -22,7 +22,7 @@
 \details{
   This function reads the \sQuote{Axt} files of two assemblies.
   It can be a single big \sQuote{Axt} file or several small \sQuote{Axt} files.
-  Different from the start coordinate in \sQuote{Axt} file, 
+  Contrary to the start coordinate in \sQuote{Axt} file, 
   the start coordinate in \code{Axt} object is 1-based.
   
   When \sQuote{tAssemblyFn} and \sQuote{qAssemblyFn} are 

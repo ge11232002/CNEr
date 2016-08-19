@@ -7,8 +7,8 @@
 \description{
   Wrapper function of \command{netToAxt} and \command{axtSort}:
   convert net (and chain) to axt, and sort axt files.
-  This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  This function doesn't work on the Windows platform since Kent utilities only
+  support Linux and Unix platforms.
 }
 \usage{
   netToAxt(in.net, in.chain, assemblyTarget, assemblyQuery,

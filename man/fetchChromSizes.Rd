@@ -4,8 +4,8 @@
 fetchChromSizes function.
 }
 \description{
-This function tries to automate the fetch of chrom sizes for assembly 
-from UCSC and other sources.
+This function tries to automate the fetch of chromosome sizes for assemblies 
+from UCSC.
 }
 \usage{
 fetchChromSizes(assembly)
@@ -18,7 +18,7 @@ fetchChromSizes(assembly)
 }
 }
 \details{
-This function utilises mysql query for UCSC assemblies.
+This function utilises mysql queries for UCSC assemblies.
 }
 \value{
 A object of \code{Seqinfo} is returned.
@@ -27,7 +27,7 @@ A object of \code{Seqinfo} is returned.
   Ge Tan
 }
 \note{
-  Currently the assemblies from UCSC are supported.
+  Currently, the assemblies from UCSC are supported.
 }
 
 

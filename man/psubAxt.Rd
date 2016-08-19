@@ -4,7 +4,7 @@
   Parallel subset of Axt alignment
 }
 \description{
-  Give two \code{GRanges} objects, select the \code{Axt} alignments
+  Given two \code{GRanges} objects, select the \code{Axt} alignments
   whose the target and query alignments are both within each pair of ranges.
 }
 \usage{
@@ -16,13 +16,13 @@
   }
   \item{targetSearch,querySearch}{
     \code{GRanges} objects: the ranges to keep for target and query alignments.
-    They must have same lengths and the strand information is ignored.
+    They must be of the same length. Strand information is ignored.
   }
 }
 \details{
   The \sQuote{targetSearch} and \sQuote{querySearch} have the coordinates
   relative to the positive strand.
-  For each pair of the ranges, the alignments lie within both the target
+  For each pair of the ranges, the alignments that lie within both the target
   and query range are kept.
 }
 \value{

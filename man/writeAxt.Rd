@@ -5,7 +5,7 @@
   \code{writeAxt} function
 }
 \description{
-  Write an axt object into file.
+  Write an axt object into a file.
 }
 \usage{
   writeAxt(axt, con)
@@ -13,7 +13,7 @@
 
 \arguments{
   \item{axt}{
-    A \code{Axt} object to write.
+    An \code{Axt} object to write.
   }
   \item{con}{
     A \link{connection} object or a character string.

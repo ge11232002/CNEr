@@ -6,9 +6,9 @@
 }
 \description{
   Wrapper function of \emph{chainNetSyntenic}:
-  Make alignment nets out of chains and add synteny info to net.
+  Makes alignment nets out of chains and adds synteny info to net.
   This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  support Linux and Unix platforms.
 }
 \usage{
   chainNetSyntenic(allPreChain, assemblyTarget, assemblyQuery,

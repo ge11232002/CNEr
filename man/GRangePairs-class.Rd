@@ -43,7 +43,7 @@
 
 \description{
   The \code{GRangePairs} class is a container for a pair of 
-  \code{GRanges} object that have same lengths.
+  \code{GRanges} objects that have the same lengths.
 }
 
 \details{
@@ -129,7 +129,7 @@
       Return the \link{GRangePairs} object conceptually defined
       by \code{c(x[[1]], x[[2]], ..., x[[length(x)]])}.
       \code{use.names} determines whether \code{x} names should be
-      propagated to the result or not.
+      passed to the result or not.
     }
   }
 }
@@ -179,7 +179,7 @@
     }
     \item{}{
       \code{show(x)}:
-      By default the \code{show} method displays 5 head and 5 tail
+      By default, the \code{show} method displays 5 head and 5 tail
       elements. This can be changed by setting the global options
       \code{showHeadLines} and \code{showTailLines}. If the object
       length is less than (or equal to) the sum of these 2 options

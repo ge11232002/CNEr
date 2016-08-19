@@ -45,9 +45,9 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
     \item{axt12Fn,axt21Fn}{Object of class \code{"character"}: 
       The Axt filenames of assembly1 to assembly2, assembly2 to assembly1}
     \item{window}{Object of class \code{"integer"}:
-      The window size of scanning CNEs. By default, it is 50.}
+      The window size for scanning CNEs. By default, it is 50.}
     \item{identity}{Object of class \code{"integer"}:
-      The identity over the window size of scanning CNEs.
+      The identity over the window size for scanning CNEs.
       By default, it is 50.}
     \item{CNE12}{Object of class \code{"GRangePairs"}:
       The preliminary CNEs from axt file with assembly1 as reference.}
@@ -59,7 +59,7 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
       The CNEs after being realigned back to reference genome,
       with blat in current implementation.}
     \item{aligner}{Object of class \code{"character"}:
-      The method to realign CNEs back to reference genome.}
+      The method to realign CNEs back to the reference genome.}
     \item{cutoffs1, cutoffs2}{Object of class \code{"integer"}:
       The CNEs with more than the cutoff hits on the reference genome 
       are removed.}

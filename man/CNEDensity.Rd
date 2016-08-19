@@ -10,7 +10,7 @@
 }
 
 \description{
-  This function queries the database and generates the CNEs density values.
+  This function queries the database and generates the CNEs' density values.
 }
 
 \usage{
@@ -31,15 +31,15 @@ CNEDensity(dbName, tableName, chr, start, end,
      \code{character}(1): the chromosome to query.
   }
   \item{start, end}{
-    \code{integer}(1): the start and end coordiante to fetch the CNEs.
+    \code{integer}(1): the start and end coordinate to fetch the CNEs.
   }
   \item{whichAssembly}{
     \code{character}(1):
-    the genome to fetch is in the \sQuote{first} columns or \sQuote{second}
-    columns of the table.
+    the genome to fetch is in the \sQuote{first} column or \sQuote{second}
+    column of the table.
   }
   \item{windowSize}{
-    \code{integer}(1): the window size in kb used to smooth the CNEs.
+    \code{integer}(1): the window size in kb that is used to smooth the CNEs.
   }
   \item{minLength}{
     \code{integer}(1): the minimal length of CNEs to fetch.
@@ -60,7 +60,7 @@ CNEDensity(dbName, tableName, chr, start, end,
 }}
 
 \value{
-  A \code{GRanges} object with density value is returned. 
+  A \code{GRanges} object with density values is returned. 
 }
 
 \author{

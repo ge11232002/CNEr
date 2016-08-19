@@ -2,10 +2,10 @@
 \alias{plotCNEWidth}
 
 \title{
-  Plot the CNE width distribution
+  Plot the CNE widths distribution
 }
 \description{
-  CNE widths can follow heavy tailed distribution.
+  CNE widths can follow heavy tailed distribution that are associated with power-laws.
   This function plot the reverse cumulative density distribution of CNE widths,
   and fit a discrete power-law distribution.
   Goodness of fit can also be evaluated.
@@ -19,10 +19,10 @@
     \code{GRangePairs} object: a pair of CNEs.
   }
   \item{powerLawTest}{
-    \code{boolean}: when TRUE, the goodness of power law fit is evaluated.
+    \code{boolean}: when TRUE, the goodness of power-law fit is evaluated.
   }
   \item{mc.cores}{
-    \code{integer}: the number of threads to use in evalusation of 
+    \code{integer}: the number of threads to use in evaluation of 
     goodness of fit.
   }
   \item{\dots}{
@@ -30,11 +30,11 @@
   }
 }
 \details{
-  The power law distribution is usually for heavy tailed distribution.
+  The power-law distribution is associated with heavy tailed distribution.
   
   A reverse cumulative density distribution plot will be generated with optimal
-  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power law fit and 
-  a pvalue of goodness of fit for power law distribution.
+  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power-law fit and 
+  a p-value of goodness of fit for the power-law distribution.
 }
 \value{
   An invisible list of fitted model is returned.
@@ -46,7 +46,7 @@
   Ge Tan
 }
 \note{
-  The power law distribution implementation is based on package \pkg{poweRlaw}.
+  The power-law distribution implementation is based on the \pkg{poweRlaw} package.
 }
 
 \examples{

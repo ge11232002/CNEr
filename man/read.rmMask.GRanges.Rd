@@ -18,9 +18,9 @@
 }
 
 \value{
-  A \code{GRanges} object with a metadata columns of
+  A \code{GRanges} object with metadata columns containing the
   name of the matching interspersed repeat,
-  the class of the repeat and Smith-Waterman score of the match.
+  the class of the repeat and the Smith-Waterman score of the match.
 }
 \references{
   \url{http://www.repeatmasker.org/webrepeatmaskerhelp.html}
