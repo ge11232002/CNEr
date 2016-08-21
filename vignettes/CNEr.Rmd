@@ -584,7 +584,7 @@ plotTracks(list(axisTrack, cpgIslands, ht),
 From this horizon plot and when comparing Zebrafish with Human as a reference genome, 
 we notice that the genes barhl2, lmo4b and sox14 are surrounded by the density peaks of CNEs.
 
-# Conclusion
+# Conclusions
 `r Biocpkg("CNEr")` efficiently identifies CNEs
 and handles the corresponding objects conveniently in R.  
 Horizon plot shows a superior dynamic range to the standard density plots, 
