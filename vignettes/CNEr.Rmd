@@ -399,7 +399,7 @@ cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName,
                                           tableName="danRer10_hg38_45_50",
                                           tAssemblyFn=tAssemblyFn,
                                           qAssemblyFn=qAssemblyFn)
-plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+plotCNEWidth(cneGRangePairs)
 ```
 
 ## Genomic distribution of CNEs along the chromosome

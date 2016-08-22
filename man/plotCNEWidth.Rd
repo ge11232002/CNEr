@@ -11,19 +11,12 @@
   Goodness of fit can also be evaluated.
 }
 \usage{
-  plotCNEWidth(x, powerLawTest = FALSE, mc.cores=1L, ...)
+  plotCNEWidth(x, ...)
 }
   
 \arguments{
   \item{x}{
     \code{GRangePairs} object: a pair of CNEs.
-  }
-  \item{powerLawTest}{
-    \code{boolean}: when TRUE, the goodness of power-law fit is evaluated.
-  }
-  \item{mc.cores}{
-    \code{integer}: the number of threads to use in evaluation of 
-    goodness of fit.
   }
   \item{\dots}{
     Additional points passed to \code{plot} function.
@@ -33,8 +26,7 @@
   The power-law distribution is associated with heavy tailed distribution.
   
   A reverse cumulative density distribution plot will be generated with optimal
-  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power-law fit and 
-  a p-value of goodness of fit for the power-law distribution.
+  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power-law fit.
 }
 \value{
   An invisible list of fitted model is returned.
@@ -54,5 +46,5 @@
                       "danRer10CNE.sqlite")
   cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
                                             tableName="danRer10_hg38_45_50")
-  plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+  plotCNEWidth(cneGRangePairs)
 }
