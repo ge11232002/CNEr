@@ -137,9 +137,6 @@ export(
   #queryrefGene, queryknownGene, queryensGene,
   #makeGeneDbFromUCSC,
 
-  ## DB.R
-  queryCNEData,
-  
   ## WholeGenomeAlignment.R
   lastz,
   lavToPsl,
