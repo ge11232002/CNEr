@@ -266,8 +266,11 @@ cneMergeGRangePairs <- function(cne12, cne21){
   lastHist <- findOverlaps(second(cne), type="within",
                            drop.self=TRUE, drop.redundant=TRUE)
   redundance <- IRanges::intersect(firstHits, lastHist)
-  ans <- cne[-queryHits(redundance)]
-  return(ans)
+  if(length(redundance) == 0L){
+    return(cne)
+  }else{
+    return(cne[-queryHits(redundance)])
+  }
 }
 
 ### -----------------------------------------------------------------
