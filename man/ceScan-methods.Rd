@@ -2,7 +2,6 @@
 \docType{methods}
 \alias{ceScan}
 \alias{ceScan,Axt-method}
-\alias{ceScan,character-method}
 \alias{ceScan,CNE-method}
 
 \title{ceScan function}
@@ -86,13 +85,7 @@
                             qFilter=bedHg38, 
                             tSizes=qSizesDanRer10, qSizes=qSizesHg38,
                             window=windows, identity=identities)
-                            
-  ## Axt file names
-  CNEHg38DanRer10 <- ceScan(x=axtFnHg38DanRer10, tFilter=bedHg38,
-                            qFilter=bedDanRer10, 
-                            tSizes=qSizesHg38, qSizes=qSizesDanRer10,
-                            window=windows, identity=identities)
-                            
+
   ## CNE object
   cneDanRer10Hg38 <- CNE(
     assembly1Fn=file.path(system.file("extdata",
