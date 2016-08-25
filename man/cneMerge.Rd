@@ -8,7 +8,7 @@
   CNE merge function
 }
 \description{
-  Remove the CNEs which overlap on both genomes.
+  Removes the CNEs which overlap on both genomes.
 }
 \usage{
   cneMerge(cne12, cne21)
@@ -20,19 +20,19 @@
   }
   \item{cne21}{
     A object of \code{GRangePairs} object.
-    When cne12 is \code{CNE} object, cne21 can be missing.
+    When cne12 is a \code{CNE} object, cne21 can be missing.
   }
 }
 
 
 \value{
   A \code{GRangePairs} of CNEs or a \code{CNE} object is returned.
-  In this table, the order of columns are consistent with cne1.
+  In this table, the order of columns is consistent with cne1.
   For instance, if cne1 has the first three columns for zebrafish 
   and next three columns for human,
   in the merged table, the first three columns are 
   still the coordinates for zebrafish
-  while the next three columns are coordinates for human.
+  while the next three columns are the coordinates for human.
 }
 
 \author{

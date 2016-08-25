@@ -11,7 +11,7 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes,
   if(is.null(tFilter) && is.null(qFilter)){
     .Call2("myCeScan", NULL, NULL, NULL,
            NULL, NULL, NULL,
-           NULL, NULL,
+           as.character(seqnames(qSizes)), as.integer(seqlengths(qSizes)),
            as.character(seqnames(targetRanges(axts))),
            start(targetRanges(axts)), end(targetRanges(axts)),
            as.character(strand(targetRanges(axts))),
@@ -42,7 +42,7 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes,
     .Call2("myCeScan", as.character(seqnames(tFilter)), 
            start(tFilter), end(tFilter),
            NULL, NULL, NULL,
-           NULL, NULL,
+           as.character(seqnames(qSizes)), as.integer(seqlengths(qSizes)),
            as.character(seqnames(targetRanges(axts))),
            start(targetRanges(axts)), end(targetRanges(axts)),
            as.character(strand(targetRanges(axts))),
@@ -55,21 +55,21 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes,
            as.character(resFiles),
            PACKAGE="CNEr")
   }else{
-    .Call2("myCeScan", as.character(seqnames(tFilter)), 
-           start(tFilter), end(tFilter),
-              as.character(seqnames(qFilter)), start(qFilter), end(qFilter),
-              as.character(seqnames(qSizes)), as.integer(seqlengths(qSizes)), 
-              as.character(seqnames(targetRanges(axts))), 
-              start(targetRanges(axts)), end(targetRanges(axts)), 
-              as.character(strand(targetRanges(axts))), 
-              as.character(targetSeqs(axts)),
-              as.character(seqnames(queryRanges(axts))), 
-              start(queryRanges(axts)), end(queryRanges(axts)), 
-              as.character(strand(queryRanges(axts))), 
-              as.character(querySeqs(axts)),
-              score(axts), symCount(axts), winSize, minScore, 
-              as.character(resFiles),
-              PACKAGE="CNEr")
+    .Call2("myCeScan", 
+           as.character(seqnames(tFilter)), start(tFilter), end(tFilter),
+           as.character(seqnames(qFilter)), start(qFilter), end(qFilter),
+           as.character(seqnames(qSizes)), as.integer(seqlengths(qSizes)), 
+           as.character(seqnames(targetRanges(axts))), 
+           start(targetRanges(axts)), end(targetRanges(axts)), 
+           as.character(strand(targetRanges(axts))), 
+           as.character(targetSeqs(axts)),
+           as.character(seqnames(queryRanges(axts))), 
+           start(queryRanges(axts)), end(queryRanges(axts)), 
+           as.character(strand(queryRanges(axts))), 
+           as.character(querySeqs(axts)),
+           score(axts), symCount(axts), winSize, minScore, 
+           as.character(resFiles),
+           PACKAGE="CNEr")
   }
   CNE <- lapply(resFiles, 
                 function(x){
@@ -111,15 +111,6 @@ setMethod("ceScan", "Axt", function(x, tFilter=NULL, qFilter=NULL,
                                     window=50L, identity=50L){
   ceScanAxt(x, tFilter=tFilter, qFilter=qFilter, tSizes=tSizes, qSizes=qSizes, 
             window=window, identity=identity)
-})
-
-setMethod("ceScan", "character", function(x, tFilter=NULL, qFilter=NULL, 
-                                          tSizes=NULL, qSizes=NULL,
-                                    window=50L, identity=50L){
-  axtsAll <- readAxt(x)
-  ceScan(axtsAll, tFilter=tFilter, qFilter=qFilter, 
-         tSizes=tSizes, qSizes=qSizes, 
-         window=window, identity=identity)
 })
 
 setMethod("ceScan", "CNE", function(x, tFilter=NULL, qFilter=NULL,
@@ -266,8 +257,11 @@ cneMergeGRangePairs <- function(cne12, cne21){
   lastHist <- findOverlaps(second(cne), type="within",
                            drop.self=TRUE, drop.redundant=TRUE)
   redundance <- IRanges::intersect(firstHits, lastHist)
-  ans <- cne[-queryHits(redundance)]
-  return(ans)
+  if(length(redundance) == 0L){
+    return(cne)
+  }else{
+    return(cne[-queryHits(redundance)])
+  }
 }
 
 ### -----------------------------------------------------------------

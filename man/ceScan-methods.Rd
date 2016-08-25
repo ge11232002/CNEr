@@ -2,7 +2,6 @@
 \docType{methods}
 \alias{ceScan}
 \alias{ceScan,Axt-method}
-\alias{ceScan,character-method}
 \alias{ceScan,CNE-method}
 
 \title{ceScan function}
@@ -42,17 +41,17 @@
 }
 
 \details{
-  ceScan scan the axts alignmnets and identify the CNEs.
-  ceScan can accept axts in \code{Axt} object and 
-  filter in \code{GRanges} object,
+  ceScan scan the axts alignments and identify the CNEs.
+  ceScan can accept axts in \code{Axt} object and regions to 
+  filter out as \code{GRanges} objects,
   or directly the \sQuote{axt} files and \sQuote{bed} files.
 
-  The details of algorithm is described in the vignette.
+  The details of the algorithm are described in the vignette.
 }
 
 \value{
   A \code{list} of \code{GRangePairs} or \code{CNE} object is returned. 
-  Each element of the list is for one threshold.
+  Each element of the list corresponds to one user-specified threshold for identifying CNEs.
 }
 
 \author{
@@ -86,13 +85,7 @@
                             qFilter=bedHg38, 
                             tSizes=qSizesDanRer10, qSizes=qSizesHg38,
                             window=windows, identity=identities)
-                            
-  ## Axt file names
-  CNEHg38DanRer10 <- ceScan(x=axtFnHg38DanRer10, tFilter=bedHg38,
-                            qFilter=bedDanRer10, 
-                            tSizes=qSizesHg38, qSizes=qSizesDanRer10,
-                            window=windows, identity=identities)
-                            
+
   ## CNE object
   cneDanRer10Hg38 <- CNE(
     assembly1Fn=file.path(system.file("extdata",

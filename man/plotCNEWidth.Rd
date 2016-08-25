@@ -2,39 +2,31 @@
 \alias{plotCNEWidth}
 
 \title{
-  Plot the CNE width distribution
+  Plot the CNE widths distribution
 }
 \description{
-  CNE widths can follow heavy tailed distribution.
+  CNE widths can follow heavy tailed distribution that are associated with power-laws.
   This function plot the reverse cumulative density distribution of CNE widths,
   and fit a discrete power-law distribution.
   Goodness of fit can also be evaluated.
 }
 \usage{
-  plotCNEWidth(x, powerLawTest = FALSE, mc.cores=1L, ...)
+  plotCNEWidth(x, ...)
 }
   
 \arguments{
   \item{x}{
     \code{GRangePairs} object: a pair of CNEs.
   }
-  \item{powerLawTest}{
-    \code{boolean}: when TRUE, the goodness of power law fit is evaluated.
-  }
-  \item{mc.cores}{
-    \code{integer}: the number of threads to use in evalusation of 
-    goodness of fit.
-  }
   \item{\dots}{
     Additional points passed to \code{plot} function.
   }
 }
 \details{
-  The power law distribution is usually for heavy tailed distribution.
+  The power-law distribution is associated with heavy tailed distribution.
   
   A reverse cumulative density distribution plot will be generated with optimal
-  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power law fit and 
-  a pvalue of goodness of fit for power law distribution.
+  lower bound \emph{xmin}, scaling parameter\emph{alpha} for power-law fit.
 }
 \value{
   An invisible list of fitted model is returned.
@@ -46,7 +38,7 @@
   Ge Tan
 }
 \note{
-  The power law distribution implementation is based on package \pkg{poweRlaw}.
+  The power-law distribution implementation is based on the \pkg{poweRlaw} package.
 }
 
 \examples{
@@ -54,5 +46,5 @@
                       "danRer10CNE.sqlite")
   cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
                                             tableName="danRer10_hg38_45_50")
-  plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+  plotCNEWidth(cneGRangePairs)
 }

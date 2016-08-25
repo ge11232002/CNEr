@@ -1,7 +1,7 @@
 ### -----------------------------------------------------------------
 ### CNE length in power law
 ### Exported!
-plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
+plotCNEWidth <- function(x, ...){
   # x: GRangePairs
   if(!is(x, "GRangePairs")){
     stop("x must be a GRangePairs object!")
@@ -32,15 +32,15 @@ plotCNEWidth <- function(x, powerLawTest=FALSE, mc.cores=1L, ...){
   lastText <- paste("xmin:", lastFit$xmin, "\n",
                      "alpha:", format(lastFit$pars, digits = 3))
   
-  ## test power law distribution?
-  if(powerLawTest){
-    bs_p <- bootstrap_p(firstFit, no_of_sims=1000, threads=mc.cores)
-    firstText <- paste(firstText, "\n", 
-                       "pvalue:", format(bs_p$p, digits = 3))
-    bs_p <- bootstrap_p(lastFit, no_of_sims=1000, threads=mc.cores)
-    lastText <- paste(lastText, "\n", 
-                       "pvalue:", format(bs_p$p, digits = 3))
-  }
+  # ## test power law distribution?
+  # if(powerLawTest){
+  #   bs_p <- bootstrap_p(firstFit, no_of_sims=1000, threads=mc.cores)
+  #   firstText <- paste(firstText, "\n", 
+  #                      "pvalue:", format(bs_p$p, digits = 3))
+  #   bs_p <- bootstrap_p(lastFit, no_of_sims=1000, threads=mc.cores)
+  #   lastText <- paste(lastText, "\n", 
+  #                      "pvalue:", format(bs_p$p, digits = 3))
+  # }
   
   ## Plot the distribution
   par(mfrow=c(1,2))

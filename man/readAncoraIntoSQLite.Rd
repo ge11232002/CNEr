@@ -26,8 +26,8 @@
   The Ancora legacy CNE file has the filename in the format of 
   "cne2wBf_AstMex102_danRer10_48_50".
   The first six columns are the coordinates of pairs of CNEs.
-  The start coordinate is 0-based and converted into 1-based when
-  it is imported into SQLite database.
+  The start coordinate system is 0-based and is converted into 1-based when
+  it is imported into the SQLite database.
 }
 \value{
   A \code{character} vector of table names.

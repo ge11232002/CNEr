@@ -4,7 +4,7 @@
   axtInfo function
 }
 \description{
-  Given the path of axt file, retrieve the alignments' withs information.
+  Given the path of the axt file, this function retrieves information on the widths of the alignments. 
 }
 \usage{
   axtInfo(axtFiles)
@@ -18,7 +18,7 @@
 
 \value{
   A vector of \code{integer} is returned. 
-  It stores the withds of all the alignments.
+  It stores the widths of all the alignments.
 }
 
 \author{

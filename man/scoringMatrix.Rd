@@ -5,7 +5,7 @@
   scoringMatrix
 }
 \description{
-  Generate the scoring matrix for \emph{lastz} aligner.
+  Generates the scoring matrix for \emph{lastz} aligner.
 }
 \usage{
   scoringMatrix(distance = c("far", "medium", "near"))
@@ -13,12 +13,12 @@
 
 \arguments{
   \item{distance}{
-    It can be "far", "medium" or "close". It decides the score matrix used in
+    It can be "far", "medium" or "close". It defines the scoring matrix used in
     \emph{lastz} aligner.
     Generally, if two species are close to each other at human and chimp level,
     "close" should be used.
-    If two species have a divergent time of 100 MYA, "far" should be used.
-    In other cases, use "medium".
+    If two species have a divergence time of 100 MYA, "far" should be used.
+    In other cases, "medium" should be used.
   }
 }
 \value{

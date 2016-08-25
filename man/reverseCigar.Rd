@@ -22,7 +22,7 @@
 }
 
 \value{
-  A character vector contains the revered cigar strings.
+  A character vector contains the reversed cigar strings.
 }
 
 \author{

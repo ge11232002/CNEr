@@ -9,7 +9,7 @@
   query alignments are relative to the reverse-complemented coordinates of 
   its chromosome.
   This is different from the convention in Bioconductor.
-  This function fixes the coordinates which are alwasy relative to 
+  This function fixes the coordinates which are always relative to the
   positive strand.
 }
 \usage{
@@ -21,7 +21,7 @@
   }
 }
 \details{
-  In \code{Axt}, the \sQuote{strand} is for aligning organism.
+  In \code{Axt}, the \sQuote{strand} is for the aligning organism.
   If the strand value is \dQuote{-}, the values of the aligning organism's 
   start and end fields are relative to the reverse-complemented coordinates of 
   its chromosome. 

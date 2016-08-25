@@ -6,7 +6,7 @@
 }
 
 \description{
-  This wrapper function blat the CNEs against the reference genome.
+  This wrapper function blat the CNEs against the reference genome. Note that blat must be installed on your system.
 }
 
 \usage{
@@ -19,7 +19,7 @@
   }
   \item{blatOptions}{
     \code{character}(1): the \command{blat} options.
-    When it is NULL, the options will be chosen based on the window size of
+    When it is NULL, the options will be chosen based on the window size for
     scanning CNEs.
   }
   \item{cutIdentity}{
@@ -40,7 +40,7 @@
 }
 
 \value{
-  A \code{CNE} object with final set of CNEs.
+  A \code{CNE} object with a final set of CNEs.
 }
 
 \author{

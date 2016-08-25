@@ -26,7 +26,7 @@
   }
   \item{threshold}{
     \code{character}(1): the threshold used to identify the CNEs
-    in format of "50_50"..
+    in the format of "50_50" etc
   }
 }
 \value{

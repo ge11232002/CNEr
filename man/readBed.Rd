@@ -4,7 +4,7 @@
   Read bed file
 }
 \description{
-  Read the coordiantes information from a bed file.
+  Read the coordinates information from a bed file.
 }
 \usage{
   readBed(bedFile, assemblyFn=NULL)
@@ -14,17 +14,16 @@
     \code{character}(1): filename of the \sQuote{bed} file to read.
   }
   \item{assemblyFn}{
-    \code{character}(1): filename of the twoBit or fasta file for the genome.
+    \code{character}(1): filename of the twoBit or fasta file of the genome.
   }
 }
 \details{
-  This function is designed to read the bed file for the 
-  first three columns,
-  \emph{i.e.}, \sQuote{chrom}, \sQuote{chromStart}, \sQuote{chromEnd}.
-  The strand information is also stored when available.
+  This function is designed to read the bed file as
+   \sQuote{chrom}, \sQuote{chromStart}, \sQuote{chromEnd}.
+  The strand information is also stored where available.
   
-  In bed file, the \sQuote{chromStart} is on 0-based coordinate 
-  while \sQuote{chromEnd} is on 1-based coordinate.
+  In the bed file, the \sQuote{chromStart} is on the 0-based coordinate system 
+  while \sQuote{chromEnd} is on the 1-based coordinate system.
   For example, the first 100 bases of a chromosome are 
   defined as \sQuote{chromStart=0}, \sQuote{chromEnd=100}, 
   and span the bases numbered 0-99.
@@ -39,7 +38,7 @@
 
 \value{
   A \code{GRanges} object is returned. 
-  When no strand information is availabe in bed file,
+  When no strand information is available in the bed file,
   all the ranges are assumed to be on the positive strand.
 }
 

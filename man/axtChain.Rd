@@ -7,9 +7,9 @@
 \description{
   Wrapper function of \command{axtChain}: chain together psl alignments.
   If two matching alignments next to each other are close enough,
-  they are joined into one fragment.
+  they are joined into one segment.
   This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  support Unix-based platforms.
 }
 \usage{
   axtChain(psls, chains=sub("\\\.psl$", ".chain", psls, ignore.case=TRUE),

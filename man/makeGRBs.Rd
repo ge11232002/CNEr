@@ -19,8 +19,8 @@
   \item{winSize}{
     \code{integer}: the smoothing window size for CNE densities in kb.
     This value depends on the genome size of the reference genome.
-    A larger genome requires bigger windows size.
-    For instance, 300kb is the appropriate windows size for human genome.
+    A larger genome requires bigger window size.
+    For instance, 300kb is the appropriate window size for the human genome.
     By default, it is determined internally based on the genome size.
   }
   \item{genes}{
@@ -34,19 +34,19 @@
   \item{background}{
     \code{character}(1):
     can be "chromosome" or "genome". When slice the CNE density,
-    the background is calculated based on per chromosome or the whole genome.
+    the background is calculated on a per-chromosome or whole-genome basis.
   }
 }
 \details{
   First we calculated the CNE densities from the CNEs.
-  Then we segment the regions according to the value of CNE densities.
+  Then we segment the regions according to the values of CNE densities.
   The regions with CNE densities above the expected CNE densities * ratio are
-  consider as putative GRBs.
-  As last step, the putative GRBs that do not encompass any gene
+  considered as putative GRBs.
+  As a last step, the putative GRBs that do not encompass any gene
   are filtered out.
 }
 \value{
-  A \code{GRanges} of GRB coordinates is returned, with the numebr of CNEs
+  A \code{GRanges} object of GRB coordinates is returned, with the number of CNEs
   within each GRB.
 }
 

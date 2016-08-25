@@ -7,7 +7,7 @@
 \description{
   Wrapper function of \command{lavToPsl}: Convert blastz lav to psl format.
   This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  support Linux and Unix platforms.
 }
 \usage{
   lavToPsl(lavs, psls=sub("\\\.lav$", ".psl", lavs, ignore.case = TRUE),

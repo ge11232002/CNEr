@@ -81,8 +81,8 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   However, the \sQuote{queryRanges} can have alignments on negative strands,
   and the coordinates are based on negative strands, which is quite
   different from the convention in Bioconductor.
-  To make the coordinates of negative alignments are also 
-  based on positive strands, \code{normaliseStrand}.
+  To convert the coordinates of alignments on the negative strand to  
+  the positive strand, use \code{normaliseStrand}.
 }
 
 \author{

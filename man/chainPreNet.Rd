@@ -6,9 +6,9 @@
 }
 \description{
   Wrapper function of \command{chainPreNet}:
-  Remove chains that don't have a chance of being netted.
+  Removes chains that don't have a chance of being netted.
   This function doesn't work on Windows platform since Kent utilities only
-  support Linux and Unix platform.
+  support Linux and Unix platforms.
 }
 \usage{
   chainPreNet(allChain, assemblyTarget, assemblyQuery,

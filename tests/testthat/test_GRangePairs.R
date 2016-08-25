@@ -93,7 +93,7 @@ test_that("test_GRangePairs", {
                       "danRer10CNE.sqlite")
   cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
                                             tableName="danRer10_hg38_45_50")
-  ans <- plotCNEWidth(cneGRangePairs, powerLawTest=FALSE)
+  ans <- plotCNEWidth(cneGRangePairs)
   
   ## test the xmin and pars value
   expect_equal(ans$first$xmin, 117)
