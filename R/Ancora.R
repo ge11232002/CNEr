@@ -23,7 +23,7 @@ readAncora <- function(fn, assembly=NULL,
                        tAssemblyFn=NULL, qAssemblyFn=NULL){
   assembly1 <- strsplit(basename(fn), split="_")[[1]][2]
   assembly2 <- strsplit(basename(fn), split="_")[[1]][3]
-  cne <- suppressMessages(read_tsv(fn, col_names=FALSE))
+  cne <- read.delim(fn, header=FALSE)
   
   # Prepare the seqinfo when available
   seqinfoTarget <- NULL
@@ -35,21 +35,21 @@ readAncora <- function(fn, assembly=NULL,
     seqinfoQuery <- seqinfoFn(qAssemblyFn)
   }
   
-  ans <- GRangePairs(first=GRanges(seqnames=cne$X1,
-                                   ranges=IRanges(start=cne$X2+1,
-                                                  end=cne$X3),
+  ans <- GRangePairs(first=GRanges(seqnames=cne[[1]],
+                                   ranges=IRanges(start=cne[[2]]+1,
+                                                  end=cne[[3]]),
                                    strand="*",
-                                   name=paste0(cne$X4, ":", 
-                                               (cne$X5+1), "-", cne$X6),
-                                   itemRgb=chr2colour(cne$X4),
+                                   name=paste0(cne[[4]], ":", 
+                                               (cne[[5]]+1), "-", cne[[6]]),
+                                   itemRgb=chr2colour(cne[[4]]),
                                    seqinfo=seqinfoTarget),
-                     second=GRanges(seqnames=cne$X4,
-                                  ranges=IRanges(start=cne$X5+1,
-                                                 end=cne$X6),
+                     second=GRanges(seqnames=cne[[4]],
+                                  ranges=IRanges(start=cne[[5]]+1,
+                                                 end=cne[[6]]),
                                   strand="*",
-                                  name=paste0(cne$X1, ":", 
-                                              (cne$X2+1), "-", cne$X3),
-                                  itemRgb=chr2colour(cne$X1),
+                                  name=paste0(cne[[1]], ":", 
+                                              (cne[[2]]+1), "-", cne[[3]]),
+                                  itemRgb=chr2colour(cne[[1]]),
                                   seqinfo=seqinfoQuery)
                      )
   if(is.null(assembly)){

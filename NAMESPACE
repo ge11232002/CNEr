@@ -46,7 +46,7 @@ importFrom(S4Vectors, .Call2, queryHits, subjectHits, DataFrame,
            isTRUEorFALSE, isSingleString, queryLength, subjectLength)
 importFrom(tools, file_ext)
 importFrom(parallel, mcmapply)
-importFrom(utils, download.file, read.table, write.table)
+importFrom(utils, download.file, read.table, write.table, read.delim)
 importFrom("stats", "setNames")
 importFrom(reshape2, melt)
 importFrom(ggplot2, ggplot, aes, aes_q, aes_string, geom_tile, theme_bw, 
