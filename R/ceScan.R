@@ -73,7 +73,13 @@ ceScanR <- function(axts, tFilter=NULL, qFilter=NULL, tSizes, qSizes,
   }
   CNE <- lapply(resFiles, 
                 function(x){
-                  res <- read.table(x, header=FALSE, sep="\t", as.is=TRUE)
+                  res <- try(read.table(x, header=FALSE, sep="\t", as.is=TRUE),
+                             silent=TRUE)
+                  if(class(res) == "try-error"){
+                    return(GRangePairs(first=GRanges(seqinfo=tSizes), 
+                                       second=GRanges(seqinfo=qSizes))
+                           )
+                  }
                   colnames(res) <- c("tName", "tStart", "tEnd", 
                                      "qName", "qStart", "qEnd",
                                      "strand", "score", "cigar")
