@@ -99,7 +99,10 @@ makeCNEDensity <- function(x, outputDir=".",
   if(seqlengthsNA(x)){
     stop("seqlengths must be provided in `x`!")
   }
-  
+  if(length(x) == 0L){
+    warning("No CNEs in `x`!")
+    return(FALSE)
+  }
   ## make the bed files
   message("Making bed files...")
   bedFirst <- first(x)
@@ -219,6 +222,7 @@ makeAncoraFiles <- function(cne, outputDir=".",
                       mcols(cne)$score,
                       mcols(cne)$cigar)
   }
+  dir.create(outputDir, showWarnings=FALSE, recursive=TRUE)
   write.table(ans, file=file.path(outputDir, fileName), 
               sep="\t", quote=FALSE, row.names=FALSE,
               col.names=FALSE)
