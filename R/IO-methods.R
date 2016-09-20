@@ -156,7 +156,7 @@ read.rmskFasta <- function(fn){
   foo3 <- lapply(lapply(strsplit(as.character(seq),"") ,"%in%",
                        c("a","c","g","t")), Rle)
   foo4 <- lapply(foo3, as, "IRanges")
-  foo5 <- GRanges(seqnames=Rle(names(foo4), sapply(foo4, length)),
+  foo5 <- GRanges(seqnames=Rle(names(foo4), lengths(foo4)),
                   ranges=IRanges(start=unlist(sapply(foo4, start)),
                                  end=unlist(sapply(foo4, end))),
                   strand="+")
