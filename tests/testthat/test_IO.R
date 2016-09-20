@@ -103,3 +103,14 @@ test_that("test_readCNERangesFromSQLite", {
                                             tableName="danRer10_hg38_45_50")
   expect_equal(length(cneGRangePairs), 3209L)
 })
+
+test_that("test_read.rmskFasta", {
+  library(GenomicRanges)
+  fn <- file.path(system.file("extdata", package="CNEr"),
+                  "rmsk.fa")
+  ans <- read.rmskFasta(fn)
+  expect_equal(ans, GRanges(seqnames=c("chr1", "chr2"),
+                            ranges=IRanges(start=c(6,3),
+                                           end=c(7,5)),
+                            strand="+"))
+})
