@@ -21,7 +21,7 @@
   }
   \item{outputDir}{
     \code{character}(1): the output directory of 
-    \sQuote{Bed} and \sQuote{BigWig} files.
+    \sQuote{Bed}, \sQuote{bedGraph} and \sQuote{BigWig} files.
   }
   \item{genomeFirst,genomeSecond}{
     \code{character}(1): the genome name of the first and second species.

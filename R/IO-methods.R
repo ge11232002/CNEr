@@ -147,6 +147,23 @@ read.rmMask.GRanges <- function(fn){
 }
 
 ### -----------------------------------------------------------------
+### read a soft-repeatMasked fasta (repeats in lower case) and 
+### get the repeats regions
+### Exported!
+read.rmskFasta <- function(fn){
+  seq <- readBStringSet(fn)
+  names(seq) <- sapply(strsplit(names(seq), " "), "[", 1)
+  foo3 <- lapply(lapply(strsplit(as.character(seq),"") ,"%in%",
+                       c("a","c","g","t")), Rle)
+  foo4 <- lapply(foo3, as, "IRanges")
+  foo5 <- GRanges(seqnames=Rle(names(foo4), lengths(foo4)),
+                  ranges=IRanges(start=unlist(sapply(foo4, start)),
+                                 end=unlist(sapply(foo4, end))),
+                  strand="+")
+  return(foo5)
+}
+
+### -----------------------------------------------------------------
 ### save the CNE class or GRangePairs object into a local SQLite database
 ### Exported!!
 saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
