@@ -178,11 +178,11 @@ makeCNEDensity <- function(x, outputDir=".",
   # Make bigwig files
   message("Making bigwig files...")
   bigwigFnFirst <- file.path(outputDir, 
-                             paste0("CNE_density", genomeFirst, "_",
+                             paste0("CNE_density_", genomeFirst, "_",
                                     genomeSecond, "_", threshold, ".bw"))
   export.bw(densityFirst, con=bwFnFirst)
   bigwigFnSecond <- file.path(outputDir, 
-                              paste0("CNE_density", genomeSecond, "_",
+                              paste0("CNE_density_", genomeSecond, "_",
                                      genomeFirst, "_", threshold, ".bw"))
   export.bw(densitySecond, con=bigwigFnSecond)
   
