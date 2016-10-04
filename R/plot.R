@@ -31,6 +31,16 @@ CNEDensity <- function(dbName, tableName, chr, start, end,
   rangesPair <- readCNERangesFromSQLite(dbName, tableName, chr,
                                     context_start, context_end, 
                                     whichAssembly, minLength)
+  ## When no CNEs are returned
+  if(length(rangesPair) == 0L){
+    ans <- GRanges(seqnames=chr,
+                   ranges=IRanges(start=context_start,
+                                  end=context_end),
+                   strand="*",
+                   score=0)
+    return(ans)
+  }
+  
   if(whichAssembly == "first"){
     ranges <- first(rangesPair)
   }else if(whichAssembly == "second"){
