@@ -2,11 +2,19 @@
 ### make GRBs from CNEs
 ### Exported!
 makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1, 
-                     background=c("chromosome", "genome")){
+                     background=c("chromosome", "genome")){#,
+                     #byChrom=FALSE
   if(!is(x, "GRangesList")){
     stop("The input `x` must be a `GRangesList` object!")
   }
   background <- match.arg(background)
+  # if(isTRUE(byChrom)){
+  #   if(!all(sapply(cneList, 
+  #                  function(x){"seqnames2" %in% colnames(mcols(x))}))){
+  #     stop("`x` must have metacolum of `seqnames2` to do",
+  #          "byChrom GRB prediction!")
+  #   }
+  # }
   
   xList <- x
   if(is.null(names(xList))){
