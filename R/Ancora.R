@@ -42,6 +42,7 @@ readAncora <- function(fn, assembly=NULL,
                                    name=paste0(cne[[4]], ":", 
                                                (cne[[5]]+1), "-", cne[[6]]),
                                    itemRgb=chr2colour(cne[[4]]),
+                                   seqnames2=cne[[4]],
                                    seqinfo=seqinfoTarget),
                      second=GRanges(seqnames=cne[[4]],
                                   ranges=IRanges(start=cne[[5]]+1,
@@ -49,6 +50,7 @@ readAncora <- function(fn, assembly=NULL,
                                   strand="*",
                                   name=paste0(cne[[1]], ":", 
                                               (cne[[2]]+1), "-", cne[[3]]),
+                                  seqnames2=cne[[1]],
                                   itemRgb=chr2colour(cne[[1]]),
                                   seqinfo=seqinfoQuery)
                      )
@@ -180,7 +182,7 @@ makeCNEDensity <- function(x, outputDir=".",
   bigwigFnFirst <- file.path(outputDir, 
                              paste0("CNE_density_", genomeFirst, "_",
                                     genomeSecond, "_", threshold, ".bw"))
-  export.bw(densityFirst, con=bwFnFirst)
+  export.bw(densityFirst, con=bigwigFnFirst)
   bigwigFnSecond <- file.path(outputDir, 
                               paste0("CNE_density_", genomeSecond, "_",
                                      genomeFirst, "_", threshold, ".bw"))

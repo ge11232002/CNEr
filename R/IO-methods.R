@@ -283,6 +283,12 @@ readCNERangesFromSQLite <- function(dbName, tableName,
     seqinfoQuery <- seqinfoFn(qAssemblyFn)
   }
   
+  # Return empty GRangePairs when no CNEs are returned.
+  if(nrow(fetchedCNE) == 0L){
+    return(GRangePairs(first=GRanges(seqinfo=seqinfoTarget),
+                       second=GRanges(seqinfo=seqinfoQuery)))
+  }
+  
   firstGRanges <- GRanges(seqnames=fetchedCNE[ ,1],
                           ranges=IRanges(start=fetchedCNE[ ,2],
                                          end=fetchedCNE[,3]),
