@@ -56,6 +56,7 @@
   \code{\link{readAncora}}
 }
 \examples{
+  \dontrun{
   dbName <- file.path(system.file("extdata", package="CNEr"),
                       "danRer10CNE.sqlite")
   qAssemblyFn <- file.path(system.file("extdata",
@@ -64,9 +65,10 @@
   tAssemblyFn <- file.path(system.file("extdata",
                              package="BSgenome.Drerio.UCSC.danRer10"),
                            "single_sequences.2bit")
-  cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName, 
+  cneGRangePairs <- readCNERangesFromSQLite(dbName=dbName,
                                             tableName="danRer10_hg38_45_50",
                                             tAssemblyFn=tAssemblyFn,
                                             qAssemblyFn=qAssemblyFn)
   makeCNEDensity(cneGRangePairs[1:1000])
+  }
 }
