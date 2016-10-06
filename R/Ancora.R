@@ -86,8 +86,7 @@ readAncoraIntoSQLite <- function(cneFns, dbName, overwrite=FALSE){
 
 ### -----------------------------------------------------------------
 ### makeCNEDensity: make the Ancora downloads-like bed files, bedgraph, 
-### bigwig files
-###   from a GrangePairs of CNEs.
+### bigwig files from a GrangePairs of CNEs.
 ### Exported!
 makeCNEDensity <- function(x, outputDir=".",
                            genomeFirst="first", genomeSecond="second",
