@@ -93,7 +93,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
   for(i in 1:length(xList)){
     hitsCNEs <- findOverlaps(xList[[i]], clusterRanges,
                              ignore.strand=TRUE, type="within")
-    cnes <- sapply(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)), length)
+    cnes <- lengths(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)))
     mcols(clusterRanges)[[names(xList)[i]]] <- 0L
     mcols(clusterRanges)[[names(xList)[i]]][as.integer(names(cnes))] <- cnes
   }
