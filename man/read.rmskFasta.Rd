@@ -1,10 +1,10 @@
 \name{read.rmskFasta}
 \alias{read.rmskFasta}
 \title{
-  Read a soft reoeat masked fasta
+  Read a soft repeat masked fasta
 }
 \description{
-  Read a soft repeat masked fasta file into a \code{GRanges}.
+  Read a soft repeat masked fasta file into a \code{GRanges} object.
 }
 \usage{
   read.rmskFasta(fn)

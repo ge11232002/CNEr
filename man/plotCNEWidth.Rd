@@ -6,8 +6,8 @@
 }
 \description{
   CNE widths can follow heavy tailed distribution that are associated with power-laws.
-  This function plot the reverse cumulative density distribution of CNE widths,
-  and fit a discrete power-law distribution.
+  This function plots the reverse cumulative density distribution of CNE widths,
+  and fits a discrete power-law distribution.
   Goodness of fit can also be evaluated.
 }
 \usage{

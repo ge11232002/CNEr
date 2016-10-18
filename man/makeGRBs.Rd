@@ -33,20 +33,20 @@
   }
   \item{background}{
     \code{character}(1):
-    can be "chromosome" or "genome". When slice the CNE density,
+    can be "chromosome" or "genome". When using \code{slice} for the CNE density,
     the background is calculated on a per-chromosome or whole-genome basis.
   }
   \item{minCNEs}{
-    \code{integer}(1): the minimal number of CNEs that a GRB need to have.
+    \code{integer}(1): the minimal number of CNEs that a GRB needs to have.
   }
 }
 \details{
-  First we calculated the CNE densities from the CNEs.
+  First we calculate the CNE densities from the CNEs.
   Then we segment the regions according to the values of CNE densities.
   The regions with CNE densities above the expected CNE densities * ratio are
   considered as putative GRBs.
-  Of course, the putative GRBs that do not encompass any gene are filtered out.
-  Finanlly, the GRBs that have fewered than \code{minCNEs} number of CNEs will
+  Putative GRBs that do not encompass any gene are filtered out.
+  Finally, the GRBs that have fewer than \code{minCNEs} number of CNEs will
   be filtered out.
 }
 \value{

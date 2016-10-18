@@ -5,7 +5,7 @@
   Read the cne file from Ancora format.
 }
 \description{
-  Read the Ancora CNE file into a \code{GRanges} or \code{GRangePairs}.
+  Read the Ancora CNE file into a \code{GRanges} or \code{GRangePairs} object.
 }
 \usage{
   readAncora(fn, assembly=NULL, tAssemblyFn=NULL, qAssemblyFn=NULL)

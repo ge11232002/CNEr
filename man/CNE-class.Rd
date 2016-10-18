@@ -52,7 +52,7 @@ CNE(assembly1Fn=character(1), assembly2Fn=character(1),
     \item{CNE12}{Object of class \code{"GRangePairs"}:
       The preliminary CNEs from axt file with assembly1 as reference.}
     \item{CNE21}{Object of class \code{"GRangePairs"}:
-      The preliminart CNEs from axt file with assembly2 as reference.}
+      The preliminary CNEs from axt file with assembly2 as reference.}
     \item{CNEMerged}{Object of class \code{"GRangePairs"}:
       The CNEs after merging CNE1 and CNE2.}
     \item{CNEFinal}{Object of class \code{"GRangePairs"}:
