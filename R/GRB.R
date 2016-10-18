@@ -2,7 +2,8 @@
 ### make GRBs from CNEs
 ### Exported!
 makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1, 
-                     background=c("chromosome", "genome")){#,
+                     background=c("chromosome", "genome"),
+                     minCNEs=1L){#,
                      #byChrom=FALSE
   if(!is(x, "GRangesList")){
     stop("The input `x` must be a `GRangesList` object!")
@@ -97,6 +98,11 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     mcols(clusterRanges)[[names(xList)[i]]] <- 0L
     mcols(clusterRanges)[[names(xList)[i]]][as.integer(names(cnes))] <- cnes
   }
+  
+  # Filter out the GRBs with few CNEs
+  indexToKeep <- apply(as.data.frame(mcols(clusterRanges)[names(xList)]) >= 
+                         minCNEs, 1, any)
+  clusterRanges <- clusterRanges[indexToKeep]
   
   return(clusterRanges)
 }

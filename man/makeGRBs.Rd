@@ -9,7 +9,7 @@
 }
 \usage{
   makeGRBs(x, winSize=NULL, genes=NULL, ratio=1,
-           background=c("chromosome", "genome"))
+           background=c("chromosome", "genome"), minCNEs=1L)
 }
   
 \arguments{
@@ -36,14 +36,18 @@
     can be "chromosome" or "genome". When slice the CNE density,
     the background is calculated on a per-chromosome or whole-genome basis.
   }
+  \item{minCNEs}{
+    \code{integer}(1): the minimal number of CNEs that a GRB need to have.
+  }
 }
 \details{
   First we calculated the CNE densities from the CNEs.
   Then we segment the regions according to the values of CNE densities.
   The regions with CNE densities above the expected CNE densities * ratio are
   considered as putative GRBs.
-  As a last step, the putative GRBs that do not encompass any gene
-  are filtered out.
+  Of course, the putative GRBs that do not encompass any gene are filtered out.
+  Finanlly, the GRBs that have fewered than \code{minCNEs} number of CNEs will
+  be filtered out.
 }
 \value{
   A \code{GRanges} object of GRB coordinates is returned, with the number of CNEs
@@ -69,5 +73,5 @@
   makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
            background="genome")
   makeGRBs(cneList, winSize=200, genes=refGenesDanRer10, ratio=1.2,
-           background="chromosome")
+           background="chromosome", minCNEs=3L)
 }
