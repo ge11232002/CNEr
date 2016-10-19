@@ -94,9 +94,22 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
   for(i in 1:length(xList)){
     hitsCNEs <- findOverlaps(xList[[i]], clusterRanges,
                              ignore.strand=TRUE, type="within")
+    
+    ## Add the number of CNEs
     cnes <- lengths(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)))
     mcols(clusterRanges)[[names(xList)[i]]] <- 0L
     mcols(clusterRanges)[[names(xList)[i]]][as.integer(names(cnes))] <- cnes
+    
+    ## Add the CNE ranges
+    cnes <- split(xList[[i]][queryHits(hitsCNEs)], subjectHits(hitsCNEs))
+    missingCNEs <- setdiff(seq_len(length(clusterRanges)),
+                           subjectHits(hitsCNEs))
+    for(j in missingCNEs){
+      ## This is really a bad implementation. 
+      cnes[[as.character(j)]] <- GRanges()
+    }
+    mcols(clusterRanges)[[paste(names(xList)[i], "CNE")]] <- 
+      cnes[order(as.integer(names(cnes)))]
   }
   
   # Filter out the GRBs with few CNEs
