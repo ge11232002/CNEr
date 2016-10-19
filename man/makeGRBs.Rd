@@ -50,8 +50,9 @@
   be filtered out.
 }
 \value{
-  A \code{GRanges} object of GRB coordinates is returned, with the number of CNEs
-  within each GRB.
+  A \code{GRanges} object of GRB coordinates is returned.
+  The numbers of CNEs and the coordinates of CNEs within each GRB are
+  returned as a metadata column.
 }
 
 \author{
