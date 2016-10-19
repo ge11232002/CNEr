@@ -144,13 +144,13 @@ makeCNEDensity <- function(x, outputDir=".",
   message("Making bedGraph files...")
   bedFirst <- reduce(bedFirst, ignore.strand=TRUE)
   covFirst <- coverage(bedFirst)
-  densityFirst <- runmean(covFirst, k=windowSizeFirst*1000, 
-                          endrule = "constant") * 100
+  densityFirst <- suppressWarnings(runmean(covFirst, k=windowSizeFirst*1000, 
+                          endrule = "constant") * 100)
   
   bedSecond <- reduce(bedSecond, ignore.strand=TRUE)
   covSecond <- coverage(bedSecond)
-  densitySecond <- runmean(covSecond, k=windowSizeSecond*1000,
-                           endrule = "constant") * 100
+  densitySecond <- suppressWarnings(runmean(covSecond, k=windowSizeSecond*1000,
+                           endrule = "constant") * 100)
  
   firstTrackLine <- new("GraphTrackLine",
                         name=paste(genomeFirst, "CNEs density", threshold),

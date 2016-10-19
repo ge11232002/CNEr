@@ -37,7 +37,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     stop("The `genes` must be a `GRanges` object!")
   }
 
-  density <- runmean(cov, k=winSize,  endrule="constant")
+  density <- suppressWarnings(runmean(cov, k=winSize,  endrule="constant"))
   if(background == "genome"){
     # calculate the background percentage of coverage
     totalGenomeSize <- 
@@ -119,4 +119,3 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
   
   return(clusterRanges)
 }
-
