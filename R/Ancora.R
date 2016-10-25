@@ -50,8 +50,8 @@ readAncora <- function(fn, assembly=NULL,
                                   strand="*",
                                   name=paste0(cne[[1]], ":", 
                                               (cne[[2]]+1), "-", cne[[3]]),
-                                  seqnames2=cne[[1]],
                                   itemRgb=chr2colour(cne[[1]]),
+                                  seqnames2=cne[[1]],
                                   seqinfo=seqinfoQuery)
                      )
   if(is.null(assembly)){
@@ -144,13 +144,13 @@ makeCNEDensity <- function(x, outputDir=".",
   message("Making bedGraph files...")
   bedFirst <- reduce(bedFirst, ignore.strand=TRUE)
   covFirst <- coverage(bedFirst)
-  densityFirst <- runmean(covFirst, k=windowSizeFirst*1000, 
-                          endrule = "constant") * 100
+  densityFirst <- suppressWarnings(runmean(covFirst, k=windowSizeFirst*1000, 
+                          endrule = "constant") * 100)
   
   bedSecond <- reduce(bedSecond, ignore.strand=TRUE)
   covSecond <- coverage(bedSecond)
-  densitySecond <- runmean(covSecond, k=windowSizeSecond*1000,
-                           endrule = "constant") * 100
+  densitySecond <- suppressWarnings(runmean(covSecond, k=windowSizeSecond*1000,
+                           endrule = "constant") * 100)
  
   firstTrackLine <- new("GraphTrackLine",
                         name=paste(genomeFirst, "CNEs density", threshold),

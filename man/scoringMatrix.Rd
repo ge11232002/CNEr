@@ -15,7 +15,7 @@
   \item{distance}{
     It can be "far", "medium" or "close". It defines the scoring matrix used in
     \emph{lastz} aligner.
-    Generally, if two species are close to each other at human and chimp level,
+    Generally, if two species are close to each other, for example human and chimp,
     "close" should be used.
     If two species have a divergence time of 100 MYA, "far" should be used.
     In other cases, "medium" should be used.

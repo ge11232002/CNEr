@@ -2,7 +2,8 @@
 ### make GRBs from CNEs
 ### Exported!
 makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1, 
-                     background=c("chromosome", "genome")){#,
+                     background=c("chromosome", "genome"),
+                     minCNEs=1L){#,
                      #byChrom=FALSE
   if(!is(x, "GRangesList")){
     stop("The input `x` must be a `GRangesList` object!")
@@ -21,7 +22,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     names(xList) <- as.character(1:length(xList))
   }
   x <- unlist(x)
-  x <- reduce(x)
+  x <- reduce(x, ignore.strand=TRUE)
   cov <- coverage(x)
 
   # Guess winSize from genome size if NULL
@@ -36,7 +37,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     stop("The `genes` must be a `GRanges` object!")
   }
 
-  density <- runmean(cov, k=winSize,  endrule="constant")
+  density <- suppressWarnings(runmean(cov, k=winSize,  endrule="constant"))
   if(background == "genome"){
     # calculate the background percentage of coverage
     totalGenomeSize <- 
@@ -93,11 +94,28 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
   for(i in 1:length(xList)){
     hitsCNEs <- findOverlaps(xList[[i]], clusterRanges,
                              ignore.strand=TRUE, type="within")
-    cnes <- sapply(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)), length)
+    
+    ## Add the number of CNEs
+    cnes <- lengths(split(queryHits(hitsCNEs), subjectHits(hitsCNEs)))
     mcols(clusterRanges)[[names(xList)[i]]] <- 0L
     mcols(clusterRanges)[[names(xList)[i]]][as.integer(names(cnes))] <- cnes
+    
+    ## Add the CNE ranges
+    cnes <- split(xList[[i]][queryHits(hitsCNEs)], subjectHits(hitsCNEs))
+    missingCNEs <- setdiff(seq_len(length(clusterRanges)),
+                           subjectHits(hitsCNEs))
+    for(j in missingCNEs){
+      ## This is really a bad implementation. 
+      cnes[[as.character(j)]] <- GRanges()
+    }
+    mcols(clusterRanges)[[paste(names(xList)[i], "CNE")]] <- 
+      cnes[order(as.integer(names(cnes)))]
   }
+  
+  # Filter out the GRBs with few CNEs
+  indexToKeep <- apply(as.data.frame(mcols(clusterRanges)[names(xList)]) >= 
+                         minCNEs, 1, any)
+  clusterRanges <- clusterRanges[indexToKeep]
   
   return(clusterRanges)
 }
-

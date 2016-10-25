@@ -6,7 +6,7 @@
 }
 \description{
 Query the SQLite database based on chromosome, 
-coordinates and some other criterias.
+coordinates and some other criteria.
 Primarily not intended to be used directly.
 For the CNE density plot, \code{fetchCNEDensity} function should be used.
 }

@@ -49,7 +49,7 @@ CNEDensity <- function(dbName, tableName, chr, start, end,
   # Implement get_cne_ranges_in_region_partitioned_by_other_chr later!!!
   ranges <- reduce(ranges)
   covAll <- coverage(ranges, width=context_end)
-  runMeanAll <- runmean(covAll, k=windowSize, "constant")
+  runMeanAll <- suppressWarnings(runmean(covAll, k=windowSize, "constant"))
   ans <- as(runMeanAll, "GRanges")
   ans$score <- ans$score * 100
   return(ans)

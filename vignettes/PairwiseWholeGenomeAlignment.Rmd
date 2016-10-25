@@ -55,7 +55,7 @@ Then we can run `lastz` function to generate the _lav_ files.
 assemblyDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/2bit"
 axtDir <- "/Users/gtan/OneDrive/Project/CSC/CNEr/axt"
 assemblyTarget <- file.path(system.file("extdata",
-                              package="BSgenome.Drerio.UCSC.danRer10"),
+                            package="BSgenome.Drerio.UCSC.danRer10"),
                             "single_sequences.2bit")
 assemblyQuery <- file.path(system.file("extdata",
                                        package="BSgenome.Hsapiens.UCSC.hg38"),
@@ -156,7 +156,7 @@ netSyntenicFile <- chainNetSyntenic(allPreChain, assemblyTarget, assemblyQuery,
                                                       sub("\\.2bit$", "",
                                                       basename(assemblyQuery),
                                                       ignore.case = TRUE),
-                                              ".noClass.net")),
+                                               ".noClass.net")),
                      binaryChainNet="chainNet", binaryNetSyntenic="netSyntenic")
 ```
 
@@ -185,4 +185,3 @@ document was compiled:
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
-
