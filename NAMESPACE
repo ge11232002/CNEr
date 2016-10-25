@@ -62,6 +62,7 @@ importFrom(GO.db, GOCCANCESTOR, GOCCOFFSPRING, GOCCCHILDREN,
                   GOMFANCESTOR, GOMFOFFSPRING, GOMFCHILDREN)
 importFrom("grDevices", "jpeg", "pdf", "png", "postscript")
 importFrom(R.utils, gunzip, gzip)
+importFrom(KEGGREST, keggGet)
 
 ### -----------------------------------------------------------------
 ### Export S4 classes defined in CNEr
