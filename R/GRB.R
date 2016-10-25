@@ -22,7 +22,7 @@ makeGRBs <- function(x, winSize=NULL, genes=NULL, ratio=1,
     names(xList) <- as.character(1:length(xList))
   }
   x <- unlist(x)
-  x <- reduce(x)
+  x <- reduce(x, ignore.strand=TRUE)
   cov <- coverage(x)
 
   # Guess winSize from genome size if NULL
