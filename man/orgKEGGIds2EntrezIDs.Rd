@@ -13,7 +13,7 @@
 
 \arguments{
   \item{organism}{
-    \code{character}(1): the name of prganism to query. It has to be available
+    \code{character}(1): the name of organism to query. It has to be available
     at http://rest.kegg.jp/list/organism.
   }
 }
