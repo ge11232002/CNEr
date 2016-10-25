@@ -50,8 +50,8 @@ readAncora <- function(fn, assembly=NULL,
                                   strand="*",
                                   name=paste0(cne[[1]], ":", 
                                               (cne[[2]]+1), "-", cne[[3]]),
-                                  seqnames2=cne[[1]],
                                   itemRgb=chr2colour(cne[[1]]),
+                                  seqnames2=cne[[1]],
                                   seqinfo=seqinfoQuery)
                      )
   if(is.null(assembly)){
