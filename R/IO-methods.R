@@ -50,7 +50,7 @@ readBed <- function(bedFile, assemblyFn=NULL){
 ### read the axt files into an axt object.
 ### Exported!
 readAxt <- function(axtFiles, tAssemblyFn=NULL, qAssemblyFn=NULL){
-  if(any(duplicated(file_ext(axtFiles))))
+  if(length(unique((file_ext(axtFiles)))) > 1)
     stop("`axtFiles` must have same extensions!")
   
   # Read axt files into R axt object.
