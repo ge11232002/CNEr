@@ -146,7 +146,7 @@ lastz <- function(assemblyTarget, assemblyQuery,
       ## Self-alignment
       cmd <- paste0(binary, " ", assemblyTarget, "/",
                     gsub("|", "\\|", chrTarget, fixed=TRUE), " ",
-                    "--self --nomirror",
+                    "--self --nomirror", " ",
                     lastzOptions[[distance]],
                     " --format=", format,
                     " --output=", output,
