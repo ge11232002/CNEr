@@ -3,34 +3,37 @@
 ### Exported!
 scoringMatrix <- function(distance=c("far", "medium", "near")){
   distance <- match.arg(distance)
-  lastzMatrix <- list(medium=matrix(c(91, -114, -31, -123,
-                                      -114, 100, -125, -31,
-                                      -31, -125, 100,-114,
-                                      -123, -31, -114, 91),
-                                    nrow=4, ncol=4,
-                                    dimnames=list(c("A", "C", "G", "T"),
-                                                  c("A", "C", "G", "T"))
-  ),
-  far=matrix(c(91, -90, -25, -100,
-               -90, 100, -100, -25,
-               -25, -100, 100, -90,
-               -100, -25, -90, 91),
-             nrow=4, ncol=4,
-             dimnames=list(c("A", "C", "G", "T"),
-                           c("A", "C", "G", "T"))
-  ),
-  near=matrix(c(90, -330, -236, -356,
-                -330, 100, -318, -236,
-                -236, -318, 100, -330,
-                -356, -236, -330, 90),
-              nrow=4, ncol=4,
-              dimnames=list(c("A", "C", "G", "T"),
-                            c("A", "C", "G", "T"))
-  )
+  lastzMatrix <- list(
+    # Default
+    medium=matrix(c(91, -114, -31, -123,
+                    -114, 100, -125, -31,
+                    -31, -125, 100,-114,
+                    -123, -31, -114, 91),
+                  nrow=4, ncol=4,
+                  dimnames=list(c("A", "C", "G", "T"),
+                                c("A", "C", "G", "T"))
+                  ),
+    ## HOXD55
+    far=matrix(c(91, -90, -25, -100,
+                 -90, 100, -100, -25,
+                 -25, -100, 100, -90,
+                 -100, -25, -90, 91),
+               nrow=4, ncol=4,
+               dimnames=list(c("A", "C", "G", "T"),
+                             c("A", "C", "G", "T"))
+    ),
+    ## human-chimp
+    near=matrix(c(90, -330, -236, -356,
+                  -330, 100, -318, -236,
+                  -236, -318, 100, -330,
+                  -356, -236, -330, 90),
+                nrow=4, ncol=4,
+                dimnames=list(c("A", "C", "G", "T"),
+                              c("A", "C", "G", "T"))
+    )
   )
   return(lastzMatrix[[distance]])
 }
-
 
 ### -----------------------------------------------------------------
 ### lastz wrapper
@@ -54,7 +57,10 @@ lastz <- function(assemblyTarget, assemblyQuery,
   }
   
   matrixFile <- tempfile(fileext=".lastzMatrix")
-  on.exit(unlink(matrixFile))
+  if(!isTRUE(echoCommand)){
+    ## If echo the command, we keep the scoring matrix file.
+    on.exit(unlink(matrixFile))
+  }
   write.table(scoringMatrix(distance), file=matrixFile, quote=FALSE,
               sep=" ", row.names=FALSE, col.names=TRUE)
   ## The options used here is taken from RunLastzChain_sh.txt 
@@ -117,7 +123,6 @@ lastz <- function(assemblyTarget, assemblyQuery,
                matrixFile)
   )
   
-  message("Starting lastz")
   if(is.null(chrsTarget)){
     chrsTarget <- seqnames(seqinfo(TwoBitFile(assemblyTarget)))
   }else{
