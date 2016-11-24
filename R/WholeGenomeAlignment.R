@@ -140,14 +140,29 @@ lastz <- function(assemblyTarget, assemblyQuery,
                         "-", gsub("|", "\\|", chrQuery, fixed=TRUE),
                         ".", sub("\\..*$", "", basename(assemblyQuery)),
                         ".", format))
-    cmd <- paste0(binary, " ", assemblyTarget, "/",
-                  gsub("|", "\\|", chrTarget, fixed=TRUE), " ",
-                  assemblyQuery, "/",
-                  gsub("|", "\\|", chrQuery, fixed=TRUE), " ",
-                  lastzOptions[[distance]],
-                  " --format=", format,
-                  " --output=", output,
-                  " --markend")
+    
+    if(identical(paste(assemblyTarget, chrTarget), 
+                 paste(assemblyQuery, chrQuery))){
+      ## Self-alignment
+      cmd <- paste0(binary, " ", assemblyTarget, "/",
+                    gsub("|", "\\|", chrTarget, fixed=TRUE), " ",
+                    "--self --nomirror",
+                    lastzOptions[[distance]],
+                    " --format=", format,
+                    " --output=", output,
+                    " --markend")
+    }else{
+      ## No self-alignment
+      cmd <- paste0(binary, " ", assemblyTarget, "/",
+                    gsub("|", "\\|", chrTarget, fixed=TRUE), " ",
+                    assemblyQuery, "/",
+                    gsub("|", "\\|", chrQuery, fixed=TRUE), " ",
+                    lastzOptions[[distance]],
+                    " --format=", format,
+                    " --output=", output,
+                    " --markend")
+    }
+    
     if(echoCommand){
       output <- cmd
     }else{
