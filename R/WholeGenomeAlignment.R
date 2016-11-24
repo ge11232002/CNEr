@@ -111,9 +111,10 @@ lastz <- function(assemblyTarget, assemblyQuery,
   lastzOptions <- list(
     near=paste0("C=0 E=150 H=0 K=4500 L=3000 M=254 O=600 T=2 Y=15000 Q=",
                 matrixFile),
-    medium=paste0("C=0 E=30 H=0 K=3000 L=3000 M=50 O=400 T=1 Y=9400",
+    medium=paste0("C=0 E=30 H=0 K=3000 L=3000 M=50 O=400 T=1 Y=9400 Q=",
                   matrixFile),
-    far=paste0("C=0 E=30 H=2000 K=2200 L=6000 M=50 O=400 T=2 Y=3400 Q=", matrixFile)
+    far=paste0("C=0 E=30 H=2000 K=2200 L=6000 M=50 O=400 T=2 Y=3400 Q=", 
+               matrixFile)
   )
   
   message("Starting lastz")
