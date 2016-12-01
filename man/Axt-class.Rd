@@ -94,6 +94,7 @@ Axt(targetRanges=GRanges(), targetSeqs=DNAStringSet(),
   \code{\link{writeAxt}}
   \code{\link{subAxt}}
   \code{\link{fixCoordinates}}
+  \code{\link{makeAxtTracks}}
 }
 
 \examples{

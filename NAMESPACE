@@ -111,7 +111,7 @@ export(
   Axt,
   
   ## Axt-methods.R
-  #dotplotAxt,
+  makeAxtTracks,
   
   ## subAxt-methods.R
   psubAxt,

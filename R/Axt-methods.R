@@ -99,3 +99,24 @@ setMethod("syntenicDotplot", signature=(x="Axt"),
                                     secondChrs=secondChrs,
                                     col=col, type=type)
           })
+
+### -----------------------------------------------------------------
+### makeAxtTracks
+### Exported!!
+makeAxtTracks <- function(x){
+  if(!is(x, "Axt")){
+    stop(deparse(substitute(x)), " must be a `Axt`` class!")
+  }
+  x <- fixCoordinates(x)
+  
+  targetAxt <- targetRanges(x)
+  queryAxt <- queryRanges(x)
+  
+  targetAxt$name <- as.character(queryAxt)
+  queryAxt$name <- as.character(targetAxt)
+  
+  export.bed(targetAxt, "targetAxt.bed")
+  export.bed(queryAxt, "queryAxt.bed")
+  
+  invisible(list(targetAxt, queryAxt))
+}
