@@ -1,5 +1,5 @@
 Package: CNEr 
-Version: 1.11.4
+Version: 1.11.5
 Date: 2016-11-03
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
@@ -14,7 +14,7 @@ Imports: Biostrings (>= 2.33.4),
          XVector (>= 0.5.4),
          GenomicAlignments (>= 1.1.9),
          methods,
-         S4Vectors (>= 0.9.25),
+         S4Vectors (>= 0.13.8),
          IRanges (>= 2.5.27),
          readr (>= 0.2.2),
          BiocGenerics,
