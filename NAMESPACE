@@ -5,7 +5,7 @@ import(BiocGenerics)
 ### Import S4 classes defined in other packages
 ###
 importClassesFrom(methods, ANY, character, integer, missing)
-importClassesFrom(S4Vectors, List, characterORNULL, DataFrame, Pairs)
+importClassesFrom(S4Vectors, List, character_OR_NULL, DataFrame, Pairs)
 importClassesFrom(GenomicRanges, GRanges)
 importClassesFrom(Biostrings, DNAStringSet)
 
