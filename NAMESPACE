@@ -5,7 +5,7 @@ import(BiocGenerics)
 ### Import S4 classes defined in other packages
 ###
 importClassesFrom(methods, ANY, character, integer, missing)
-importClassesFrom(S4Vectors, List, characterORNULL, DataFrame, Pairs)
+importClassesFrom(S4Vectors, List, character_OR_NULL, DataFrame, Pairs)
 importClassesFrom(GenomicRanges, GRanges)
 importClassesFrom(Biostrings, DNAStringSet)
 
@@ -89,7 +89,6 @@ exportMethods(
   syntenicDotplot,
 
   ## Axt-methods.R
-  #  mismatchSummary
   summary
 )
 
@@ -104,7 +103,6 @@ export(
   binRangesFromCoordRange,
   binRestrictionString,
   readCNERangesFromSQLite,
-  #queryAnnotationSQLite,
   fetchChromSizes,
 
   ## Axt-class.R
@@ -118,6 +116,7 @@ export(
   
   ## CNE-class.R
   CNE,
+  
   ## GRangePairs-class.R
   GRangePairs,
 
@@ -131,14 +130,7 @@ export(
   read.rmskFasta,
 
   ## ceScan.R
-  
   blatCNE,
-  #ceScanOneStep,
-
-  ## makeGeneDbFromUCSC.r
-  #supportedUCSCtables,
-  #queryrefGene, queryknownGene, queryensGene,
-  #makeGeneDbFromUCSC,
 
   ## WholeGenomeAlignment.R
   lastz,

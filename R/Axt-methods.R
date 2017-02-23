@@ -40,8 +40,7 @@ axtMatchDistribution <- function(x, size=10000, title=NULL){
     ggtitle(ifelse(is.null(title), "Distribution of matched bases",
                   title)) +
     scale_fill_continuous(low="deepskyblue4", high="gold") +
-    geom_text(aes(fill=toPlot$percentage, 
-                  label=round(toPlot$percentage, 1)))
+    geom_text(aes(label=round(toPlot$percentage, 1)))
 }
 
 ### -----------------------------------------------------------------
