@@ -89,7 +89,6 @@ exportMethods(
   syntenicDotplot,
 
   ## Axt-methods.R
-  #  mismatchSummary
   summary
 )
 
@@ -104,20 +103,20 @@ export(
   binRangesFromCoordRange,
   binRestrictionString,
   readCNERangesFromSQLite,
-  #queryAnnotationSQLite,
   fetchChromSizes,
 
   ## Axt-class.R
   Axt,
   
   ## Axt-methods.R
-  #dotplotAxt,
+  makeAxtTracks,
   
   ## subAxt-methods.R
   psubAxt,
   
   ## CNE-class.R
   CNE,
+  
   ## GRangePairs-class.R
   GRangePairs,
 
@@ -131,14 +130,7 @@ export(
   read.rmskFasta,
 
   ## ceScan.R
-  
   blatCNE,
-  #ceScanOneStep,
-
-  ## makeGeneDbFromUCSC.r
-  #supportedUCSCtables,
-  #queryrefGene, queryknownGene, queryensGene,
-  #makeGeneDbFromUCSC,
 
   ## WholeGenomeAlignment.R
   lastz,

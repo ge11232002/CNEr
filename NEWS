@@ -3,6 +3,7 @@ CHANGES IN Bioc 3.5
 NEW FEATURES
     o Add function orgKEGGIds2EntrezIDs to fetch the mapping between KEGG IDs
       and Entrez IDs
+    o Add function makeAxtTracks
     
 CHANGES IN Bioc 3.4
 ------------------------

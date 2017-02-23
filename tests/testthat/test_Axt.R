@@ -154,3 +154,20 @@ test_that("test_subAxt", {
   expect_identical(ans, axt[c(1,3,347:350)])
 }
 )
+
+test_that("test_makeAxtTracks", {
+  tAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Drerio.UCSC.danRer10"),
+                           "single_sequences.2bit")
+  qAssemblyFn <- file.path(system.file("extdata",
+                                       package="BSgenome.Hsapiens.UCSC.hg38"),
+                           "single_sequences.2bit")
+  axtFn <- file.path(system.file("extdata", package="CNEr"), 
+                     "danRer10.hg38.net.axt")
+  axt <- readAxt(axtFn, tAssemblyFn, qAssemblyFn)
+  ans <- makeAxtTracks(axt)
+  
+  ## Make sure the coordinates are right.
+  expect_identical(ans[[1]]$name[1:2], c("chr7:12578221-12578959:-", 
+                                         "chr9:121302901-121303067:-"))
+})
