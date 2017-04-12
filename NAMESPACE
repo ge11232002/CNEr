@@ -155,6 +155,9 @@ export(
   # CNE-utils.R
   plotCNEWidth, plotCNEDistribution,
   
+  # GO.R
+  addAncestorGO,
+  
   ## AssemblyStats.R
   N50, N90
 )

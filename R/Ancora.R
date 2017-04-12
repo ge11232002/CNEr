@@ -104,6 +104,10 @@ makeCNEDensity <- function(x, outputDir=".",
     warning("No CNEs in `x`!")
     return(FALSE)
   }
+  
+  ## Always try to create the output folder
+  dir.create(outputDir, showWarnings=FALSE, recursive=TRUE)
+  
   ## make the bed files
   message("Making bed files...")
   bedFirst <- first(x)
