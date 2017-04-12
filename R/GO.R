@@ -128,3 +128,19 @@ readGAF <- function(fn){
   ans <- split(GOTerms, geneIDs)
   return(ans)
 }
+
+### -----------------------------------------------------------------
+### Add ancestor GO
+### Exported!
+addAncestorGO <- function(go){
+  if(!is(go, "list")){
+    stop("`go` must be a list!")
+  }
+  goID2Ancestor <- c(as.list(GOBPANCESTOR), as.list(GOMFANCESTOR), 
+                     as.list(GOCCANCESTOR))
+  newGo <- lapply(relist(lapply(mapply(append, unlist(go), 
+                                       goID2Ancestor[unlist(go)]), 
+                                function(x){x[x!="all"]}), go), unlist)
+  newGo <- lapply(newGo, function(x){if(is.null(x)){character(0)}else{x}})
+  return(newGo)
+}

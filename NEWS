@@ -4,6 +4,7 @@ NEW FEATURES
     o Add function orgKEGGIds2EntrezIDs to fetch the mapping between KEGG IDs
       and Entrez IDs
     o Add function makeAxtTracks
+    o Add function addAncestorGO
     
 CHANGES IN Bioc 3.4
 ------------------------
