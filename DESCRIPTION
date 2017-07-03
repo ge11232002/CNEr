@@ -1,12 +1,13 @@
 Package: CNEr 
-Version: 1.11.8
-Date: 2017-04-10
+Version: 1.13.1
+Date: 2017-07-03
 Title: CNE Detection and Visualization
 Description: Large-scale identification and advanced visualization 
              of sets of conserved noncoding elements.
 Author: Ge Tan <ge_tan@live.com>
 Maintainer: Ge Tan <ge_tan@live.com>
 Imports: Biostrings (>= 2.33.4),
+         DBI (>= 0.7),
          RSQLite (>= 0.11.4),
          GenomeInfoDb (>= 1.1.3),
          GenomicRanges (>= 1.23.16),
@@ -27,7 +28,7 @@ Imports: Biostrings (>= 2.33.4),
          GO.db (>= 3.3.0),
          R.utils (>= 2.3.0),
          KEGGREST (>= 1.14.0)
-Depends: R (>= 3.2.2)
+Depends: R (>= 3.4)
 Suggests: Gviz (>= 1.7.4),
           BiocStyle,
           knitr,
