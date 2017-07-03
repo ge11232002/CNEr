@@ -138,9 +138,10 @@ addAncestorGO <- function(go){
   }
   goID2Ancestor <- c(as.list(GOBPANCESTOR), as.list(GOMFANCESTOR), 
                      as.list(GOCCANCESTOR))
-  newGo <- lapply(relist(lapply(mapply(append, unlist(go), 
-                                       goID2Ancestor[unlist(go)]), 
-                                function(x){x[x!="all"]}), go), unlist)
+  allGo <- unlist(go)
+  goID2Ancestor <- lapply(goID2Ancestor, function(x){x[x%in%allGo]})
+  newGo <- lapply(relist(mapply(append, allGo, goID2Ancestor[allGo]), go),
+                  unlist)
   newGo <- lapply(newGo, function(x){if(is.null(x)){character(0)}else{x}})
   return(newGo)
 }

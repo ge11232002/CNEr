@@ -19,7 +19,8 @@ importMethodsFrom(GenomeInfoDb, seqnames, seqlengths, seqinfo, as.data.frame,
 importMethodsFrom(GenomicRanges, reduce, "strand<-", strand, start, end,
                                  findOverlaps, coverage, grglist)
 importMethodsFrom(XVector, subseq)
-importMethodsFrom(RSQLite, dbGetQuery, dbConnect, dbDisconnect, dbWriteTable)
+importMethodsFrom(DBI, dbGetQuery)
+importMethodsFrom(RSQLite, dbConnect, dbDisconnect, dbWriteTable)
 importMethodsFrom(methods, initialize, show)
 importMethodsFrom(Biostrings, compareStrings)
 importMethodsFrom(S4Vectors, Rle, isConstant, runmean, elementNROWS, first,
@@ -156,7 +157,7 @@ export(
   plotCNEWidth, plotCNEDistribution,
   
   # GO.R
-  addAncestorGO,
+  ## addAncestorGO,
   
   ## AssemblyStats.R
   N50, N90
