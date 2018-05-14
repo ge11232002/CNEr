@@ -1,4 +1,4 @@
-CHANGES IN Bioc 3.5
+CHANGES IN VERSION 1.12.0
 ------------------------
 NEW FEATURES
     o Add function orgKEGGIds2EntrezIDs to fetch the mapping between KEGG IDs
@@ -6,7 +6,7 @@ NEW FEATURES
     o Add function makeAxtTracks
     o Add function addAncestorGO
     
-CHANGES IN Bioc 3.4
+CHANGES IN VERSION 1.10.0
 ------------------------
 NEW FEATURES
     o Updated CNE class for storing all the information about 
@@ -26,7 +26,7 @@ BUG FIXES
     o Instead of an error, an empty GRangePairs is returned when no CNEs
       identified.
     
-CHANGES IN Bioc 3.3
+CHANGES IN VERSION 1.8.0
 ------------------------
 BUG FIXES
     o Fix a bug caused by "format" in the blat step.
