@@ -182,15 +182,15 @@ saveCNEToSQLite <- function(x, dbName, tableName=NULL, overwrite=FALSE){
     stop(" x must be a CNE class or GRangePairs class.")
   }
   
-  # Remove the mcols pf cneFinal, otherwise it will mess up the as.data.frame
-  mcols(first(cneFinal)) <- NULL
-  mcols(second(cneFinal)) <- NULL
-  cneFinal <- as.data.frame(cneFinal)
+  firstCNE <- as.data.frame(first(cneFinal))
+  colnames(firstCNE) <- paste0("first.", colnames(firstCNE))
+  secondCNE <- as.data.frame(second(cneFinal))
+  colnames(secondCNE) <- paste0("second.", colnames(secondCNE))
+  cneFinal <- cbind(firstCNE, secondCNE)
   
   if(nrow(cneFinal) == 0L){
     warning("There is no CNEs.")
   }
-  colnames(cneFinal) <- sub("^X\\.", "", colnames(cneFinal))
   
   ## Create the bin column
   cneFinal$first.bin <- binFromCoordRange(cneFinal$first.start,
