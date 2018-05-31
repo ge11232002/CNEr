@@ -45,12 +45,11 @@ SEXP subAlignment(SEXP axttStart, SEXP axttEnd, SEXP axttSym,
       }
       if(INTEGER(subtStart) == INTEGER(axttStart) + j - nrGapsTarget){
         cpStartTarget = j;
-        INTEGER(newqStart) = j + INTEGER(axtqStart) 
+        INTEGER(newqStart) = j + INTEGER(axtqStart);
       }
       if(INTEGER(subtEnd) == INTEGER(axttStart) + j - nrGapsTarget){
-        cpENdTarget = j;
+        cpEndTarget = j;
       }
-      
     }
     Rprintf("\n");
   }
