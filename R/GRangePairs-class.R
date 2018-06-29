@@ -61,6 +61,7 @@ GRangePairs <- function(first=GRanges(), second=GRanges(), ..., names=NULL,
   }else{
     elementMetadata <- S4Vectors:::make_zero_col_DataFrame(length(first))
   }
+  #rownames(elementMetadata) <- names
   new("GRangePairs",first=first, second=second, NAMES=names,
       elementMetadata=elementMetadata)
 }
@@ -100,9 +101,11 @@ setMethod("seqinfo", "GRangePairs",
 ### Combine
 ### Exported!
 .unlist_list_of_GRangePairs <- function(x, Class){
+  metadata <- do.call(rbind, lapply(x, mcols))
+  rownames(metadata) <- NULL
   new(Class, first=do.call(c, lapply(x, first)),
       second=do.call(c, lapply(x, second)),
-      elementMetadata=do.call(rbind, lapply(x, mcols)),
+      elementMetadata=metadata,
       ### FIXME: breaks if only some names are NULL
       NAMES=unlist(lapply(x, names)))
 }
