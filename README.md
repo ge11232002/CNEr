@@ -4,8 +4,9 @@ Conserved Noncoding Elements (CNEs) Identification and Visualisation
 ## Installation of the stable version of `CNEr` from Bioconductor
 
 ```R
-source("https://bioconductor.org/biocLite.R")
-biocLite("CNEr")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("CNEr")
 ```
 
 ## Installation of the development version of `CNEr` from github
