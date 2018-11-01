@@ -1,27 +1,27 @@
 \name{fetchChromSizes}
 \alias{fetchChromSizes}
 \title{
-fetchChromSizes function.
+  fetchChromSizes function.
 }
 \description{
-This function tries to automate the fetch of chromosome sizes for assemblies 
+  This function tries to automate the fetch of chromosome sizes for assemblies 
 from UCSC.
 }
 \usage{
-fetchChromSizes(assembly)
-
+  fetchChromSizes(assembly)
 }
 \arguments{
   \item{assembly}{
   A \code{character} object: the canonical name of assembly, 
-  i.e., hg19 for UCSC.
+  i.e., \sQuote{hg19} for UCSC.
 }
 }
 \details{
-This function utilises mysql queries for UCSC assemblies.
+  This function downloads \sQuote{chromInfo.txt.gz} from UCSC golden path
+  for UCSC assemblies.
 }
 \value{
-A object of \code{Seqinfo} is returned.
+  A object of \code{Seqinfo} is returned.
 }
 \author{
   Ge Tan
@@ -29,7 +29,6 @@ A object of \code{Seqinfo} is returned.
 \note{
   Currently, the assemblies from UCSC are supported.
 }
-
 
 \examples{
   \donttest{

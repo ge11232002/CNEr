@@ -11,8 +11,10 @@ test_that("test_ceScan", {
   bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"),
                              "filter_regions.danRer10.bed")
   bedDanRer10 <- readBed(bedDanRer10Fn)
-  qSizesHg38 <- fetchChromSizes("hg38")
-  qSizesDanRer10 <- fetchChromSizes("danRer10")
+  library(BSgenome.Drerio.UCSC.danRer10)
+  library(BSgenome.Hsapiens.UCSC.hg38)
+  qSizesHg38 <- seqinfo(BSgenome.Hsapiens.UCSC.hg38)
+  qSizesDanRer10 <- seqinfo(BSgenome.Drerio.UCSC.danRer10)
   
   windows <- c(50L, 50L, 50L)
   identities <- c(45L, 48L, 49L)

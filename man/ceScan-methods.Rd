@@ -59,6 +59,8 @@
 }
 
 \examples{
+  library(BSgenome.Drerio.UCSC.danRer10)
+  library(BSgenome.Hsapiens.UCSC.hg38)
   axtFnHg38DanRer10 <- file.path(system.file("extdata", package="CNEr"), 
                                  "hg38.danRer10.net.axt")
   axtHg38DanRer10 <- readAxt(axtFnHg38DanRer10)
@@ -71,8 +73,8 @@
   bedDanRer10Fn <- file.path(system.file("extdata", package="CNEr"), 
                              "filter_regions.danRer10.bed")
   bedDanRer10 <- readBed(bedDanRer10Fn)
-  qSizesHg38 <- fetchChromSizes("hg38")
-  qSizesDanRer10 <- fetchChromSizes("danRer10")
+  qSizesHg38 <- seqinfo(BSgenome.Hsapiens.UCSC.hg38)
+  qSizesDanRer10 <- seqinfo(BSgenome.Drerio.UCSC.danRer10)
   
   ## Axt object
   windows <- c(50L, 50L, 50L)

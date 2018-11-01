@@ -61,13 +61,14 @@
 }
 \examples{
   library(GenomeInfoDb)
-  
+  library(BSgenome.Ggallus.UCSC.galGal3)
+  library(BSgenome.Hsapiens.UCSC.hg19)
   ## dotplot for Axt object
   fn <- file.path(system.file("extdata", package="CNEr"),
                   "chr4.hg19.galGal3.net.axt.gz")
   axt <- readAxt(fn)
-  firstSeqlengths <- seqlengths(fetchChromSizes("hg19"))
-  secondSeqlengths <- seqlengths(fetchChromSizes("galGal3"))
+  firstSeqlengths <- seqlengths(BSgenome.Hsapiens.UCSC.hg19)
+  secondSeqlengths <- seqlengths(BSgenome.Ggallus.UCSC.galGal3)
   firstChrs <- c("chr4")
   secondChrs <- c("chr4")
   syntenicDotplot(axt, firstSeqlengths, secondSeqlengths,
