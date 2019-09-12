@@ -1,0 +1,18 @@
+citHeader("To cite CNEr in publications use:")
+
+citEntry(entry = "Article",
+  title        = "CNEr: A toolkit for exploring extreme noncoding conservation",
+  author       = personList(as.person("Ge Tan"),
+                            as.person("Dimitris Polychronopoulos")
+                            as.person("Boris Lenhard")),
+  journal      = "PLoS computational biology",
+  year         = "2019",
+  volume       = "15",
+  issue        = "8",
+  pages        = "e1006940",
+  url          = "https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006940",
+  textVersion  =
+  paste("Ge Tan, Dimitris Polychronopoulos, Boris Lenhard (2019).",
+        "CNEr: A toolkit for exploring extreme noncoding conservation",
+        "PLoS Comput. Biol. 15, e1006940.")
+)
