@@ -3,7 +3,7 @@ citHeader("To cite CNEr in publications use:")
 citEntry(entry = "Article",
   title        = "CNEr: A toolkit for exploring extreme noncoding conservation",
   author       = personList(as.person("Ge Tan"),
-                            as.person("Dimitris Polychronopoulos")
+                            as.person("Dimitris Polychronopoulos"),
                             as.person("Boris Lenhard")),
   journal      = "PLoS computational biology",
   year         = "2019",
