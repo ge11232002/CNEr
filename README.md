@@ -22,3 +22,11 @@ devtools::install_github("ge11232002/CNEr")
 
 ## Vignette
 Latest vignette is available at http://rpubs.com/yang2/CNEr3
+
+<b>Citation</b>:
+
+```
+G. Tan, D. Polychronopoulos, B.Lenhard: 
+CNEr: A toolkit for exploring extreme noncoding conservation.
+PLoS Comput Biol. 2019 Aug 26;15(8):e1006940. doi: 10.1371/journal.pcbi.1006940. eCollection 2019 Aug. 
+```
