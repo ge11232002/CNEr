@@ -31,7 +31,7 @@
 }
 
 \examples{
-  \donttest{
+  \dontrun{
     library(GO.db)
     go <- list(c("GO:0005215", "GO:0006810", "GO:0016020"), "GO:0016579")
     addAncestorGO(go)

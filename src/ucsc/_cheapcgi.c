@@ -1,5 +1,11 @@
 /* rtracklayer took out these little utilities from cheapcgi.c */
 
+/* Routines for getting variables passed in from web page
+ * forms via CGI.
+ *
+ * This file is copyright 2002 Jim Kent, but license is hereby
+ * granted for all use - public, private or commercial. */
+
 #include "common.h"
 
 void cgiDecode(char *in, char *out, int inLength)

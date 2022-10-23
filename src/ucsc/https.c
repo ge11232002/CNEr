@@ -1,5 +1,8 @@
 /* Connect via https. */
 
+/* Copyright (C) 2012 The Regents of the University of California 
+ * See kent/LICENSE or http://genome.ucsc.edu/license/ for licensing information. */
+
 #ifdef USE_SSL
 
 #include "openssl/ssl.h"

@@ -25,7 +25,7 @@
 }
 
 \examples{
-  \donttest{
+  \dontrun{
     orgKEGGIds2EntrezIDs(organism="Homo sapiens")
   }
 }

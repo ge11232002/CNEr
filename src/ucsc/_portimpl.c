@@ -1,5 +1,11 @@
 /* rtracklayer took this utility out of portimpl.c */
 
+/* Implementation file for some portability stuff mostly aimed
+ * at making the same code run under different web servers.
+ *
+ * This file is copyright 2002 Jim Kent, but license is hereby
+ * granted for all use - public, private or commercial. */
+
 #include "common.h"
 #include "portable.h"
 
